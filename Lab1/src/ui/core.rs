@@ -7,7 +7,7 @@ pub fn start() -> eframe::Result {
     let native_options = NativeOptions {
         viewport: egui::ViewportBuilder::default()
             .with_title(format!("Computer Graphics: {LAB_TITLE}"))
-            .with_inner_size([1200.0, 700.0])
+            .with_inner_size([900.0, 550.0])
             .with_min_inner_size([900.0, 550.0])
             .with_icon(
                 eframe::icon_data::from_png_bytes(
@@ -15,7 +15,7 @@ pub fn start() -> eframe::Result {
                 )
                 .expect("Failed to load icon"),
             ),
-        default_theme: Theme::Light,
+        default_theme: Theme::Dark,
         follow_system_theme: false,
         ..Default::default()
     };
