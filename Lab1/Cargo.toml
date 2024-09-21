@@ -1,0 +1,8 @@
+[package]
+name = "Lab1"
+version = "0.1.0"
+authors = ["Alex Kovalov <alexkovalevkpi@gmail.com>"]
+edition = "2021"
+rust-version = "1.81"
+
+[dependencies]
