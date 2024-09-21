@@ -1,3 +1,6 @@
+# Logs
+log.txt
+
 # Remove folder, that contains RustRover’s project specific settings files.
 .idea/
 
