@@ -1,19 +1,14 @@
-pub struct Application {
-    // Example stuff:
-    label: String,
-}
+use crate::ui;
+
+pub struct Application {}
 
 impl Default for Application {
     fn default() -> Self {
-        Self {
-            // Example stuff:
-            label: "Hello World!".to_owned(),
-        }
+        Self {}
     }
 }
 
 impl Application {
-    /// Called once before the first frame.
     pub fn new(_cc: &eframe::CreationContext<'_>) -> Self {
         // This is also where you can customize the look and feel of egui using
         // `cc.egui_ctx.set_visuals` and `cc.egui_ctx.set_fonts`.
@@ -24,6 +19,8 @@ impl Application {
 
 impl eframe::App for Application {
     fn update(&mut self, _ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        // Smth here
+        egui::CentralPanel::default().show(_ctx, |ui| {
+            ui::main_window::show(ui);
+        });
     }
 }
