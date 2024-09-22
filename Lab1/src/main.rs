@@ -17,7 +17,7 @@ fn main() {
         std::process::exit(1);
     });
 
-    ui::core::start(app_config.name).unwrap_or_else(|err| {
+    ui::core::start(app_config.name, app_config.theme).unwrap_or_else(|err| {
         log::error!("{}", err);
         std::process::exit(1);
     });

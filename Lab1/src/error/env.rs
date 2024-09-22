@@ -13,4 +13,10 @@ pub enum EnvError {
 
     #[error("Crate name is not loaded.")]
     NameNotLoaded,
+
+    #[error("Theme is not loaded.")]
+    ThemeNotLoaded,
+
+    #[error("Theme is undefined.")]
+    ThemeUndefined,
 }

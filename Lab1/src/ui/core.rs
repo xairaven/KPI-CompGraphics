@@ -4,7 +4,7 @@ use eframe::{NativeOptions, Theme};
 pub const WINDOW_WIDTH: f32 = 900.0;
 pub const WINDOW_HEIGHT: f32 = 550.0;
 
-pub fn start(crate_name: String) -> eframe::Result {
+pub fn start(crate_name: String, theme: Theme) -> eframe::Result {
     let native_options = NativeOptions {
         viewport: egui::ViewportBuilder::default()
             .with_title(format!("Computer Graphics: {crate_name}"))
@@ -16,7 +16,7 @@ pub fn start(crate_name: String) -> eframe::Result {
                 )
                 .expect("Failed to load icon"),
             ),
-        default_theme: Theme::Dark,
+        default_theme: theme,
         follow_system_theme: false,
         ..Default::default()
     };

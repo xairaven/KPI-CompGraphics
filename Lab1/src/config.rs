@@ -1,5 +1,6 @@
 use crate::error::env::EnvError;
 use dotenvy::dotenv;
+use eframe::Theme;
 use log::LevelFilter;
 use std::env;
 use std::str::FromStr;
@@ -7,6 +8,7 @@ use std::str::FromStr;
 pub struct AppConfig {
     pub name: String,
     pub log_level: LevelFilter,
+    pub theme: Theme,
 }
 
 impl AppConfig {
@@ -24,6 +26,18 @@ impl AppConfig {
         let log_level =
             LevelFilter::from_str(&log_level).map_err(|_| EnvError::LogLevelUndefined)?;
 
-        Ok(Self { name, log_level })
+        // Loading theme
+        let theme = env::var("THEME").map_err(|_| EnvError::ThemeNotLoaded)?;
+        let theme = match theme.to_lowercase().as_str() {
+            "dark" => Theme::Dark,
+            "light" => Theme::Light,
+            _ => return Err(EnvError::ThemeUndefined),
+        };
+
+        Ok(Self {
+            name,
+            log_level,
+            theme,
+        })
     }
 }
