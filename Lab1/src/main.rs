@@ -3,6 +3,7 @@ use crate::config::AppConfig;
 pub mod config;
 pub mod error;
 pub mod logger;
+pub mod models;
 pub mod ui;
 
 fn main() {

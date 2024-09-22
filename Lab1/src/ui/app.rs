@@ -1,10 +1,15 @@
 use crate::ui;
+use crate::ui::elements::canvas::PaintingCanvas;
 
-pub struct Application {}
+pub struct Application {
+    canvas: PaintingCanvas,
+}
 
 impl Default for Application {
     fn default() -> Self {
-        Self {}
+        Self {
+            canvas: Default::default(),
+        }
     }
 }
 
@@ -18,9 +23,9 @@ impl Application {
 }
 
 impl eframe::App for Application {
-    fn update(&mut self, _ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        egui::CentralPanel::default().show(_ctx, |ui| {
-            ui::main_window::show(ui);
+    fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+        egui::CentralPanel::default().show(ctx, |ui| {
+            ui::main_window::show(self, ui, ctx);
         });
     }
 }
