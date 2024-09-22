@@ -1,5 +1,5 @@
 use crate::error::logger::LoggerError;
-use chrono::Local;
+use chrono::{Datelike, Local};
 use log::LevelFilter;
 
 pub fn init(log_level: LevelFilter, file_name: &str) -> Result<(), LoggerError> {
@@ -19,4 +19,17 @@ pub fn init(log_level: LevelFilter, file_name: &str) -> Result<(), LoggerError> 
         .chain(fern::Output::file(file, "\r\n"))
         .apply()
         .map_err(LoggerError::SetLoggerError)
+}
+
+pub fn generate_log_name(crate_name: String) -> String {
+    let now = Local::now();
+    let date = format!(
+        "{year:04}-{month:02}-{day:02}",
+        year = now.year(),
+        month = now.month(),
+        day = now.day(),
+    );
+
+    let crate_name_formatted = crate_name.replace(" ", "-");
+    format!("{crate_name_formatted}_{date}.log")
 }

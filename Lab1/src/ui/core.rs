@@ -1,14 +1,15 @@
 use crate::ui::app::Application;
 use eframe::{NativeOptions, Theme};
 
-pub const LAB_TITLE: &str = "Lab 1";
+pub const WINDOW_WIDTH: f32 = 900.0;
+pub const WINDOW_HEIGHT: f32 = 550.0;
 
-pub fn start() -> eframe::Result {
+pub fn start(crate_name: String) -> eframe::Result {
     let native_options = NativeOptions {
         viewport: egui::ViewportBuilder::default()
-            .with_title(format!("Computer Graphics: {LAB_TITLE}"))
-            .with_inner_size([900.0, 550.0])
-            .with_min_inner_size([900.0, 550.0])
+            .with_title(format!("Computer Graphics: {crate_name}"))
+            .with_inner_size([WINDOW_WIDTH, WINDOW_HEIGHT])
+            .with_min_inner_size([WINDOW_WIDTH, WINDOW_HEIGHT])
             .with_icon(
                 eframe::icon_data::from_png_bytes(
                     &include_bytes!("../../assets/icon-256.png")[..],
@@ -21,7 +22,7 @@ pub fn start() -> eframe::Result {
     };
 
     eframe::run_native(
-        LAB_TITLE,
+        &crate_name,
         native_options,
         Box::new(|cc| Ok(Box::new(Application::new(cc)))),
     )
