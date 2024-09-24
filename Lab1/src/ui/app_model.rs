@@ -1,6 +1,6 @@
 use crate::models::grid::Grid;
-use crate::ui;
 use crate::ui::components::canvas::Canvas;
+use crate::ui::windows::main_window;
 
 #[derive(Default)]
 pub struct AppModel {
@@ -20,7 +20,7 @@ impl AppModel {
 impl eframe::App for AppModel {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
-            ui::main_window::show(self, ui, ctx);
+            main_window::show(self, ui, ctx);
         });
     }
 }

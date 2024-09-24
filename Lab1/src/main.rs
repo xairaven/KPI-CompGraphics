@@ -7,7 +7,7 @@ pub mod models;
 pub mod ui {
     pub mod app_model;
     pub mod core;
-    pub mod main_window;
+    pub mod windows;
 
     pub mod components;
 }
