@@ -1,4 +1,4 @@
-use crate::ui::app::AppModel;
+use crate::ui::app_model::AppModel;
 use eframe::{NativeOptions, Theme};
 
 pub const WINDOW_WIDTH: f32 = 900.0;

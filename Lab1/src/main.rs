@@ -5,7 +5,7 @@ pub mod error;
 pub mod logger;
 pub mod models;
 pub mod ui {
-    pub mod app;
+    pub mod app_model;
     pub mod core;
     pub mod main_window;
 
