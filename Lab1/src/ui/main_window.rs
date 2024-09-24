@@ -1,12 +1,23 @@
-use crate::ui::app::Application;
-use egui::{Color32, Frame};
+use crate::ui;
+use crate::ui::app::AppModel;
+use crate::ui::components;
+use egui::SidePanel;
 
-pub const ELEMENT_NAME_SETTINGS_PANEL: &str = "Settings_Panel";
+pub const SETTINGS_PANEL_WIDTH: f32 = 250.0;
+pub const CANVAS_PANEL_WIDTH: f32 = ui::core::WINDOW_WIDTH - SETTINGS_PANEL_WIDTH;
 
-pub fn show(app: &mut Application, ui: &mut egui::Ui, ctx: &egui::Context) {
-    egui::SidePanel::right(ELEMENT_NAME_SETTINGS_PANEL)
+pub fn show(app: &mut AppModel, ui: &mut egui::Ui, _ctx: &egui::Context) {
+    SidePanel::left(components::NAME_CANVAS_PANEL)
         .resizable(false)
-        .default_width(250.0)
+        .default_width(CANVAS_PANEL_WIDTH)
+        .show_inside(ui, |ui| {
+            app.canvas.show(ui);
+        });
+
+    SidePanel::right(components::NAME_SETTINGS_PANEL)
+        .resizable(false)
+        .default_width(SETTINGS_PANEL_WIDTH)
+        .show_separator_line(false)
         .show_inside(ui, |ui| {
             egui::ScrollArea::vertical().show(ui, |ui| {
                 ui.vertical_centered(|ui| {
@@ -22,8 +33,4 @@ pub fn show(app: &mut Application, ui: &mut egui::Ui, ctx: &egui::Context) {
                 ui.label(egui::RichText::new("SomeText"));
             });
         });
-
-    Frame::canvas(ui.style())
-        .fill(Color32::from_rgb(255, 255, 255))
-        .show(ui, |ui| {});
 }

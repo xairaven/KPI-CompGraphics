@@ -1,4 +1,4 @@
-use crate::ui::app::Application;
+use crate::ui::app::AppModel;
 use eframe::{NativeOptions, Theme};
 
 pub const WINDOW_WIDTH: f32 = 900.0;
@@ -24,6 +24,6 @@ pub fn start(crate_name: String, theme: Theme) -> eframe::Result {
     eframe::run_native(
         &crate_name,
         native_options,
-        Box::new(|cc| Ok(Box::new(Application::new(cc)))),
+        Box::new(|cc| Ok(Box::new(AppModel::new(cc)))),
     )
 }

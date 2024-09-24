@@ -4,7 +4,13 @@ pub mod config;
 pub mod error;
 pub mod logger;
 pub mod models;
-pub mod ui;
+pub mod ui {
+    pub mod app;
+    pub mod core;
+    pub mod main_window;
+
+    pub mod components;
+}
 
 fn main() {
     let app_config = AppConfig::from_env().unwrap_or_else(|err| {
