@@ -1,9 +1,9 @@
 use egui::{emath, Color32, Frame, Pos2, Rect, Sense, Stroke};
 
 pub struct Canvas {
-    lines: Vec<Vec<Pos2>>,
-    px_per_cm: f32,
-    stroke: Stroke,
+    pub lines: Vec<Vec<Pos2>>,
+    pub px_per_cm: f32,
+    pub stroke: Stroke,
 }
 
 impl Default for Canvas {

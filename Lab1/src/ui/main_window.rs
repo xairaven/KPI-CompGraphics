@@ -10,19 +10,7 @@ pub fn show(app: &mut AppModel, ui: &mut egui::Ui, _ctx: &egui::Context) {
         .default_width(SETTINGS_PANEL_WIDTH)
         .show_separator_line(true)
         .show_inside(ui, |ui| {
-            egui::ScrollArea::vertical().show(ui, |ui| {
-                ui.vertical_centered(|ui| {
-                    ui.heading("Settings");
-                });
-
-                ui.vertical_centered(|ui| {
-                    if ui.button("Set Default Figure").clicked() {
-                        // TODO: Set default figure
-                    }
-                });
-
-                ui.label(egui::RichText::new("SomeText"));
-            });
+            components::settings::show_panel(app, ui);
         });
 
     CentralPanel::default().show_inside(ui, |ui| {

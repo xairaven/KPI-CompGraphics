@@ -1,5 +1,5 @@
 pub struct Grid {
-    ticks: u32,
+    pub ticks: u32,
 }
 
 impl Default for Grid {

@@ -1,16 +1,11 @@
+use crate::models::grid::Grid;
 use crate::ui;
 use crate::ui::components::canvas::Canvas;
 
+#[derive(Default)]
 pub struct AppModel {
     pub canvas: Canvas,
-}
-
-impl Default for AppModel {
-    fn default() -> Self {
-        Self {
-            canvas: Default::default(),
-        }
-    }
+    pub grid: Grid,
 }
 
 impl AppModel {
