@@ -1,6 +1,4 @@
-use eframe::emath::vec2;
-use egui::{emath, Color32, Frame, Pos2, Rect, Sense, Stroke, Vec2};
-use std::f32::consts::TAU;
+use egui::{emath, Color32, Frame, Pos2, Rect, Sense, Stroke};
 
 pub struct Canvas {
     pub lines: Vec<Vec<Pos2>>,

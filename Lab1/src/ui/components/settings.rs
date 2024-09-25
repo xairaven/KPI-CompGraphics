@@ -2,6 +2,8 @@ use crate::ui::app_model::AppModel;
 use crate::utils::egui::label_centered_with_drag;
 use egui::{DragValue, Grid};
 
+pub const MAX_RESIZING: u32 = 300;
+
 pub fn show_panel(app: &mut AppModel, ui: &mut egui::Ui) {
     egui::ScrollArea::vertical().show(ui, |ui| {
         ui.vertical_centered(|ui| {
@@ -23,7 +25,7 @@ pub fn show_panel(app: &mut AppModel, ui: &mut egui::Ui) {
 
         ui.vertical_centered(|ui| {
             if ui.button("Set Default Figure").clicked() {
-                // TODO: Set default figure
+                set_default_figure(app);
             }
         });
 
@@ -46,14 +48,14 @@ pub fn show_panel(app: &mut AppModel, ui: &mut egui::Ui) {
                         "AB",
                         &mut app.resize.length_ab,
                         1,
-                        1..=100,
+                        1..=MAX_RESIZING,
                     );
                     label_centered_with_drag(
                         ui,
                         "BC",
                         &mut app.resize.length_bc,
                         1,
-                        1..=100,
+                        1..=MAX_RESIZING,
                     );
                     ui.end_row();
 
@@ -62,14 +64,14 @@ pub fn show_panel(app: &mut AppModel, ui: &mut egui::Ui) {
                         "CD",
                         &mut app.resize.length_cd,
                         1,
-                        1..=100,
+                        1..=MAX_RESIZING,
                     );
                     label_centered_with_drag(
                         ui,
                         "DE",
                         &mut app.resize.length_de,
                         1,
-                        1..=100,
+                        1..=MAX_RESIZING,
                     );
                     ui.end_row();
 
@@ -78,14 +80,14 @@ pub fn show_panel(app: &mut AppModel, ui: &mut egui::Ui) {
                         "EF",
                         &mut app.resize.length_ef,
                         1,
-                        1..=100,
+                        1..=MAX_RESIZING,
                     );
                     label_centered_with_drag(
                         ui,
                         "FG",
                         &mut app.resize.length_fg,
                         1,
-                        1..=100,
+                        1..=MAX_RESIZING,
                     );
                     ui.end_row();
 
@@ -94,14 +96,14 @@ pub fn show_panel(app: &mut AppModel, ui: &mut egui::Ui) {
                         "GH",
                         &mut app.resize.length_gh,
                         1,
-                        1..=100,
+                        1..=MAX_RESIZING,
                     );
                     label_centered_with_drag(
                         ui,
                         "AH",
                         &mut app.resize.length_ah,
                         1,
-                        1..=100,
+                        1..=MAX_RESIZING,
                     );
                     ui.end_row();
                 });
@@ -162,7 +164,7 @@ pub fn show_panel(app: &mut AppModel, ui: &mut egui::Ui) {
                     label_centered_with_drag(
                         ui,
                         "Y Offset:",
-                        &mut app.euclidean.offset_x,
+                        &mut app.euclidean.offset_y,
                         1,
                         0..=100,
                     );
@@ -301,4 +303,11 @@ pub fn show_panel(app: &mut AppModel, ui: &mut egui::Ui) {
                 });
         });
     });
+}
+
+fn set_default_figure(app: &mut AppModel) {
+    app.affine = Default::default();
+    app.euclidean = Default::default();
+    app.projective = Default::default();
+    app.resize = Default::default();
 }
