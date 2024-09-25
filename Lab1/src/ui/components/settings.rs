@@ -121,20 +121,8 @@ pub fn show_panel(app: &mut AppModel, ui: &mut egui::Ui) {
                 .min_col_width(30.0)
                 .num_columns(4)
                 .show(ui, |ui| {
-                    label_centered_with_drag(
-                        ui,
-                        "I",
-                        &mut app.resize.radius_i,
-                        1,
-                        1..=100,
-                    );
-                    label_centered_with_drag(
-                        ui,
-                        "J",
-                        &mut app.resize.radius_j,
-                        1,
-                        1..=100,
-                    );
+                    label_centered_with_drag(ui, "I", &mut app.resize.radius_i, 1, 1..=100);
+                    label_centered_with_drag(ui, "J", &mut app.resize.radius_j, 1, 1..=100);
                     ui.end_row();
                 });
         });
@@ -202,20 +190,8 @@ pub fn show_panel(app: &mut AppModel, ui: &mut egui::Ui) {
                     label_centered_with_drag(ui, "Yy", &mut app.affine.yy, 1, 0..=100);
                     ui.end_row();
 
-                    label_centered_with_drag(
-                        ui,
-                        "0x",
-                        &mut app.affine.zero_x,
-                        1,
-                        0..=100,
-                    );
-                    label_centered_with_drag(
-                        ui,
-                        "0y",
-                        &mut app.affine.zero_y,
-                        1,
-                        0..=100,
-                    );
+                    label_centered_with_drag(ui, "0x", &mut app.affine.zero_x, 1, 0..=100);
+                    label_centered_with_drag(ui, "0y", &mut app.affine.zero_y, 1, 0..=100);
                     ui.end_row();
                 });
         });
@@ -232,73 +208,19 @@ pub fn show_panel(app: &mut AppModel, ui: &mut egui::Ui) {
                 .striped(true)
                 .num_columns(6)
                 .show(ui, |ui| {
-                    label_centered_with_drag(
-                        ui,
-                        "Xx",
-                        &mut app.projective.xx,
-                        1,
-                        0..=100,
-                    );
-                    label_centered_with_drag(
-                        ui,
-                        "Xy",
-                        &mut app.projective.xy,
-                        1,
-                        0..=100,
-                    );
-                    label_centered_with_drag(
-                        ui,
-                        "wX",
-                        &mut app.projective.wx,
-                        1,
-                        0..=100,
-                    );
+                    label_centered_with_drag(ui, "Xx", &mut app.projective.xx, 1, 0..=100);
+                    label_centered_with_drag(ui, "Xy", &mut app.projective.xy, 1, 0..=100);
+                    label_centered_with_drag(ui, "wX", &mut app.projective.wx, 1, 0..=100);
                     ui.end_row();
 
-                    label_centered_with_drag(
-                        ui,
-                        "Yx",
-                        &mut app.projective.yx,
-                        1,
-                        0..=100,
-                    );
-                    label_centered_with_drag(
-                        ui,
-                        "Yy",
-                        &mut app.projective.yy,
-                        1,
-                        0..=100,
-                    );
-                    label_centered_with_drag(
-                        ui,
-                        "wY",
-                        &mut app.projective.wy,
-                        1,
-                        0..=100,
-                    );
+                    label_centered_with_drag(ui, "Yx", &mut app.projective.yx, 1, 0..=100);
+                    label_centered_with_drag(ui, "Yy", &mut app.projective.yy, 1, 0..=100);
+                    label_centered_with_drag(ui, "wY", &mut app.projective.wy, 1, 0..=100);
                     ui.end_row();
 
-                    label_centered_with_drag(
-                        ui,
-                        "0x",
-                        &mut app.projective.zero_x,
-                        1,
-                        0..=100,
-                    );
-                    label_centered_with_drag(
-                        ui,
-                        "0y",
-                        &mut app.projective.zero_y,
-                        1,
-                        0..=100,
-                    );
-                    label_centered_with_drag(
-                        ui,
-                        "w0",
-                        &mut app.projective.w_zero,
-                        1,
-                        0..=100,
-                    );
+                    label_centered_with_drag(ui, "0x", &mut app.projective.zero_x, 1, 0..=100);
+                    label_centered_with_drag(ui, "0y", &mut app.projective.zero_y, 1, 0..=100);
+                    label_centered_with_drag(ui, "w0", &mut app.projective.w_zero, 1, 0..=100);
                     ui.end_row();
                 });
         });

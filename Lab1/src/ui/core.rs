@@ -11,10 +11,8 @@ pub fn start(crate_name: String, theme: Theme) -> eframe::Result {
             .with_inner_size([WINDOW_WIDTH, WINDOW_HEIGHT])
             .with_min_inner_size([WINDOW_WIDTH, WINDOW_HEIGHT])
             .with_icon(
-                eframe::icon_data::from_png_bytes(
-                    &include_bytes!("../../assets/icon-256.png")[..],
-                )
-                .expect("Failed to load icon"),
+                eframe::icon_data::from_png_bytes(&include_bytes!("../../assets/icon-256.png")[..])
+                    .expect("Failed to load icon"),
             ),
         default_theme: theme,
         follow_system_theme: false,
