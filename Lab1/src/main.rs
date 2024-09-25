@@ -17,6 +17,9 @@ pub mod ui {
 
     pub mod components;
 }
+pub mod utils {
+    pub mod egui;
+}
 
 fn main() {
     let app_config = AppConfig::from_env().unwrap_or_else(|err| {
