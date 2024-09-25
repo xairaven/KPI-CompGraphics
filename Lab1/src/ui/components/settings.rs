@@ -1,6 +1,6 @@
 use crate::ui::app_model::AppModel;
 use crate::utils::egui::label_centered_with_drag;
-use egui::{DragValue, Grid};
+use egui::{DragValue, Grid, RichText};
 
 pub const MAX_RESIZING: u32 = 300;
 
@@ -118,44 +118,38 @@ pub fn show_panel(app: &mut AppModel, ui: &mut egui::Ui) {
             ui.add_space(5.0);
 
             Grid::new("RadiusTransformationsGrid")
-                .min_col_width(30.0)
+                .min_col_width(50.0)
                 .num_columns(4)
                 .show(ui, |ui| {
-                    label_centered_with_drag(ui, "I", &mut app.resize.radius_i, 1, 1..=100);
-                    label_centered_with_drag(ui, "J", &mut app.resize.radius_j, 1, 1..=100);
+                    label_centered_with_drag(ui, "I:", &mut app.resize.radius_i, 1, 1..=100);
+                    label_centered_with_drag(ui, "J:", &mut app.resize.radius_j, 1, 1..=100);
                     ui.end_row();
                 });
         });
+
         ui.add_space(10.0);
+
+        ui.vertical_centered(|ui| {
+            ui.label(RichText::new("Euclidean Transformations").strong());
+        });
+        ui.add_space(5.0);
 
         ui.group(|ui| {
             ui.vertical_centered(|ui| {
-                ui.label("Euclidean Transformations");
+                ui.label("Rotation");
             });
 
             ui.add_space(5.0);
 
-            Grid::new("EuclideanTransformationsGrid")
+            Grid::new("RotationGrid")
                 .num_columns(2)
                 .striped(true)
                 .min_col_width(125.0)
                 .show(ui, |ui| {
-                    label_centered_with_drag(
-                        ui,
-                        "X Offset:",
-                        &mut app.euclidean.offset_x,
-                        1,
-                        0..=100,
-                    );
+                    label_centered_with_drag(ui, "X:", &mut app.euclidean.rotation_x, 1, 0..=100);
                     ui.end_row();
 
-                    label_centered_with_drag(
-                        ui,
-                        "Y Offset:",
-                        &mut app.euclidean.offset_y,
-                        1,
-                        0..=100,
-                    );
+                    label_centered_with_drag(ui, "Y:", &mut app.euclidean.rotation_y, 1, 0..=100);
                     ui.end_row();
 
                     label_centered_with_drag(
@@ -172,11 +166,31 @@ pub fn show_panel(app: &mut AppModel, ui: &mut egui::Ui) {
 
         ui.group(|ui| {
             ui.vertical_centered(|ui| {
-                ui.label("Affine Transformations");
+                ui.label("Offset");
             });
 
             ui.add_space(5.0);
 
+            Grid::new("OffsetGrid")
+                .num_columns(4)
+                .striped(true)
+                .min_col_width(50.0)
+                .show(ui, |ui| {
+                    label_centered_with_drag(ui, "X:", &mut app.euclidean.offset_x, 1, 0..=100);
+
+                    label_centered_with_drag(ui, "Y:", &mut app.euclidean.offset_y, 1, 0..=100);
+                    ui.end_row();
+                });
+        });
+
+        ui.add_space(10.0);
+
+        ui.vertical_centered(|ui| {
+            ui.label(RichText::new("Affine Transformations").strong());
+        });
+        ui.add_space(5.0);
+
+        ui.group(|ui| {
             Grid::new("AffineTransformationsGrid")
                 .min_col_width(60.0)
                 .striped(true)
@@ -195,15 +209,15 @@ pub fn show_panel(app: &mut AppModel, ui: &mut egui::Ui) {
                     ui.end_row();
                 });
         });
+
         ui.add_space(10.0);
 
+        ui.vertical_centered(|ui| {
+            ui.label(RichText::new("Projective Transformations").strong());
+        });
+        ui.add_space(5.0);
+
         ui.group(|ui| {
-            ui.vertical_centered(|ui| {
-                ui.label("Projective Transformations");
-            });
-
-            ui.add_space(5.0);
-
             Grid::new("ProjectiveTransformationsGrid")
                 .striped(true)
                 .num_columns(6)
