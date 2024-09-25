@@ -1,4 +1,6 @@
-use egui::{emath, Color32, Frame, Pos2, Rect, Sense, Stroke};
+use eframe::emath::vec2;
+use egui::{emath, Color32, Frame, Pos2, Rect, Sense, Stroke, Vec2};
+use std::f32::consts::TAU;
 
 pub struct Canvas {
     pub lines: Vec<Vec<Pos2>>,
@@ -30,8 +32,9 @@ impl Canvas {
     }
 
     pub fn ui_content(&mut self, ui: &mut egui::Ui) -> egui::Response {
-        let (mut response, painter) =
-            ui.allocate_painter(ui.available_size_before_wrap(), Sense::drag());
+        let size = ui.available_size_before_wrap();
+
+        let (mut response, painter) = ui.allocate_painter(size, Sense::drag());
 
         let to_screen = emath::RectTransform::from_to(
             Rect::from_min_size(Pos2::ZERO, response.rect.square_proportions()),
@@ -66,6 +69,18 @@ impl Canvas {
             });
 
         painter.extend(shapes);
+
+        // let size = Vec2::splat(16.0);
+        // let (response, painter) = ui.allocate_painter(size, Sense::hover());
+        // let rect = response.rect;
+        // let c = rect.center();
+        // let r = rect.width() / 2.0 - 1.0;
+        // let color = Color32::from_gray(128);
+        // let stroke = Stroke::new(1.0, color);
+        // painter.circle_stroke(c, r, stroke);
+        // painter.line_segment([c - vec2(0.0, r), c + vec2(0.0, r)], stroke);
+        // painter.line_segment([c, c + r * Vec2::angled(TAU * 1.0 / 8.0)], stroke);
+        // painter.line_segment([c, c + r * Vec2::angled(TAU * 3.0 / 8.0)], stroke);
 
         response
     }

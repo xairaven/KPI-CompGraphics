@@ -8,7 +8,7 @@ pub mod transformations {
     pub mod affine;
     pub mod euclidean;
     pub mod projective;
-    pub mod resizing;
+    pub mod resize;
 }
 pub mod ui {
     pub mod app_model;

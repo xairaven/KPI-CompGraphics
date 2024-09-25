@@ -1,4 +1,8 @@
 use crate::models::grid::Grid;
+use crate::transformations::affine::Affine;
+use crate::transformations::euclidean::Euclidean;
+use crate::transformations::projective::Projective;
+use crate::transformations::resize::Resize;
 use crate::ui::components::canvas::Canvas;
 use crate::ui::windows::main_window;
 
@@ -6,6 +10,11 @@ use crate::ui::windows::main_window;
 pub struct AppModel {
     pub canvas: Canvas,
     pub grid: Grid,
+
+    pub affine: Affine,
+    pub euclidean: Euclidean,
+    pub projective: Projective,
+    pub resize: Resize,
 }
 
 impl AppModel {

@@ -1,6 +1,6 @@
-pub struct Resizing {}
+pub struct Resize {}
 
-impl Default for Resizing {
+impl Default for Resize {
     fn default() -> Self {
         Self {}
     }
