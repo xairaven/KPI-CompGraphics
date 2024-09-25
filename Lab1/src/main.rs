@@ -4,6 +4,12 @@ pub mod config;
 pub mod error;
 pub mod logger;
 pub mod models;
+pub mod transformations {
+    pub mod affine;
+    pub mod euclidean;
+    pub mod projective;
+    pub mod resizing;
+}
 pub mod ui {
     pub mod app_model;
     pub mod core;
