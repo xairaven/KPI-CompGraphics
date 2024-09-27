@@ -181,6 +181,14 @@ pub fn show_panel(app: &mut AppModel, ui: &mut egui::Ui) {
                     label_centered_with_drag(ui, "Y:", &mut app.euclidean.offset_y, 1, 0..=100);
                     ui.end_row();
                 });
+
+            ui.add_space(10.0);
+
+            ui.vertical_centered(|ui| {
+                if ui.button("\t\tApply\t\t").clicked() {
+                    // TODO: OFFSET APPLY
+                }
+            });
         });
 
         ui.add_space(10.0);
@@ -242,6 +250,7 @@ pub fn show_panel(app: &mut AppModel, ui: &mut egui::Ui) {
 }
 
 fn set_default_figure(app: &mut AppModel) {
+    // TODO: Set default figure...
     app.affine = Default::default();
     app.euclidean = Default::default();
     app.projective = Default::default();
