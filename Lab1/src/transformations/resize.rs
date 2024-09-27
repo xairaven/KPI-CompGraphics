@@ -36,7 +36,7 @@ impl Default for Resize {
 }
 
 impl Resize {
-    pub fn update_sides(&self, model: &mut Model) {
+    pub fn update_sides(&mut self, model: &mut Model) {
         if self.length_ab != model.length_ab {
             Self::update_points(
                 &mut model.a,
@@ -44,6 +44,7 @@ impl Resize {
                 self.length_ab,
                 &mut model.length_ab,
             );
+            self.sync_lengths(model);
         }
         if self.length_bc != model.length_bc {
             Self::update_points(
@@ -60,6 +61,7 @@ impl Resize {
                 self.length_cd,
                 &mut model.length_cd,
             );
+            self.sync_lengths(model);
         }
         if self.length_de != model.length_de {
             Self::update_points(
@@ -68,6 +70,7 @@ impl Resize {
                 self.length_de,
                 &mut model.length_de,
             );
+            self.sync_lengths(model);
         }
         if self.length_ef != model.length_ef {
             Self::update_points(
@@ -76,6 +79,7 @@ impl Resize {
                 self.length_ef,
                 &mut model.length_ef,
             );
+            self.sync_lengths(model);
         }
         if self.length_fg != model.length_fg {
             Self::update_points(
@@ -84,6 +88,7 @@ impl Resize {
                 self.length_fg,
                 &mut model.length_fg,
             );
+            self.sync_lengths(model);
         }
         if self.length_gh != model.length_gh {
             Self::update_points(
@@ -92,6 +97,7 @@ impl Resize {
                 self.length_gh,
                 &mut model.length_gh,
             );
+            self.sync_lengths(model);
         }
         if self.length_ah != model.length_ah {
             Self::update_points(
@@ -100,6 +106,7 @@ impl Resize {
                 self.length_ah,
                 &mut model.length_ah,
             );
+            self.sync_lengths(model);
         }
     }
 
@@ -144,5 +151,18 @@ impl Resize {
         };
 
         Line::new_plain(new_start, new_end)
+    }
+
+    fn sync_lengths(&mut self, model: &mut Model) {
+        model.recalculate_lengths();
+
+        self.length_ab = model.length_ab;
+        self.length_bc = model.length_bc;
+        self.length_cd = model.length_cd;
+        self.length_de = model.length_de;
+        self.length_ef = model.length_ef;
+        self.length_fg = model.length_fg;
+        self.length_gh = model.length_gh;
+        self.length_ah = model.length_ah;
     }
 }

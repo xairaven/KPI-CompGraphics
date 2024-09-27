@@ -72,4 +72,15 @@ impl Model {
 
         lines
     }
+
+    pub fn recalculate_lengths(&mut self) {
+        self.length_ab = Line::new_plain(self.a, self.b).length();
+        self.length_bc = Line::new_plain(self.b, self.c).length();
+        self.length_cd = Line::new_plain(self.c, self.d).length();
+        self.length_de = Line::new_plain(self.d, self.e).length();
+        self.length_ef = Line::new_plain(self.e, self.f).length();
+        self.length_fg = Line::new_plain(self.f, self.g).length();
+        self.length_gh = Line::new_plain(self.g, self.h).length();
+        self.length_ah = Line::new_plain(self.h, self.a).length();
+    }
 }
