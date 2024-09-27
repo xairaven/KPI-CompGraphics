@@ -1,5 +1,4 @@
-use crate::ui::components::canvas;
-use canvas::inverse_coordinates as to_screen;
+use crate::models::point::Point;
 use eframe::epaint::{Color32, Stroke};
 use egui::{Pos2, Shape};
 
@@ -52,10 +51,13 @@ impl Model {
         let shapes: Vec<Shape> = points
             .windows(2)
             .map(|pair| {
+                let first = Point::from_pos2(pair[0]);
+                let second = Point::from_pos2(pair[1]);
+
                 Shape::line(
                     vec![
-                        to_screen(pair[0], canvas_height, px_per_cm),
-                        to_screen(pair[1], canvas_height, px_per_cm),
+                        first.to_screen(canvas_height, px_per_cm),
+                        second.to_screen(canvas_height, px_per_cm),
                     ],
                     self.stroke,
                 )

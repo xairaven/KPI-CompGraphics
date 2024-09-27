@@ -1,4 +1,4 @@
-use crate::ui::components::canvas::inverse_coordinates as to_screen;
+use crate::models::point::Point;
 use eframe::epaint::{Color32, Stroke};
 use egui::{Pos2, Shape};
 
@@ -30,51 +30,78 @@ impl Default for Grid {
 
 impl Grid {
     pub fn shape(&self, canvas_height: f32, px_per_cm: f32) -> Vec<Shape> {
-        let end_axis_x = Pos2::from([
-            self.point_unit_x.x * (self.ticks as f32),
-            self.point_unit_x.y,
-        ]);
-        let end_axis_y = Pos2::from([
-            self.point_unit_y.x,
-            self.point_unit_y.y * (self.ticks as f32),
-        ]);
+        // (x; 0)
+        let axis_x_end = Point {
+            x: self.point_unit_x.x * (self.ticks as f32),
+            y: self.point_unit_x.y,
+        };
 
-        let end_axis_x_to_screen = to_screen(end_axis_x, canvas_height, px_per_cm);
-        let end_axis_y_to_screen = to_screen(end_axis_y, canvas_height, px_per_cm);
-        let point_origin_to_screen = to_screen(self.point_origin, canvas_height, px_per_cm);
+        // (0;y)
+        let axis_y_end = Point {
+            x: self.point_unit_y.x,
+            y: self.point_unit_y.y * (self.ticks as f32),
+        };
+
+        // (0;0)
+        let point_origin = Point {
+            x: self.point_origin.x,
+            y: self.point_origin.y,
+        };
 
         let mut lines: Vec<Shape> = vec![];
 
+        // OY
         for i in 1..=self.ticks {
             let x = self.point_unit_x.x * i as f32;
 
-            let start = to_screen(Pos2::from([x, 0.0]), canvas_height, px_per_cm);
-            let end = to_screen(Pos2::from([x, end_axis_y.y]), canvas_height, px_per_cm);
+            let start = Point { x, y: 0.0 };
+            let end = Point { x, y: axis_y_end.y };
 
-            let shape = Shape::line(Vec::from([start, end]), self.grid_stroke);
+            let shape = Shape::line(
+                vec![
+                    start.to_screen(canvas_height, px_per_cm),
+                    end.to_screen(canvas_height, px_per_cm),
+                ],
+                self.grid_stroke,
+            );
             lines.push(shape);
         }
 
+        // OX
         for i in 1..=self.ticks {
             let y = self.point_unit_y.y * i as f32;
 
-            let start = to_screen(Pos2::from([0.0, y]), canvas_height, px_per_cm);
-            let end = to_screen(Pos2::from([end_axis_x.x, y]), canvas_height, px_per_cm);
+            let start = Point { x: 0.0, y };
+            let end = Point { x: axis_x_end.x, y };
 
-            let shape = Shape::line(Vec::from([start, end]), self.grid_stroke);
+            let shape = Shape::line(
+                vec![
+                    start.to_screen(canvas_height, px_per_cm),
+                    end.to_screen(canvas_height, px_per_cm),
+                ],
+                self.grid_stroke,
+            );
             lines.push(shape);
         }
 
-        // OX + OY
-        lines.push(Shape::line(
-            Vec::from([point_origin_to_screen, end_axis_x_to_screen]),
-            self.axis_stroke,
-        ));
-        lines.push(Shape::line(
-            Vec::from([point_origin_to_screen, end_axis_y_to_screen]),
-            self.axis_stroke,
-        ));
+        // Main Axes
+        let main_axes = vec![
+            Shape::line(
+                vec![
+                    point_origin.to_screen(canvas_height, px_per_cm),
+                    axis_x_end.to_screen(canvas_height, px_per_cm),
+                ],
+                self.axis_stroke,
+            ),
+            Shape::line(
+                vec![
+                    point_origin.to_screen(canvas_height, px_per_cm),
+                    axis_y_end.to_screen(canvas_height, px_per_cm),
+                ],
+                self.axis_stroke,
+            ),
+        ];
 
-        lines
+        [lines, main_axes].concat()
     }
 }

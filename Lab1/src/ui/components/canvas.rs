@@ -1,8 +1,8 @@
 use crate::context::Context;
-use egui::{Color32, Frame, Pos2, Response, Sense};
+use egui::{Color32, Frame, Response, Sense};
 
-const INIT_X: f32 = 50.0;
-const INIT_Y: f32 = 50.0;
+pub const INIT_X: f32 = 50.0;
+pub const INIT_Y: f32 = 50.0;
 
 pub struct Canvas {
     pub px_per_cm: f32,
@@ -36,11 +36,4 @@ impl Canvas {
                 self.draw(ui, context);
             });
     }
-}
-
-pub fn inverse_coordinates(pos: Pos2, max_y: f32, px_per_cm: f32) -> Pos2 {
-    let x = (pos.x / 10.0 * px_per_cm) + INIT_X;
-    let y = max_y - INIT_Y - (pos.y / 10.0 * px_per_cm);
-
-    Pos2::from([x, y])
 }
