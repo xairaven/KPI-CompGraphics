@@ -4,6 +4,7 @@ use crate::utils::egui::label_centered_with_drag;
 use egui::{DragValue, Grid, RichText};
 
 pub const MAX_RESIZING: u32 = 300;
+pub const MAX_ROTATION_DOT_CORDS: u32 = 200;
 
 pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui) {
     egui::ScrollArea::vertical().show(ui, |ui| {
@@ -148,7 +149,7 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                         "X:",
                         &mut context.euclidean.rotation_x,
                         1,
-                        0..=100,
+                        0..=MAX_ROTATION_DOT_CORDS,
                     );
                     ui.end_row();
 
@@ -157,7 +158,7 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                         "Y:",
                         &mut context.euclidean.rotation_y,
                         1,
-                        0..=100,
+                        0..=MAX_ROTATION_DOT_CORDS,
                     );
                     ui.end_row();
 
@@ -166,7 +167,7 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                         "Angle Rotation:",
                         &mut context.euclidean.rotation_angle,
                         1,
-                        0..=100,
+                        0..=360,
                     );
                     ui.end_row();
                 });

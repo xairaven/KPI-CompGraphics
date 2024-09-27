@@ -36,7 +36,7 @@ impl Default for Resize {
 }
 
 impl Resize {
-    pub fn update_sides(&mut self, model: &mut Model) {
+    pub fn update_values(&mut self, model: &mut Model) {
         if self.length_ab != model.length_ab {
             Self::update_points(
                 &mut model.a,

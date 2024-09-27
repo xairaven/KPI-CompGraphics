@@ -21,8 +21,7 @@ impl Canvas {
         let (response, painter) = ui.allocate_painter(painter_size, Sense::hover());
         let canvas_height = response.rect.max.y;
 
-        context.resize.update_sides(&mut context.model);
-
+        // Draw grid
         let grid_shapes: Vec<Shape> = context
             .grid
             .lines()
@@ -31,6 +30,10 @@ impl Canvas {
             .collect();
         painter.extend(grid_shapes);
 
+        // Resizing
+        context.resize.update_values(&mut context.model);
+
+        // Draw model sides
         let model_shapes: Vec<Shape> = context
             .model
             .sides()
@@ -39,6 +42,7 @@ impl Canvas {
             .collect();
         painter.extend(model_shapes);
 
+        // Draw model circles
         let model_circle_shapes: Vec<Shape> = context
             .model
             .circles()
@@ -46,6 +50,12 @@ impl Canvas {
             .map(|line| line.to_screen_shape(canvas_height, self.px_per_cm))
             .collect();
         painter.extend(model_circle_shapes);
+
+        // Euclidean Dot
+        let rotation_dot = context
+            .euclidean
+            .rotation_dot_shape(canvas_height, self.px_per_cm);
+        painter.add(rotation_dot);
 
         response
     }
