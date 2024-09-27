@@ -306,6 +306,8 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
 
 fn set_default_figure(context: &mut Context) {
     // TODO: Set default figure...
+    context.model = Default::default();
+
     context.affine = Default::default();
     context.euclidean = Default::default();
     context.projective = Default::default();

@@ -16,10 +16,12 @@ impl Default for Canvas {
 }
 
 impl Canvas {
-    pub fn draw(&mut self, ui: &mut egui::Ui, context: &Context) -> Response {
+    pub fn draw(&mut self, ui: &mut egui::Ui, context: &mut Context) -> Response {
         let painter_size = ui.available_size_before_wrap();
         let (response, painter) = ui.allocate_painter(painter_size, Sense::hover());
         let canvas_height = response.rect.max.y;
+
+        context.resize.update_sides(&mut context.model);
 
         let grid_shapes: Vec<Shape> = context
             .grid
@@ -40,7 +42,7 @@ impl Canvas {
         response
     }
 
-    pub fn show_content(&mut self, ui: &mut egui::Ui, context: &Context) {
+    pub fn show_content(&mut self, ui: &mut egui::Ui, context: &mut Context) {
         Frame::canvas(ui.style())
             .fill(Color32::from_rgb(255, 255, 255))
             .show(ui, |ui| {

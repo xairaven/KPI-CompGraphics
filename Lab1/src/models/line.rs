@@ -3,15 +3,22 @@ use eframe::epaint::Stroke;
 use egui::Shape;
 
 pub struct Line {
-    start: Point,
-    end: Point,
+    pub start: Point,
+    pub end: Point,
 
-    stroke: Stroke,
+    pub stroke: Stroke,
 }
 
 impl Line {
     pub fn new(start: Point, end: Point, stroke: Stroke) -> Self {
         Self { start, end, stroke }
+    }
+    pub fn new_plain(start: Point, end: Point) -> Self {
+        Self {
+            start,
+            end,
+            stroke: Stroke::default(),
+        }
     }
 
     pub fn to_shape(&self) -> Shape {
@@ -26,5 +33,9 @@ impl Line {
             ],
             self.stroke,
         )
+    }
+
+    pub fn length(&self) -> f32 {
+        f32::sqrt((self.end.x - self.start.x).powf(2.0) + (self.end.y - self.start.y).powf(2.0))
     }
 }

@@ -14,6 +14,6 @@ pub fn show(app: &mut App, ui: &mut egui::Ui, _ctx: &egui::Context) {
         });
 
     CentralPanel::default().show_inside(ui, |ui| {
-        app.canvas.show_content(ui, &app.context);
+        app.canvas.show_content(ui, &mut app.context);
     });
 }
