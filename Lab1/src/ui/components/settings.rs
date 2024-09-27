@@ -264,8 +264,8 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                 .min_col_width(50.0)
                 .num_columns(4)
                 .show(ui, |ui| {
-                    label_centered_with_drag(ui, "X:", &mut context.affine.scaling_x, 1, -10..=10);
-                    label_centered_with_drag(ui, "Y:", &mut context.affine.scaling_y, 1, -10..=10);
+                    label_centered_with_drag(ui, "X:", &mut context.affine.symmetry_x, 1, -10..=10);
+                    label_centered_with_drag(ui, "Y:", &mut context.affine.symmetry_y, 1, -10..=10);
                     ui.end_row();
                 });
 
