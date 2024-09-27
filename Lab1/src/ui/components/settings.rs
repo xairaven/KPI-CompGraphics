@@ -1,5 +1,4 @@
 use crate::context::Context;
-use crate::ui::app_model::App;
 use crate::ui::components::canvas::Canvas;
 use crate::utils::egui::label_centered_with_drag;
 use egui::{DragValue, Grid, RichText};

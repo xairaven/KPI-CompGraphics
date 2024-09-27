@@ -1,4 +1,7 @@
-use egui::Pos2;
+use crate::ui::components::canvas;
+use canvas::inverse_coordinates as to_screen;
+use eframe::epaint::Stroke;
+use egui::{Pos2, Shape};
 
 pub struct Model {
     pub a: Pos2,
@@ -33,5 +36,72 @@ impl Default for Model {
             j: Pos2::from([20.0, 110.0]),
             j_radius: 7.5,
         }
+    }
+}
+
+impl Model {
+    pub fn shape(&self, canvas_height: f32, px_per_cm: f32, stroke: Stroke) -> Vec<Shape> {
+        let ch = canvas_height;
+
+        let shapes = vec![
+            Shape::line(
+                vec![
+                    to_screen(self.a, ch, px_per_cm),
+                    to_screen(self.b, ch, px_per_cm),
+                ],
+                stroke,
+            ),
+            Shape::line(
+                vec![
+                    to_screen(self.b, ch, px_per_cm),
+                    to_screen(self.c, ch, px_per_cm),
+                ],
+                stroke,
+            ),
+            Shape::line(
+                vec![
+                    to_screen(self.c, ch, px_per_cm),
+                    to_screen(self.d, ch, px_per_cm),
+                ],
+                stroke,
+            ),
+            Shape::line(
+                vec![
+                    to_screen(self.d, ch, px_per_cm),
+                    to_screen(self.e, ch, px_per_cm),
+                ],
+                stroke,
+            ),
+            Shape::line(
+                vec![
+                    to_screen(self.e, ch, px_per_cm),
+                    to_screen(self.f, ch, px_per_cm),
+                ],
+                stroke,
+            ),
+            Shape::line(
+                vec![
+                    to_screen(self.f, ch, px_per_cm),
+                    to_screen(self.g, ch, px_per_cm),
+                ],
+                stroke,
+            ),
+            Shape::line(
+                vec![
+                    to_screen(self.g, ch, px_per_cm),
+                    to_screen(self.h, ch, px_per_cm),
+                ],
+                stroke,
+            ),
+            Shape::line(
+                vec![
+                    to_screen(self.h, ch, px_per_cm),
+                    to_screen(self.a, ch, px_per_cm),
+                ],
+                stroke,
+            ),
+        ];
+
+        shapes
     }
 }

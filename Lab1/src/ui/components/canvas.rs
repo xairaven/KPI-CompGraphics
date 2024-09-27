@@ -1,5 +1,8 @@
 use crate::context::Context;
-use egui::{emath, vec2, Color32, Frame, Pos2, Rect, Response, Sense, Stroke, Vec2};
+use egui::{Color32, Frame, Pos2, Response, Sense, Stroke};
+
+const INIT_X: f32 = 50.0;
+const INIT_Y: f32 = 100.0;
 
 pub struct Canvas {
     pub lines: Vec<Vec<Pos2>>,
@@ -14,7 +17,7 @@ impl Default for Canvas {
     fn default() -> Self {
         Self {
             lines: Default::default(),
-            px_per_cm: 35.0,
+            px_per_cm: 1.0,
 
             axis_stroke: Stroke::new(1.8, Color32::from_rgb(0, 0, 0)),
             grid_stroke: Stroke::new(0.8, Color32::from_rgb(150, 150, 150)),
@@ -29,15 +32,10 @@ impl Canvas {
         let (response, painter) = ui.allocate_painter(painter_size, Sense::hover());
         let canvas_height = response.rect.max.y;
 
-        let positions: [Pos2; 2] = [Pos2::from([0.0, 0.0]), Pos2::from([100.0, 100.0])];
-
-        let transformed_points: Vec<Pos2> = positions
-            .into_iter()
-            .map(|p| Self::inverse(p, canvas_height))
-            .collect();
-        let lines = vec![egui::Shape::line(transformed_points, self.model_stroke)];
-
-        painter.extend(lines);
+        let shapes = context
+            .model
+            .shape(canvas_height, self.px_per_cm, self.model_stroke);
+        painter.extend(shapes);
 
         response
     }
@@ -49,11 +47,12 @@ impl Canvas {
                 self.draw(ui, context);
             });
     }
+}
 
-    fn inverse(pos: Pos2, max_y: f32) -> Pos2 {
-        let init_x: f32 = 50.0;
-        let init_y: f32 = 100.0;
+pub fn inverse_coordinates(pos: Pos2, max_y: f32, px_per_cm: f32) -> Pos2 {
+    let x = (pos.x * px_per_cm) + INIT_X;
+    let y = max_y - INIT_Y - (pos.y * px_per_cm);
+    log::info!("{}", format!("x: {x}, y: {y}"));
 
-        Pos2::from([pos.x + init_x, max_y - pos.y - init_y])
-    }
+    Pos2::from([x, y])
 }
