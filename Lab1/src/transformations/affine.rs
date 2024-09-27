@@ -9,4 +9,7 @@ pub struct Affine {
 
     pub scaling_x: f32,
     pub scaling_y: f32,
+
+    pub symmetry_x: f32,
+    pub symmetry_y: f32,
 }

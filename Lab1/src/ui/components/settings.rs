@@ -239,6 +239,33 @@ pub fn show_panel(app: &mut AppModel, ui: &mut egui::Ui) {
 
         ui.add_space(10.0);
 
+        ui.group(|ui| {
+            ui.vertical_centered(|ui| {
+                ui.label("Point symmetry");
+            });
+
+            ui.add_space(5.0);
+
+            Grid::new("PointSymmetryTransformationsGrid")
+                .min_col_width(50.0)
+                .num_columns(4)
+                .show(ui, |ui| {
+                    label_centered_with_drag(ui, "X:", &mut app.affine.scaling_x, 1, -10..=10);
+                    label_centered_with_drag(ui, "Y:", &mut app.affine.scaling_y, 1, -10..=10);
+                    ui.end_row();
+                });
+
+            ui.add_space(10.0);
+
+            ui.vertical_centered(|ui| {
+                if ui.button("\t\tApply\t\t").clicked() {
+                    // TODO: POINT SYMMETRY APPLY
+                }
+            });
+        });
+
+        ui.add_space(10.0);
+
         ui.vertical_centered(|ui| {
             ui.label(RichText::new("Projective Transformations").strong());
         });
