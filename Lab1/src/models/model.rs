@@ -43,64 +43,22 @@ impl Model {
     pub fn shape(&self, canvas_height: f32, px_per_cm: f32, stroke: Stroke) -> Vec<Shape> {
         let ch = canvas_height;
 
-        let shapes = vec![
-            Shape::line(
-                vec![
-                    to_screen(self.a, ch, px_per_cm),
-                    to_screen(self.b, ch, px_per_cm),
-                ],
-                stroke,
-            ),
-            Shape::line(
-                vec![
-                    to_screen(self.b, ch, px_per_cm),
-                    to_screen(self.c, ch, px_per_cm),
-                ],
-                stroke,
-            ),
-            Shape::line(
-                vec![
-                    to_screen(self.c, ch, px_per_cm),
-                    to_screen(self.d, ch, px_per_cm),
-                ],
-                stroke,
-            ),
-            Shape::line(
-                vec![
-                    to_screen(self.d, ch, px_per_cm),
-                    to_screen(self.e, ch, px_per_cm),
-                ],
-                stroke,
-            ),
-            Shape::line(
-                vec![
-                    to_screen(self.e, ch, px_per_cm),
-                    to_screen(self.f, ch, px_per_cm),
-                ],
-                stroke,
-            ),
-            Shape::line(
-                vec![
-                    to_screen(self.f, ch, px_per_cm),
-                    to_screen(self.g, ch, px_per_cm),
-                ],
-                stroke,
-            ),
-            Shape::line(
-                vec![
-                    to_screen(self.g, ch, px_per_cm),
-                    to_screen(self.h, ch, px_per_cm),
-                ],
-                stroke,
-            ),
-            Shape::line(
-                vec![
-                    to_screen(self.h, ch, px_per_cm),
-                    to_screen(self.a, ch, px_per_cm),
-                ],
-                stroke,
-            ),
+        let points = [
+            self.a, self.b, self.c, self.d, self.e, self.f, self.g, self.h, self.a,
         ];
+
+        let shapes: Vec<Shape> = points
+            .windows(2)
+            .map(|pair| {
+                Shape::line(
+                    vec![
+                        to_screen(pair[0], ch, px_per_cm),
+                        to_screen(pair[1], ch, px_per_cm),
+                    ],
+                    stroke,
+                )
+            })
+            .collect();
 
         shapes
     }
