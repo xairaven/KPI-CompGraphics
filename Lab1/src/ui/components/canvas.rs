@@ -17,19 +17,7 @@ impl Default for Canvas {
 }
 
 impl Canvas {
-    pub fn ui_control(&mut self, ui: &mut egui::Ui) -> egui::Response {
-        ui.horizontal(|ui| {
-            ui.label("Stroke:");
-            ui.add(&mut self.stroke);
-            ui.separator();
-            if ui.button("Clear Painting").clicked() {
-                self.lines.clear();
-            }
-        })
-        .response
-    }
-
-    pub fn ui_content(&mut self, ui: &mut egui::Ui) -> egui::Response {
+    pub fn show_content(&mut self, ui: &mut egui::Ui) -> egui::Response {
         let size = ui.available_size_before_wrap();
 
         let (mut response, painter) = ui.allocate_painter(size, Sense::drag());
@@ -83,13 +71,11 @@ impl Canvas {
         response
     }
 
-    pub fn show(&mut self, ui: &mut egui::Ui) {
-        self.ui_control(ui);
-        ui.label("Paint with your mouse/touch!");
+    pub fn update(&mut self, ui: &mut egui::Ui) {
         Frame::canvas(ui.style())
             .fill(Color32::from_rgb(255, 255, 255))
             .show(ui, |ui| {
-                self.ui_content(ui);
+                self.show_content(ui);
             });
     }
 }
