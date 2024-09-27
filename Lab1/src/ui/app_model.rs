@@ -1,23 +1,14 @@
-use crate::models::grid::Grid;
-use crate::transformations::affine::Affine;
-use crate::transformations::euclidean::Euclidean;
-use crate::transformations::projective::Projective;
-use crate::transformations::resize::Resize;
+use crate::context::Context;
 use crate::ui::components::canvas::Canvas;
 use crate::ui::windows::main_window;
 
 #[derive(Default)]
-pub struct AppModel {
+pub struct App {
     pub canvas: Canvas,
-    pub grid: Grid,
-
-    pub affine: Affine,
-    pub euclidean: Euclidean,
-    pub projective: Projective,
-    pub resize: Resize,
+    pub context: Context,
 }
 
-impl AppModel {
+impl App {
     pub fn new(_cc: &eframe::CreationContext<'_>) -> Self {
         // This is also where you can customize the look and feel of egui using
         // `cc.egui_ctx.set_visuals` and `cc.egui_ctx.set_fonts`.
@@ -26,7 +17,7 @@ impl AppModel {
     }
 }
 
-impl eframe::App for AppModel {
+impl eframe::App for App {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
             main_window::show(self, ui, ctx);

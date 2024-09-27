@@ -1,9 +1,11 @@
 use crate::config::AppConfig;
 
 pub mod config;
+pub mod context;
 pub mod error;
 pub mod logger;
 pub mod models;
+
 pub mod transformations {
     pub mod affine;
     pub mod euclidean;

@@ -1,9 +1,13 @@
-use egui::{emath, Color32, Frame, Pos2, Rect, Sense, Stroke};
+use crate::context::Context;
+use egui::{emath, vec2, Color32, Frame, Pos2, Rect, Response, Sense, Stroke, Vec2};
 
 pub struct Canvas {
     pub lines: Vec<Vec<Pos2>>,
     pub px_per_cm: f32,
-    pub stroke: Stroke,
+
+    pub axis_stroke: Stroke,
+    pub grid_stroke: Stroke,
+    pub model_stroke: Stroke,
 }
 
 impl Default for Canvas {
@@ -11,71 +15,45 @@ impl Default for Canvas {
         Self {
             lines: Default::default(),
             px_per_cm: 35.0,
-            stroke: Stroke::new(1.0, Color32::from_rgb(25, 200, 100)),
+
+            axis_stroke: Stroke::new(1.8, Color32::from_rgb(0, 0, 0)),
+            grid_stroke: Stroke::new(0.8, Color32::from_rgb(150, 150, 150)),
+            model_stroke: Stroke::new(2.0, Color32::from_rgb(0, 0, 0)),
         }
     }
 }
 
 impl Canvas {
-    pub fn show_content(&mut self, ui: &mut egui::Ui) -> egui::Response {
-        let size = ui.available_size_before_wrap();
+    pub fn draw(&mut self, ui: &mut egui::Ui, context: &Context) -> Response {
+        let painter_size = ui.available_size_before_wrap();
+        let (response, painter) = ui.allocate_painter(painter_size, Sense::hover());
+        let canvas_height = response.rect.max.y;
 
-        let (mut response, painter) = ui.allocate_painter(size, Sense::drag());
+        let positions: [Pos2; 2] = [Pos2::from([0.0, 0.0]), Pos2::from([100.0, 100.0])];
 
-        let to_screen = emath::RectTransform::from_to(
-            Rect::from_min_size(Pos2::ZERO, response.rect.square_proportions()),
-            response.rect,
-        );
-        let from_screen = to_screen.inverse();
+        let transformed_points: Vec<Pos2> = positions
+            .into_iter()
+            .map(|p| Self::inverse(p, canvas_height))
+            .collect();
+        let lines = vec![egui::Shape::line(transformed_points, self.model_stroke)];
 
-        if self.lines.is_empty() {
-            self.lines.push(vec![]);
-        }
-
-        let current_line = self.lines.last_mut().unwrap();
-
-        if let Some(pointer_pos) = response.interact_pointer_pos() {
-            let canvas_pos = from_screen * pointer_pos;
-            if current_line.last() != Some(&canvas_pos) {
-                current_line.push(canvas_pos);
-                response.mark_changed();
-            }
-        } else if !current_line.is_empty() {
-            self.lines.push(vec![]);
-            response.mark_changed();
-        }
-
-        let shapes = self
-            .lines
-            .iter()
-            .filter(|line| line.len() >= 2)
-            .map(|line| {
-                let points: Vec<Pos2> = line.iter().map(|p| to_screen * *p).collect();
-                egui::Shape::line(points, self.stroke)
-            });
-
-        painter.extend(shapes);
-
-        // let size = Vec2::splat(16.0);
-        // let (response, painter) = ui.allocate_painter(size, Sense::hover());
-        // let rect = response.rect;
-        // let c = rect.center();
-        // let r = rect.width() / 2.0 - 1.0;
-        // let color = Color32::from_gray(128);
-        // let stroke = Stroke::new(1.0, color);
-        // painter.circle_stroke(c, r, stroke);
-        // painter.line_segment([c - vec2(0.0, r), c + vec2(0.0, r)], stroke);
-        // painter.line_segment([c, c + r * Vec2::angled(TAU * 1.0 / 8.0)], stroke);
-        // painter.line_segment([c, c + r * Vec2::angled(TAU * 3.0 / 8.0)], stroke);
+        painter.extend(lines);
 
         response
     }
 
-    pub fn update(&mut self, ui: &mut egui::Ui) {
+    pub fn show_content(&mut self, ui: &mut egui::Ui, context: &Context) {
         Frame::canvas(ui.style())
             .fill(Color32::from_rgb(255, 255, 255))
             .show(ui, |ui| {
-                self.show_content(ui);
+                self.draw(ui, context);
             });
+    }
+
+    fn inverse(pos: Pos2, max_y: f32) -> Pos2 {
+        let init_x: f32 = 50.0;
+        let init_y: f32 = 100.0;
+
+        Pos2::from([pos.x + init_x, max_y - pos.y - init_y])
     }
 }

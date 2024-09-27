@@ -1,10 +1,12 @@
-use crate::ui::app_model::AppModel;
+use crate::context::Context;
+use crate::ui::app_model::App;
+use crate::ui::components::canvas::Canvas;
 use crate::utils::egui::label_centered_with_drag;
 use egui::{DragValue, Grid, RichText};
 
 pub const MAX_RESIZING: u32 = 300;
 
-pub fn show_panel(app: &mut AppModel, ui: &mut egui::Ui) {
+pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui) {
     egui::ScrollArea::vertical().show(ui, |ui| {
         ui.vertical_centered(|ui| {
             ui.heading("Settings");
@@ -15,7 +17,7 @@ pub fn show_panel(app: &mut AppModel, ui: &mut egui::Ui) {
         ui.horizontal(|ui| {
             ui.label("Pixels per Centimeter:");
             ui.add(
-                DragValue::new(&mut app.canvas.px_per_cm)
+                DragValue::new(&mut canvas.px_per_cm)
                     .speed(1)
                     .range(1..=100),
             );
@@ -25,7 +27,7 @@ pub fn show_panel(app: &mut AppModel, ui: &mut egui::Ui) {
 
         ui.vertical_centered(|ui| {
             if ui.button("Set Default Figure").clicked() {
-                set_default_figure(app);
+                set_default_figure(context);
             }
         });
 
@@ -46,14 +48,14 @@ pub fn show_panel(app: &mut AppModel, ui: &mut egui::Ui) {
                     label_centered_with_drag(
                         ui,
                         "AB",
-                        &mut app.resize.length_ab,
+                        &mut context.resize.length_ab,
                         1,
                         1..=MAX_RESIZING,
                     );
                     label_centered_with_drag(
                         ui,
                         "BC",
-                        &mut app.resize.length_bc,
+                        &mut context.resize.length_bc,
                         1,
                         1..=MAX_RESIZING,
                     );
@@ -62,14 +64,14 @@ pub fn show_panel(app: &mut AppModel, ui: &mut egui::Ui) {
                     label_centered_with_drag(
                         ui,
                         "CD",
-                        &mut app.resize.length_cd,
+                        &mut context.resize.length_cd,
                         1,
                         1..=MAX_RESIZING,
                     );
                     label_centered_with_drag(
                         ui,
                         "DE",
-                        &mut app.resize.length_de,
+                        &mut context.resize.length_de,
                         1,
                         1..=MAX_RESIZING,
                     );
@@ -78,14 +80,14 @@ pub fn show_panel(app: &mut AppModel, ui: &mut egui::Ui) {
                     label_centered_with_drag(
                         ui,
                         "EF",
-                        &mut app.resize.length_ef,
+                        &mut context.resize.length_ef,
                         1,
                         1..=MAX_RESIZING,
                     );
                     label_centered_with_drag(
                         ui,
                         "FG",
-                        &mut app.resize.length_fg,
+                        &mut context.resize.length_fg,
                         1,
                         1..=MAX_RESIZING,
                     );
@@ -94,14 +96,14 @@ pub fn show_panel(app: &mut AppModel, ui: &mut egui::Ui) {
                     label_centered_with_drag(
                         ui,
                         "GH",
-                        &mut app.resize.length_gh,
+                        &mut context.resize.length_gh,
                         1,
                         1..=MAX_RESIZING,
                     );
                     label_centered_with_drag(
                         ui,
                         "AH",
-                        &mut app.resize.length_ah,
+                        &mut context.resize.length_ah,
                         1,
                         1..=MAX_RESIZING,
                     );
@@ -121,8 +123,8 @@ pub fn show_panel(app: &mut AppModel, ui: &mut egui::Ui) {
                 .min_col_width(50.0)
                 .num_columns(4)
                 .show(ui, |ui| {
-                    label_centered_with_drag(ui, "I:", &mut app.resize.radius_i, 1, 1..=100);
-                    label_centered_with_drag(ui, "J:", &mut app.resize.radius_j, 1, 1..=100);
+                    label_centered_with_drag(ui, "I:", &mut context.resize.radius_i, 1, 1..=100);
+                    label_centered_with_drag(ui, "J:", &mut context.resize.radius_j, 1, 1..=100);
                     ui.end_row();
                 });
         });
@@ -146,16 +148,28 @@ pub fn show_panel(app: &mut AppModel, ui: &mut egui::Ui) {
                 .striped(true)
                 .min_col_width(125.0)
                 .show(ui, |ui| {
-                    label_centered_with_drag(ui, "X:", &mut app.euclidean.rotation_x, 1, 0..=100);
+                    label_centered_with_drag(
+                        ui,
+                        "X:",
+                        &mut context.euclidean.rotation_x,
+                        1,
+                        0..=100,
+                    );
                     ui.end_row();
 
-                    label_centered_with_drag(ui, "Y:", &mut app.euclidean.rotation_y, 1, 0..=100);
+                    label_centered_with_drag(
+                        ui,
+                        "Y:",
+                        &mut context.euclidean.rotation_y,
+                        1,
+                        0..=100,
+                    );
                     ui.end_row();
 
                     label_centered_with_drag(
                         ui,
                         "Angle Rotation:",
-                        &mut app.euclidean.rotation_angle,
+                        &mut context.euclidean.rotation_angle,
                         1,
                         0..=100,
                     );
@@ -176,9 +190,9 @@ pub fn show_panel(app: &mut AppModel, ui: &mut egui::Ui) {
                 .striped(true)
                 .min_col_width(50.0)
                 .show(ui, |ui| {
-                    label_centered_with_drag(ui, "X:", &mut app.euclidean.offset_x, 1, 0..=100);
+                    label_centered_with_drag(ui, "X:", &mut context.euclidean.offset_x, 1, 0..=100);
 
-                    label_centered_with_drag(ui, "Y:", &mut app.euclidean.offset_y, 1, 0..=100);
+                    label_centered_with_drag(ui, "Y:", &mut context.euclidean.offset_y, 1, 0..=100);
                     ui.end_row();
                 });
 
@@ -204,16 +218,16 @@ pub fn show_panel(app: &mut AppModel, ui: &mut egui::Ui) {
                 .striped(true)
                 .num_columns(4)
                 .show(ui, |ui| {
-                    label_centered_with_drag(ui, "Xx", &mut app.affine.xx, 1, 0..=100);
-                    label_centered_with_drag(ui, "Xy", &mut app.affine.xy, 1, 0..=100);
+                    label_centered_with_drag(ui, "Xx", &mut context.affine.xx, 1, 0..=100);
+                    label_centered_with_drag(ui, "Xy", &mut context.affine.xy, 1, 0..=100);
                     ui.end_row();
 
-                    label_centered_with_drag(ui, "Yx", &mut app.affine.yx, 1, 0..=100);
-                    label_centered_with_drag(ui, "Yy", &mut app.affine.yy, 1, 0..=100);
+                    label_centered_with_drag(ui, "Yx", &mut context.affine.yx, 1, 0..=100);
+                    label_centered_with_drag(ui, "Yy", &mut context.affine.yy, 1, 0..=100);
                     ui.end_row();
 
-                    label_centered_with_drag(ui, "0x", &mut app.affine.zero_x, 1, 0..=100);
-                    label_centered_with_drag(ui, "0y", &mut app.affine.zero_y, 1, 0..=100);
+                    label_centered_with_drag(ui, "0x", &mut context.affine.zero_x, 1, 0..=100);
+                    label_centered_with_drag(ui, "0y", &mut context.affine.zero_y, 1, 0..=100);
                     ui.end_row();
                 });
         });
@@ -231,8 +245,8 @@ pub fn show_panel(app: &mut AppModel, ui: &mut egui::Ui) {
                 .min_col_width(50.0)
                 .num_columns(4)
                 .show(ui, |ui| {
-                    label_centered_with_drag(ui, "Mx:", &mut app.affine.scaling_x, 1, -10..=10);
-                    label_centered_with_drag(ui, "My:", &mut app.affine.scaling_y, 1, -10..=10);
+                    label_centered_with_drag(ui, "Mx:", &mut context.affine.scaling_x, 1, -10..=10);
+                    label_centered_with_drag(ui, "My:", &mut context.affine.scaling_y, 1, -10..=10);
                     ui.end_row();
                 });
         });
@@ -250,8 +264,8 @@ pub fn show_panel(app: &mut AppModel, ui: &mut egui::Ui) {
                 .min_col_width(50.0)
                 .num_columns(4)
                 .show(ui, |ui| {
-                    label_centered_with_drag(ui, "X:", &mut app.affine.scaling_x, 1, -10..=10);
-                    label_centered_with_drag(ui, "Y:", &mut app.affine.scaling_y, 1, -10..=10);
+                    label_centered_with_drag(ui, "X:", &mut context.affine.scaling_x, 1, -10..=10);
+                    label_centered_with_drag(ui, "Y:", &mut context.affine.scaling_y, 1, -10..=10);
                     ui.end_row();
                 });
 
@@ -276,29 +290,29 @@ pub fn show_panel(app: &mut AppModel, ui: &mut egui::Ui) {
                 .striped(true)
                 .num_columns(6)
                 .show(ui, |ui| {
-                    label_centered_with_drag(ui, "Xx", &mut app.projective.xx, 1, 0..=100);
-                    label_centered_with_drag(ui, "Xy", &mut app.projective.xy, 1, 0..=100);
-                    label_centered_with_drag(ui, "wX", &mut app.projective.wx, 1, 0..=100);
+                    label_centered_with_drag(ui, "Xx", &mut context.projective.xx, 1, 0..=100);
+                    label_centered_with_drag(ui, "Xy", &mut context.projective.xy, 1, 0..=100);
+                    label_centered_with_drag(ui, "wX", &mut context.projective.wx, 1, 0..=100);
                     ui.end_row();
 
-                    label_centered_with_drag(ui, "Yx", &mut app.projective.yx, 1, 0..=100);
-                    label_centered_with_drag(ui, "Yy", &mut app.projective.yy, 1, 0..=100);
-                    label_centered_with_drag(ui, "wY", &mut app.projective.wy, 1, 0..=100);
+                    label_centered_with_drag(ui, "Yx", &mut context.projective.yx, 1, 0..=100);
+                    label_centered_with_drag(ui, "Yy", &mut context.projective.yy, 1, 0..=100);
+                    label_centered_with_drag(ui, "wY", &mut context.projective.wy, 1, 0..=100);
                     ui.end_row();
 
-                    label_centered_with_drag(ui, "0x", &mut app.projective.zero_x, 1, 0..=100);
-                    label_centered_with_drag(ui, "0y", &mut app.projective.zero_y, 1, 0..=100);
-                    label_centered_with_drag(ui, "w0", &mut app.projective.w_zero, 1, 0..=100);
+                    label_centered_with_drag(ui, "0x", &mut context.projective.zero_x, 1, 0..=100);
+                    label_centered_with_drag(ui, "0y", &mut context.projective.zero_y, 1, 0..=100);
+                    label_centered_with_drag(ui, "w0", &mut context.projective.w_zero, 1, 0..=100);
                     ui.end_row();
                 });
         });
     });
 }
 
-fn set_default_figure(app: &mut AppModel) {
+fn set_default_figure(context: &mut Context) {
     // TODO: Set default figure...
-    app.affine = Default::default();
-    app.euclidean = Default::default();
-    app.projective = Default::default();
-    app.resize = Default::default();
+    context.affine = Default::default();
+    context.euclidean = Default::default();
+    context.projective = Default::default();
+    context.resize = Default::default();
 }
