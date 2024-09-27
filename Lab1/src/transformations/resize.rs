@@ -108,6 +108,13 @@ impl Resize {
             );
             self.sync_lengths(model);
         }
+
+        if self.radius_i != model.i_radius {
+            model.i_radius = self.radius_i;
+        }
+        if self.radius_j != model.j_radius {
+            model.j_radius = self.radius_j;
+        }
     }
 
     fn update_points(
