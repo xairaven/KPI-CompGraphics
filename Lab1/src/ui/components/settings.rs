@@ -15,11 +15,7 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
 
         ui.horizontal(|ui| {
             ui.label("Pixels per Centimeter:");
-            ui.add(
-                DragValue::new(&mut canvas.px_per_cm)
-                    .speed(1)
-                    .range(1..=100),
-            );
+            ui.add(DragValue::new(&mut canvas.px_per_cm).speed(1).range(1..=60));
         });
 
         ui.add_space(10.0);

@@ -17,7 +17,7 @@ impl Default for Canvas {
     fn default() -> Self {
         Self {
             lines: Default::default(),
-            px_per_cm: 1.0,
+            px_per_cm: 15.0,
 
             axis_stroke: Stroke::new(1.8, Color32::from_rgb(0, 0, 0)),
             grid_stroke: Stroke::new(0.8, Color32::from_rgb(150, 150, 150)),
@@ -50,9 +50,8 @@ impl Canvas {
 }
 
 pub fn inverse_coordinates(pos: Pos2, max_y: f32, px_per_cm: f32) -> Pos2 {
-    let x = (pos.x * px_per_cm) + INIT_X;
-    let y = max_y - INIT_Y - (pos.y * px_per_cm);
-    log::info!("{}", format!("x: {x}, y: {y}"));
+    let x = (pos.x / 10.0 * px_per_cm) + INIT_X;
+    let y = max_y - INIT_Y - (pos.y / 10.0 * px_per_cm);
 
     Pos2::from([x, y])
 }
