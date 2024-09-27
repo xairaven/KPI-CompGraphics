@@ -6,4 +6,7 @@ pub struct Affine {
     pub yy: f32,
     pub zero_x: f32,
     pub zero_y: f32,
+
+    pub scaling_x: f32,
+    pub scaling_y: f32,
 }
