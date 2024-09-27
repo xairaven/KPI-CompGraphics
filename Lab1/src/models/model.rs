@@ -1,6 +1,7 @@
+use crate::models::line::Line;
 use crate::models::point::Point;
 use eframe::epaint::{Color32, Stroke};
-use egui::{Pos2, Shape};
+use egui::Pos2;
 
 pub struct Model {
     pub a: Pos2,
@@ -43,27 +44,21 @@ impl Default for Model {
 }
 
 impl Model {
-    pub fn shape(&self, canvas_height: f32, px_per_cm: f32) -> Vec<Shape> {
+    pub fn lines(&self) -> Vec<Line> {
         let points = [
             self.a, self.b, self.c, self.d, self.e, self.f, self.g, self.h, self.a,
         ];
 
-        let shapes: Vec<Shape> = points
+        let lines: Vec<Line> = points
             .windows(2)
             .map(|pair| {
                 let first = Point::from_pos2(pair[0]);
                 let second = Point::from_pos2(pair[1]);
 
-                Shape::line(
-                    vec![
-                        first.to_screen(canvas_height, px_per_cm),
-                        second.to_screen(canvas_height, px_per_cm),
-                    ],
-                    self.stroke,
-                )
+                Line::new(first, second, self.stroke)
             })
             .collect();
 
-        shapes
+        lines
     }
 }

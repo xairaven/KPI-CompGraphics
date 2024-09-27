@@ -1,4 +1,5 @@
 use crate::context::Context;
+use eframe::epaint::Shape;
 use egui::{Color32, Frame, Response, Sense};
 
 pub const INIT_X: f32 = 50.0;
@@ -20,10 +21,20 @@ impl Canvas {
         let (response, painter) = ui.allocate_painter(painter_size, Sense::hover());
         let canvas_height = response.rect.max.y;
 
-        let grid_shapes = context.grid.shape(canvas_height, self.px_per_cm);
+        let grid_shapes: Vec<Shape> = context
+            .grid
+            .lines()
+            .iter()
+            .map(|line| line.to_screen_shape(canvas_height, self.px_per_cm))
+            .collect();
         painter.extend(grid_shapes);
 
-        let model_shapes = context.model.shape(canvas_height, self.px_per_cm);
+        let model_shapes: Vec<Shape> = context
+            .model
+            .lines()
+            .iter()
+            .map(|line| line.to_screen_shape(canvas_height, self.px_per_cm))
+            .collect();
         painter.extend(model_shapes);
 
         response

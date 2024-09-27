@@ -1,6 +1,7 @@
+use crate::models::line::Line;
 use crate::models::point::Point;
 use eframe::epaint::{Color32, Stroke};
-use egui::{Pos2, Shape};
+use egui::Pos2;
 
 pub struct Grid {
     pub ticks: u32,
@@ -29,7 +30,7 @@ impl Default for Grid {
 }
 
 impl Grid {
-    pub fn shape(&self, canvas_height: f32, px_per_cm: f32) -> Vec<Shape> {
+    pub fn lines(&self) -> Vec<Line> {
         // (x; 0)
         let axis_x_end = Point {
             x: self.point_unit_x.x * (self.ticks as f32),
@@ -48,7 +49,7 @@ impl Grid {
             y: self.point_origin.y,
         };
 
-        let mut lines: Vec<Shape> = vec![];
+        let mut lines: Vec<Line> = vec![];
 
         // OY
         for i in 1..=self.ticks {
@@ -57,14 +58,7 @@ impl Grid {
             let start = Point { x, y: 0.0 };
             let end = Point { x, y: axis_y_end.y };
 
-            let shape = Shape::line(
-                vec![
-                    start.to_screen(canvas_height, px_per_cm),
-                    end.to_screen(canvas_height, px_per_cm),
-                ],
-                self.grid_stroke,
-            );
-            lines.push(shape);
+            lines.push(Line::new(start, end, self.grid_stroke));
         }
 
         // OX
@@ -74,34 +68,13 @@ impl Grid {
             let start = Point { x: 0.0, y };
             let end = Point { x: axis_x_end.x, y };
 
-            let shape = Shape::line(
-                vec![
-                    start.to_screen(canvas_height, px_per_cm),
-                    end.to_screen(canvas_height, px_per_cm),
-                ],
-                self.grid_stroke,
-            );
-            lines.push(shape);
+            lines.push(Line::new(start, end, self.grid_stroke));
         }
 
         // Main Axes
-        let main_axes = vec![
-            Shape::line(
-                vec![
-                    point_origin.to_screen(canvas_height, px_per_cm),
-                    axis_x_end.to_screen(canvas_height, px_per_cm),
-                ],
-                self.axis_stroke,
-            ),
-            Shape::line(
-                vec![
-                    point_origin.to_screen(canvas_height, px_per_cm),
-                    axis_y_end.to_screen(canvas_height, px_per_cm),
-                ],
-                self.axis_stroke,
-            ),
-        ];
+        lines.push(Line::new(point_origin, axis_x_end, self.axis_stroke));
+        lines.push(Line::new(point_origin, axis_y_end, self.axis_stroke));
 
-        [lines, main_axes].concat()
+        lines
     }
 }

@@ -1,7 +1,7 @@
 use crate::ui::components::canvas;
 use egui::Pos2;
 
-#[derive(Default)]
+#[derive(Default, Clone, Copy)]
 pub struct Point {
     pub x: f32,
     pub y: f32,
