@@ -33,11 +33,19 @@ impl Canvas {
 
         let model_shapes: Vec<Shape> = context
             .model
-            .lines()
+            .sides()
             .iter()
             .map(|line| line.to_screen_shape(canvas_height, self.px_per_cm))
             .collect();
         painter.extend(model_shapes);
+
+        let model_circle_shapes: Vec<Shape> = context
+            .model
+            .circles()
+            .iter()
+            .map(|line| line.to_screen_shape(canvas_height, self.px_per_cm))
+            .collect();
+        painter.extend(model_circle_shapes);
 
         response
     }

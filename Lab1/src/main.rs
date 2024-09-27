@@ -4,6 +4,9 @@ pub mod config;
 pub mod context;
 pub mod error;
 pub mod logger;
+pub mod math {
+    pub mod angle;
+}
 pub mod models;
 
 pub mod transformations {

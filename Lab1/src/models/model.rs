@@ -1,3 +1,4 @@
+use crate::math::angle::Angle;
 use crate::models::line::Line;
 use crate::models::point::Point;
 use eframe::epaint::{Color32, Stroke};
@@ -60,7 +61,7 @@ impl Default for Model {
 }
 
 impl Model {
-    pub fn lines(&self) -> Vec<Line> {
+    pub fn sides(&self) -> Vec<Line> {
         let points = [
             self.a, self.b, self.c, self.d, self.e, self.f, self.g, self.h, self.a,
         ];
@@ -69,6 +70,37 @@ impl Model {
             .windows(2)
             .map(|pair| Line::new(pair[0], pair[1], self.stroke))
             .collect();
+
+        lines
+    }
+
+    pub fn circles(&self) -> Vec<Line> {
+        let mut circles = self.circle(self.i, self.i_radius);
+        let mut another_circle = self.circle(self.j, self.j_radius);
+
+        circles.append(&mut another_circle);
+        circles
+    }
+
+    fn circle(&self, center: Point, radius: f32) -> Vec<Line> {
+        let mut lines: Vec<Line> = Vec::with_capacity(360);
+
+        for degree in 0..360 {
+            let current_rad = Angle::from_degree(degree as f32).radian();
+            let next_rad = Angle::from_degree((degree + 1) as f32).radian();
+
+            let start = Point {
+                x: radius * f32::cos(current_rad) + center.x,
+                y: radius * f32::sin(current_rad) + center.y,
+            };
+
+            let end = Point {
+                x: radius * f32::cos(next_rad) + center.x,
+                y: radius * f32::sin(next_rad) + center.y,
+            };
+
+            lines.push(Line::new(start, end, self.stroke));
+        }
 
         lines
     }
