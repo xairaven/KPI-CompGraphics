@@ -1,6 +1,6 @@
 use crate::ui::components::canvas;
 use canvas::inverse_coordinates as to_screen;
-use eframe::epaint::Stroke;
+use eframe::epaint::{Color32, Stroke};
 use egui::{Pos2, Shape};
 
 pub struct Model {
@@ -17,6 +17,8 @@ pub struct Model {
     pub j: Pos2,
     pub i_radius: f32,
     pub j_radius: f32,
+
+    pub stroke: Stroke,
 }
 
 impl Default for Model {
@@ -35,14 +37,14 @@ impl Default for Model {
             i_radius: 7.5,
             j: Pos2::from([20.0, 110.0]),
             j_radius: 7.5,
+
+            stroke: Stroke::new(2.0, Color32::from_rgb(0, 0, 0)),
         }
     }
 }
 
 impl Model {
-    pub fn shape(&self, canvas_height: f32, px_per_cm: f32, stroke: Stroke) -> Vec<Shape> {
-        let ch = canvas_height;
-
+    pub fn shape(&self, canvas_height: f32, px_per_cm: f32) -> Vec<Shape> {
         let points = [
             self.a, self.b, self.c, self.d, self.e, self.f, self.g, self.h, self.a,
         ];
@@ -52,10 +54,10 @@ impl Model {
             .map(|pair| {
                 Shape::line(
                     vec![
-                        to_screen(pair[0], ch, px_per_cm),
-                        to_screen(pair[1], ch, px_per_cm),
+                        to_screen(pair[0], canvas_height, px_per_cm),
+                        to_screen(pair[1], canvas_height, px_per_cm),
                     ],
-                    stroke,
+                    self.stroke,
                 )
             })
             .collect();
