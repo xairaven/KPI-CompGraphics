@@ -30,7 +30,7 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
 
         ui.vertical_centered(|ui| {
             if ui.button("Reset to Default Settings").clicked() {
-                reset_to_defaults(context);
+                reset_to_defaults(context, canvas);
             }
         });
 
@@ -42,7 +42,6 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
 
                 Grid::new("LengthTransformationsGrid")
                     .min_col_width(100.0)
-                    .striped(true)
                     .num_columns(2)
                     .show(ui, |ui| {
                         ui.label("Horizontal:");
@@ -346,11 +345,13 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
     });
 }
 
-fn reset_to_defaults(context: &mut Context) {
+fn reset_to_defaults(context: &mut Context, canvas: &mut Canvas) {
     context.model = Default::default();
 
     context.affine = Default::default();
     context.euclidean = Default::default();
     context.projective = Default::default();
     context.resize = Default::default();
+
+    canvas.screen_params = Default::default();
 }
