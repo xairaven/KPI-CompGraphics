@@ -4,3 +4,6 @@ resolver = "2"
 members = [
     "Lab1",
 ]
+
+[profile.release]
+lto = true
