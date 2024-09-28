@@ -1,6 +1,6 @@
 use crate::error::env::EnvError;
 use dotenvy::dotenv;
-use eframe::Theme;
+use egui::ThemePreference;
 use log::LevelFilter;
 use std::env;
 use std::str::FromStr;
@@ -8,7 +8,7 @@ use std::str::FromStr;
 pub struct AppConfig {
     pub name: String,
     pub log_level: LevelFilter,
-    pub theme: Theme,
+    pub theme: ThemePreference,
 }
 
 impl AppConfig {
@@ -29,8 +29,8 @@ impl AppConfig {
         // Loading theme
         let theme = env::var("THEME").map_err(|_| EnvError::ThemeNotLoaded)?;
         let theme = match theme.to_lowercase().as_str() {
-            "dark" => Theme::Dark,
-            "light" => Theme::Light,
+            "dark" => ThemePreference::Dark,
+            "light" => ThemePreference::Light,
             _ => return Err(EnvError::ThemeUndefined),
         };
 
