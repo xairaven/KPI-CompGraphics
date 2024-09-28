@@ -15,6 +15,19 @@ impl Canvas {
         let (response, painter) = ui.allocate_painter(painter_size, Sense::hover());
         self.screen_params.canvas_height = response.rect.max.y;
 
+        // ALL TRANSFORMATIONS
+        // Resizing
+        context.resize.update_values(&mut context.model);
+
+        // Get model lines
+        let model_lines: Vec<Line> = context.model.lines_to_draw(self.screen_params);
+
+        // Euclidean Rotation
+        let model_lines: Vec<Line> = context
+            .euclidean
+            .process_rotation(model_lines, self.screen_params);
+
+        // DRAWING
         // Draw grid
         let grid_shapes: Vec<Shape> = context
             .grid
@@ -24,18 +37,12 @@ impl Canvas {
             .collect();
         painter.extend(grid_shapes);
 
-        // Resizing
-        context.resize.update_values(&mut context.model);
-
-        // Get model lines
-        let model_lines: Vec<Line> = context.model.lines_to_draw(self.screen_params);
-
         // Draw model
         let model_shapes: Vec<Shape> = model_lines.iter().map(|line| line.to_shape()).collect();
         painter.extend(model_shapes);
 
-        // Euclidean Dot
-        let rotation_dot = context.euclidean.rotation_dot_shape(self.screen_params);
+        // Draw Euclidean Dot
+        let rotation_dot = context.euclidean.shape_rotation_dot(self.screen_params);
         painter.add(rotation_dot);
 
         response
