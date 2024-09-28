@@ -16,8 +16,13 @@ impl Point {
         Self { x: pos.x, y: pos.y }
     }
 
-    pub fn to_screen(&self, screen_params: ScreenParams) -> Pos2 {
-        let pos = Pos2::from([self.x, self.y]);
-        screen_params.pos_convert(pos)
+    pub fn to_screen(&self, screen_params: ScreenParams) -> Point {
+        let (x, y) = screen_params.convert_xy(self.x, self.y);
+        Self { x, y }
+    }
+
+    pub fn to_screen_pos2(&self, screen_params: ScreenParams) -> Pos2 {
+        let (x, y) = screen_params.convert_xy(self.x, self.y);
+        Pos2::from([x, y])
     }
 }

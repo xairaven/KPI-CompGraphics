@@ -1,5 +1,3 @@
-use eframe::emath::Pos2;
-
 pub const INIT_X: f32 = 50.0;
 pub const INIT_Y: f32 = 50.0;
 
@@ -23,10 +21,10 @@ impl Default for ScreenParams {
 }
 
 impl ScreenParams {
-    pub fn pos_convert(&self, pos: Pos2) -> Pos2 {
-        let x = (pos.x / 10.0 * self.px_per_cm) + INIT_X - self.offset_x;
-        let y = self.canvas_height - INIT_Y - (pos.y / 10.0 * self.px_per_cm) + self.offset_y;
+    pub fn convert_xy(&self, x: f32, y: f32) -> (f32, f32) {
+        let new_x = (x / 10.0 * self.px_per_cm) + INIT_X - self.offset_x;
+        let new_y = self.canvas_height - INIT_Y - (y / 10.0 * self.px_per_cm) + self.offset_y;
 
-        Pos2::from([x, y])
+        (new_x, new_y)
     }
 }

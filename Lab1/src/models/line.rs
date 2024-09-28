@@ -26,11 +26,19 @@ impl Line {
         Shape::line(vec![self.start.to_pos2(), self.end.to_pos2()], self.stroke)
     }
 
+    pub fn to_screen(&self, screen_params: ScreenParams) -> Self {
+        Self {
+            start: self.start.to_screen(screen_params),
+            end: self.end.to_screen(screen_params),
+            stroke: self.stroke,
+        }
+    }
+
     pub fn to_screen_shape(&self, screen_params: ScreenParams) -> Shape {
         Shape::line(
             vec![
-                self.start.to_screen(screen_params),
-                self.end.to_screen(screen_params),
+                self.start.to_screen_pos2(screen_params),
+                self.end.to_screen_pos2(screen_params),
             ],
             self.stroke,
         )

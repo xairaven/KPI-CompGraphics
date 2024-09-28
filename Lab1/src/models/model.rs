@@ -1,6 +1,7 @@
 use crate::math::angle::Angle;
 use crate::models::line::Line;
 use crate::models::point::Point;
+use crate::models::screen_params::ScreenParams;
 use eframe::epaint::{Color32, Stroke};
 
 pub struct Model {
@@ -61,6 +62,18 @@ impl Default for Model {
 }
 
 impl Model {
+    pub fn lines_to_draw(&self, screen_params: ScreenParams) -> Vec<Line> {
+        let mut lines = self.sides();
+        lines.append(&mut self.circles());
+
+        let lines_converted = lines
+            .iter()
+            .map(|line| line.to_screen(screen_params))
+            .collect();
+
+        lines_converted
+    }
+
     pub fn sides(&self) -> Vec<Line> {
         let points = [
             self.a, self.b, self.c, self.d, self.e, self.f, self.g, self.h, self.a,

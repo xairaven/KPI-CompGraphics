@@ -1,4 +1,5 @@
 use crate::context::Context;
+use crate::models::line::Line;
 use crate::models::screen_params::ScreenParams;
 use eframe::epaint::Shape;
 use egui::{Color32, Frame, Response, Sense};
@@ -26,23 +27,12 @@ impl Canvas {
         // Resizing
         context.resize.update_values(&mut context.model);
 
-        // Draw model sides
-        let model_shapes: Vec<Shape> = context
-            .model
-            .sides()
-            .iter()
-            .map(|line| line.to_screen_shape(self.screen_params))
-            .collect();
-        painter.extend(model_shapes);
+        // Get model lines
+        let model_lines: Vec<Line> = context.model.lines_to_draw(self.screen_params);
 
-        // Draw model circles
-        let model_circle_shapes: Vec<Shape> = context
-            .model
-            .circles()
-            .iter()
-            .map(|line| line.to_screen_shape(self.screen_params))
-            .collect();
-        painter.extend(model_circle_shapes);
+        // Draw model
+        let model_shapes: Vec<Shape> = model_lines.iter().map(|line| line.to_shape()).collect();
+        painter.extend(model_shapes);
 
         // Euclidean Dot
         let rotation_dot = context.euclidean.rotation_dot_shape(self.screen_params);

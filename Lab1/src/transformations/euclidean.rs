@@ -36,7 +36,7 @@ impl Euclidean {
             x: self.rotation_x,
             y: self.rotation_y,
         }
-        .to_screen(screen_params);
+        .to_screen_pos2(screen_params);
 
         if self.rotation_x == 0.0 && self.rotation_y == 0.0 {
             return Shape::circle_filled(
