@@ -1,32 +1,25 @@
 use crate::context::Context;
+use crate::models::screen_params::ScreenParams;
 use eframe::epaint::Shape;
 use egui::{Color32, Frame, Response, Sense};
 
-pub const INIT_X: f32 = 50.0;
-pub const INIT_Y: f32 = 50.0;
-
+#[derive(Default)]
 pub struct Canvas {
-    pub px_per_cm: f32,
-}
-
-impl Default for Canvas {
-    fn default() -> Self {
-        Self { px_per_cm: 20.0 }
-    }
+    pub screen_params: ScreenParams,
 }
 
 impl Canvas {
     pub fn draw(&mut self, ui: &mut egui::Ui, context: &mut Context) -> Response {
         let painter_size = ui.available_size_before_wrap();
         let (response, painter) = ui.allocate_painter(painter_size, Sense::hover());
-        let canvas_height = response.rect.max.y;
+        self.screen_params.canvas_height = response.rect.max.y;
 
         // Draw grid
         let grid_shapes: Vec<Shape> = context
             .grid
             .lines()
             .iter()
-            .map(|line| line.to_screen_shape(canvas_height, self.px_per_cm))
+            .map(|line| line.to_screen_shape(self.screen_params))
             .collect();
         painter.extend(grid_shapes);
 
@@ -38,7 +31,7 @@ impl Canvas {
             .model
             .sides()
             .iter()
-            .map(|line| line.to_screen_shape(canvas_height, self.px_per_cm))
+            .map(|line| line.to_screen_shape(self.screen_params))
             .collect();
         painter.extend(model_shapes);
 
@@ -47,14 +40,12 @@ impl Canvas {
             .model
             .circles()
             .iter()
-            .map(|line| line.to_screen_shape(canvas_height, self.px_per_cm))
+            .map(|line| line.to_screen_shape(self.screen_params))
             .collect();
         painter.extend(model_circle_shapes);
 
         // Euclidean Dot
-        let rotation_dot = context
-            .euclidean
-            .rotation_dot_shape(canvas_height, self.px_per_cm);
+        let rotation_dot = context.euclidean.rotation_dot_shape(self.screen_params);
         painter.add(rotation_dot);
 
         response

@@ -16,14 +16,18 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
 
         ui.horizontal(|ui| {
             ui.label("Pixels per Centimeter:");
-            ui.add(DragValue::new(&mut canvas.px_per_cm).speed(1).range(1..=60));
+            ui.add(
+                DragValue::new(&mut canvas.screen_params.px_per_cm)
+                    .speed(1)
+                    .range(1..=60),
+            );
         });
 
         ui.add_space(10.0);
 
         ui.vertical_centered(|ui| {
-            if ui.button("Set Default Figure").clicked() {
-                set_default_figure(context);
+            if ui.button("Reset to Default Settings").clicked() {
+                reset_to_defaults(context);
             }
         });
 
@@ -305,8 +309,7 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
     });
 }
 
-fn set_default_figure(context: &mut Context) {
-    // TODO: Set default figure...
+fn reset_to_defaults(context: &mut Context) {
     context.model = Default::default();
 
     context.affine = Default::default();

@@ -1,4 +1,4 @@
-use crate::ui::components::canvas;
+use crate::models::screen_params::ScreenParams;
 use egui::Pos2;
 
 #[derive(Debug, Default, Clone, Copy)]
@@ -16,15 +16,8 @@ impl Point {
         Self { x: pos.x, y: pos.y }
     }
 
-    pub fn to_screen(&self, canvas_height: f32, px_per_cm: f32) -> Pos2 {
+    pub fn to_screen(&self, screen_params: ScreenParams) -> Pos2 {
         let pos = Pos2::from([self.x, self.y]);
-        Self::inverse_coordinates(pos, canvas_height, px_per_cm)
-    }
-
-    pub fn inverse_coordinates(pos: Pos2, canvas_height: f32, px_per_cm: f32) -> Pos2 {
-        let x = (pos.x / 10.0 * px_per_cm) + canvas::INIT_X;
-        let y = canvas_height - canvas::INIT_Y - (pos.y / 10.0 * px_per_cm);
-
-        Pos2::from([x, y])
+        screen_params.pos_convert(pos)
     }
 }

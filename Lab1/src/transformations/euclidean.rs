@@ -1,4 +1,5 @@
 use crate::models::point::Point;
+use crate::models::screen_params::ScreenParams;
 use egui::{Color32, Shape};
 
 pub const ROTATION_DOT_RADIUS: f32 = 5.0;
@@ -30,12 +31,12 @@ impl Default for Euclidean {
 }
 
 impl Euclidean {
-    pub fn rotation_dot_shape(&self, canvas_height: f32, px_per_cm: f32) -> Shape {
+    pub fn rotation_dot_shape(&self, screen_params: ScreenParams) -> Shape {
         let rotation_center = Point {
             x: self.rotation_x,
             y: self.rotation_y,
         }
-        .to_screen(canvas_height, px_per_cm);
+        .to_screen(screen_params);
 
         if self.rotation_x == 0.0 && self.rotation_y == 0.0 {
             return Shape::circle_filled(

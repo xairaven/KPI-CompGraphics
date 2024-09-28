@@ -1,4 +1,5 @@
 use crate::models::point::Point;
+use crate::models::screen_params::ScreenParams;
 use eframe::epaint::Stroke;
 use egui::Shape;
 
@@ -25,11 +26,11 @@ impl Line {
         Shape::line(vec![self.start.to_pos2(), self.end.to_pos2()], self.stroke)
     }
 
-    pub fn to_screen_shape(&self, canvas_height: f32, px_per_cm: f32) -> Shape {
+    pub fn to_screen_shape(&self, screen_params: ScreenParams) -> Shape {
         Shape::line(
             vec![
-                self.start.to_screen(canvas_height, px_per_cm),
-                self.end.to_screen(canvas_height, px_per_cm),
+                self.start.to_screen(screen_params),
+                self.end.to_screen(screen_params),
             ],
             self.stroke,
         )
