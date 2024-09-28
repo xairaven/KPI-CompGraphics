@@ -120,6 +120,10 @@ impl Resize {
     fn update_points(
         start: &mut Point, end: &mut Point, new_length: f32, current_length: &mut f32,
     ) {
+        if new_length < 1.0 {
+            return;
+        }
+
         let line = Self::resize_line(*start, *end, new_length, *current_length);
         *start = line.start;
         *end = line.end;
