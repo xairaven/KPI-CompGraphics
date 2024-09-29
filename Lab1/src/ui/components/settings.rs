@@ -2,12 +2,13 @@ use crate::context::Context;
 use crate::ui::components::canvas::Canvas;
 use crate::utils::egui::label_centered_with_drag;
 use egui::style::HandleShape;
-use egui::{DragValue, Grid, RichText, Slider};
+use egui::{Color32, DragValue, Grid, RichText, Slider};
 
 pub const MAX_RESIZING: u32 = 300;
 pub const MAX_ROTATION_DOT_CORDS: u32 = 200;
 
-pub const MAX_SCROLL_OFFSET: f32 = 200.0;
+pub const MAX_P_SCROLL_OFFSET: f32 = 200.0;
+pub const MAX_N_SCROLL_OFFSET: f32 = -200.0;
 
 pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui) {
     egui::ScrollArea::vertical().show(ui, |ui| {
@@ -48,7 +49,7 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                         ui.add(
                             Slider::new(
                                 &mut canvas.screen_params.offset_x,
-                                0.0..=MAX_SCROLL_OFFSET,
+                                MAX_N_SCROLL_OFFSET..=MAX_P_SCROLL_OFFSET,
                             )
                             .handle_shape(HandleShape::Rect { aspect_ratio: 0.5 }),
                         );
@@ -58,7 +59,7 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                         ui.add(
                             Slider::new(
                                 &mut canvas.screen_params.offset_y,
-                                0.0..=MAX_SCROLL_OFFSET,
+                                MAX_N_SCROLL_OFFSET..=MAX_P_SCROLL_OFFSET,
                             )
                             .handle_shape(HandleShape::Rect { aspect_ratio: 0.5 }),
                         );
@@ -174,7 +175,7 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
 
         ui.group(|ui| {
             ui.vertical_centered(|ui| {
-                ui.label("Rotation");
+                ui.label(RichText::new("Rotation").color(Color32::from_rgb(255, 0, 0)));
             });
 
             ui.add_space(5.0);
