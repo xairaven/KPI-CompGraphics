@@ -44,6 +44,15 @@ impl Canvas {
             context.euclidean.apply_rotation(&mut context.model)
         }
 
+        // Affine Point Symmetry
+        let model_lines: Vec<Line> = context.affine.symmetry_convert_line(model_lines);
+        if context.euclidean.offset_x != 0.0 || context.euclidean.offset_y != 0.0 {
+            model_shadow = context.affine.symmetry_convert_line(model_shadow);
+        }
+        if context.affine.symmetry_applied {
+            context.affine.apply_symmetry(&mut context.model)
+        }
+
         // Affine
         let model_lines: Vec<Line> = context.affine.affine_convert_line(model_lines);
         if context.euclidean.offset_x != 0.0 || context.euclidean.offset_y != 0.0 {
@@ -57,12 +66,6 @@ impl Canvas {
             model_shadow = context.affine.scaling_convert_line(model_shadow);
         }
         let grid_lines: Vec<Line> = context.affine.scaling_convert_line(grid_lines);
-
-        // Affine Point Symmetry
-        let model_lines: Vec<Line> = context.affine.symmetry_convert_line(model_lines);
-        if context.euclidean.offset_x != 0.0 || context.euclidean.offset_y != 0.0 {
-            model_shadow = context.affine.symmetry_convert_line(model_shadow);
-        }
 
         // DRAWING
         // Draw grid

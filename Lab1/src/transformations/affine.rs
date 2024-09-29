@@ -1,5 +1,6 @@
 use crate::models::circle::Circle;
 use crate::models::line::Line;
+use crate::models::model::Model;
 use crate::models::point::Point;
 use crate::models::screen_params::ScreenParams;
 use eframe::epaint::{Color32, Shape};
@@ -20,6 +21,7 @@ pub struct Affine {
 
     pub symmetry_x: f32,
     pub symmetry_y: f32,
+    pub symmetry_applied: bool,
 }
 
 impl Default for Affine {
@@ -37,6 +39,7 @@ impl Default for Affine {
 
             symmetry_x: 0.0,
             symmetry_y: 0.0,
+            symmetry_applied: false,
         }
     }
 }
@@ -205,6 +208,17 @@ impl Affine {
             2.0 * self.symmetry_y,
             1.0,
         )
+    }
+
+    pub fn apply_symmetry(&mut self, model: &mut Model) {
+        let points = model.points_mut();
+        for point in points {
+            *point = self.symmetry_convert_point(*point);
+        }
+
+        self.symmetry_x = 0.0;
+        self.symmetry_y = 0.0;
+        self.symmetry_applied = false;
     }
 
     pub fn symmetry_dot(&self) -> Circle {
