@@ -355,6 +355,19 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                     );
                     ui.end_row();
                 });
+
+            ui.add_space(10.0);
+
+            ui.vertical_centered(|ui| {
+                if ui.button("\t\tReset\t\t").clicked() {
+                    context.affine.xx = 1.0;
+                    context.affine.xy = 0.0;
+                    context.affine.yx = 0.0;
+                    context.affine.yy = 1.0;
+                    context.affine.zero_x = 0.0;
+                    context.affine.zero_y = 0.0;
+                }
+            });
         });
 
         ui.add_space(10.0);
@@ -374,6 +387,15 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                     label_centered_with_drag(ui, "My:", &mut context.affine.scaling_y, 1, -10..=10);
                     ui.end_row();
                 });
+
+            ui.add_space(10.0);
+
+            ui.vertical_centered(|ui| {
+                if ui.button("\t\tReset\t\t").clicked() {
+                    context.affine.scaling_x = 1.0;
+                    context.affine.scaling_y = 1.0;
+                }
+            });
         });
 
         ui.add_space(10.0);
