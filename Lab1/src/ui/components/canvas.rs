@@ -22,16 +22,11 @@ impl Canvas {
         // Get model lines
         let model_lines: Vec<Line> = context.model.lines();
 
+        // Get grid lines
+        let grid_lines: Vec<Line> = context.grid.lines();
+
         // Euclidean Offset
-        let model_shadow: Vec<Line> = Line::color_shadow(&model_lines);
-        if context.euclidean.offset_x != 0.0 || context.euclidean.offset_y != 0.0 {
-            let model_shadow: Vec<Line> = context.euclidean.process_rotation(model_shadow);
-            let shapes: Vec<Shape> = model_shadow
-                .iter()
-                .map(|line| line.to_screen_shape(self.screen_params))
-                .collect();
-            painter.extend(shapes);
-        }
+        let mut model_shadow: Vec<Line> = Line::color_shadow(&model_lines);
         let model_lines: Vec<Line> = context.euclidean.process_offset(model_lines);
         if context.euclidean.offset_applied {
             context.euclidean.apply_offset(&mut context.model)
@@ -39,12 +34,20 @@ impl Canvas {
 
         // Euclidean Rotation
         let model_lines: Vec<Line> = context.euclidean.process_rotation(model_lines);
+        if context.euclidean.offset_x != 0.0 || context.euclidean.offset_y != 0.0 {
+            model_shadow = context.euclidean.process_rotation(model_shadow);
+        }
+
+        // Affine
+        let model_lines: Vec<Line> = context.affine.process_affine(model_lines);
+        if context.euclidean.offset_x != 0.0 || context.euclidean.offset_y != 0.0 {
+            model_shadow = context.affine.process_affine(model_shadow);
+        }
+        let grid_lines: Vec<Line> = context.affine.process_affine(grid_lines);
 
         // DRAWING
         // Draw grid
-        let grid_shapes: Vec<Shape> = context
-            .grid
-            .lines()
+        let grid_shapes: Vec<Shape> = grid_lines
             .iter()
             .map(|line| line.to_screen_shape(self.screen_params))
             .collect();
@@ -57,7 +60,17 @@ impl Canvas {
             .collect();
         painter.extend(model_shapes);
 
+        // Draw shadow model
+        if context.euclidean.offset_x != 0.0 || context.euclidean.offset_y != 0.0 {
+            let shapes: Vec<Shape> = model_shadow
+                .iter()
+                .map(|line| line.to_screen_shape(self.screen_params))
+                .collect();
+            painter.extend(shapes);
+        }
+
         // Draw Euclidean Rotation Dot
+        // TODO: AFFINE DRAWING
         let rotation_dot = context.euclidean.shape_rotation_dot(self.screen_params);
         painter.add(rotation_dot);
 
