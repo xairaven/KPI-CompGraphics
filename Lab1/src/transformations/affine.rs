@@ -36,7 +36,7 @@ impl Default for Affine {
 }
 
 impl Affine {
-    pub fn process_affine(&self, lines: Vec<Line>) -> Vec<Line> {
+    pub fn convert_line(&self, lines: Vec<Line>) -> Vec<Line> {
         if self.xx == 1.0
             && self.xy == 0.0
             && self.yx == 0.0
@@ -50,14 +50,14 @@ impl Affine {
         lines
             .iter()
             .map(|line| {
-                let start = self.affine(line.start);
-                let end = self.affine(line.end);
+                let start = self.convert_point(line.start);
+                let end = self.convert_point(line.end);
                 Line::new(start, end, line.stroke)
             })
             .collect()
     }
 
-    fn affine(&self, point: Point) -> Point {
+    pub fn convert_point(&self, point: Point) -> Point {
         let point_vector = point.to_vector();
         let matrix = self.get_affine_matrix();
 

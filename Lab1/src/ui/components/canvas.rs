@@ -1,6 +1,7 @@
 use crate::context::Context;
 use crate::models::line::Line;
 use crate::models::screen_params::ScreenParams;
+use crate::transformations::euclidean::{Euclidean, ROTATION_DOT_RADIUS};
 use eframe::epaint::Shape;
 use egui::{Color32, Frame, Response, Sense};
 
@@ -39,11 +40,11 @@ impl Canvas {
         }
 
         // Affine
-        let model_lines: Vec<Line> = context.affine.process_affine(model_lines);
+        let model_lines: Vec<Line> = context.affine.convert_line(model_lines);
         if context.euclidean.offset_x != 0.0 || context.euclidean.offset_y != 0.0 {
-            model_shadow = context.affine.process_affine(model_shadow);
+            model_shadow = context.affine.convert_line(model_shadow);
         }
-        let grid_lines: Vec<Line> = context.affine.process_affine(grid_lines);
+        let grid_lines: Vec<Line> = context.affine.convert_line(grid_lines);
 
         // DRAWING
         // Draw grid
@@ -70,8 +71,12 @@ impl Canvas {
         }
 
         // Draw Euclidean Rotation Dot
-        // TODO: AFFINE DRAWING
-        let rotation_dot = context.euclidean.shape_rotation_dot(self.screen_params);
+        // TODO: Something with radius
+        let rotation_dot = context.euclidean.rotation_dot();
+        let radius = ROTATION_DOT_RADIUS;
+        let rotation_dot = context.affine.convert_point(rotation_dot);
+        let radius = context.affine.xx * radius;
+        let rotation_dot = Euclidean::shape_rotation_dot(rotation_dot, radius, self.screen_params);
         painter.add(rotation_dot);
 
         response

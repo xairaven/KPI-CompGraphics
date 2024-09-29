@@ -7,13 +7,12 @@ use egui::{Color32, Shape};
 use nalgebra::Matrix3;
 
 pub const ROTATION_DOT_RADIUS: f32 = 2.5;
+pub const ROTATION_DOT_COLOR: Color32 = Color32::from_rgb(255, 0, 0);
 
 pub struct Euclidean {
     pub rotation_x: f32,
     pub rotation_y: f32,
     pub rotation_angle: f32,
-
-    rotation_dot_color: Color32,
 
     pub offset_x: f32,
     pub offset_y: f32,
@@ -27,8 +26,6 @@ impl Default for Euclidean {
             rotation_x: 0.0,
             rotation_y: 0.0,
             rotation_angle: 0.0,
-
-            rotation_dot_color: Color32::from_rgb(255, 0, 0),
 
             offset_x: 0.0,
             offset_y: 0.0,
@@ -111,19 +108,22 @@ impl Euclidean {
         Matrix3::new(m11, m12, 0.0, m21, m22, 0.0, m31, m32, 1.0)
     }
 
-    pub fn shape_rotation_dot(&self, screen_params: ScreenParams) -> Shape {
-        let rotation_center = Point {
+    pub fn rotation_dot(&self) -> Point {
+        Point {
             x: self.rotation_x,
             y: self.rotation_y,
         }
-        .to_screen_pos2(screen_params);
+    }
 
-        let radius = screen_params.convert_single(ROTATION_DOT_RADIUS);
+    pub fn shape_rotation_dot(point: Point, radius: f32, screen_params: ScreenParams) -> Shape {
+        let screen_point = point.to_screen_pos2(screen_params);
 
-        if self.rotation_x == 0.0 && self.rotation_y == 0.0 {
-            return Shape::circle_filled(rotation_center, radius, Color32::from_white_alpha(0));
+        let radius = screen_params.convert_single(radius);
+
+        if point.x == 0.0 && point.y == 0.0 {
+            return Shape::circle_filled(screen_point, radius, Color32::from_white_alpha(0));
         }
 
-        Shape::circle_filled(rotation_center, radius, self.rotation_dot_color)
+        Shape::circle_filled(screen_point, radius, ROTATION_DOT_COLOR)
     }
 }
