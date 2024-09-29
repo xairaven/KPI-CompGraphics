@@ -22,11 +22,23 @@ impl Canvas {
         // Get model lines
         let model_lines: Vec<Line> = context.model.lines();
 
+        // Euclidean Offset
+        let model_shadow: Vec<Line> = Line::color_shadow(&model_lines);
+        if context.euclidean.offset_x != 0.0 || context.euclidean.offset_y != 0.0 {
+            let model_shadow: Vec<Line> = context.euclidean.process_rotation(model_shadow);
+            let shapes: Vec<Shape> = model_shadow
+                .iter()
+                .map(|line| line.to_screen_shape(self.screen_params))
+                .collect();
+            painter.extend(shapes);
+        }
+        let model_lines: Vec<Line> = context.euclidean.process_offset(model_lines);
+        if context.euclidean.offset_applied {
+            context.euclidean.apply_offset(&mut context.model)
+        }
+
         // Euclidean Rotation
         let model_lines: Vec<Line> = context.euclidean.process_rotation(model_lines);
-
-        // Euclidean Offset
-        let model_lines: Vec<Line> = context.euclidean.process_offset(model_lines);
 
         // DRAWING
         // Draw grid

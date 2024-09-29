@@ -1,5 +1,6 @@
 use crate::math::angle::Angle;
 use crate::models::line::Line;
+use crate::models::model::Model;
 use crate::models::point::Point;
 use crate::models::screen_params::ScreenParams;
 use egui::{Color32, Shape};
@@ -16,6 +17,8 @@ pub struct Euclidean {
 
     pub offset_x: f32,
     pub offset_y: f32,
+
+    pub offset_applied: bool,
 }
 
 impl Default for Euclidean {
@@ -29,6 +32,7 @@ impl Default for Euclidean {
 
             offset_x: 0.0,
             offset_y: 0.0,
+            offset_applied: false,
         }
     }
 }
@@ -47,6 +51,17 @@ impl Euclidean {
                 Line::new(start, end, line.stroke)
             })
             .collect()
+    }
+
+    pub fn apply_offset(&mut self, model: &mut Model) {
+        model.offset(Point {
+            x: self.offset_x,
+            y: self.offset_y,
+        });
+
+        self.offset_x = 0.0;
+        self.offset_y = 0.0;
+        self.offset_applied = false;
     }
 
     pub fn process_offset(&self, model: Vec<Line>) -> Vec<Line> {

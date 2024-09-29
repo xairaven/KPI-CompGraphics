@@ -1,6 +1,7 @@
 use crate::models::screen_params::ScreenParams;
 use egui::Pos2;
 use nalgebra::SMatrix;
+use std::ops;
 
 #[derive(Debug, Default, Clone, Copy)]
 pub struct Point {
@@ -33,5 +34,16 @@ impl Point {
     pub fn to_screen_pos2(&self, screen_params: ScreenParams) -> Pos2 {
         let (x, y) = screen_params.convert_xy(self.x, self.y);
         Pos2::from([x, y])
+    }
+}
+
+impl ops::Add<Point> for Point {
+    type Output = Point;
+
+    fn add(self, rhs: Point) -> Self::Output {
+        Point {
+            x: self.x + rhs.x,
+            y: self.y + rhs.y,
+        }
     }
 }

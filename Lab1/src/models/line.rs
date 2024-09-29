@@ -1,7 +1,9 @@
 use crate::models::point::Point;
 use crate::models::screen_params::ScreenParams;
 use eframe::epaint::Stroke;
-use egui::Shape;
+use egui::{Color32, Shape};
+
+pub const SHADOW_COLOR: Color32 = Color32::from_rgb(171, 171, 171);
 
 pub struct Line {
     pub start: Point,
@@ -46,5 +48,18 @@ impl Line {
 
     pub fn length(&self) -> f32 {
         f32::sqrt((self.end.x - self.start.x).powf(2.0) + (self.end.y - self.start.y).powf(2.0))
+    }
+
+    pub fn color_shadow(lines: &[Line]) -> Vec<Line> {
+        lines
+            .iter()
+            .map(|line| {
+                Line::new(
+                    line.start,
+                    line.end,
+                    Stroke::new(line.stroke.width, SHADOW_COLOR),
+                )
+            })
+            .collect()
     }
 }

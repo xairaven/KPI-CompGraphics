@@ -112,6 +112,20 @@ impl Model {
         lines
     }
 
+    pub fn offset(&mut self, offset_point: Point) {
+        self.a = self.a + offset_point;
+        self.b = self.b + offset_point;
+        self.c = self.c + offset_point;
+        self.d = self.d + offset_point;
+        self.e = self.e + offset_point;
+        self.f = self.f + offset_point;
+        self.g = self.g + offset_point;
+        self.h = self.h + offset_point;
+
+        self.i = self.i + offset_point;
+        self.j = self.j + offset_point;
+    }
+
     pub fn recalculate_lengths(&mut self) {
         self.length_ab = Line::new_plain(self.a, self.b).length();
         self.length_bc = Line::new_plain(self.b, self.c).length();

@@ -177,6 +177,61 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
 
         ui.group(|ui| {
             ui.vertical_centered(|ui| {
+                ui.label("Offset");
+            });
+
+            ui.add_space(5.0);
+
+            Grid::new("OffsetGrid")
+                .num_columns(4)
+                .striped(true)
+                .min_col_width(50.0)
+                .show(ui, |ui| {
+                    label_centered_with_drag(
+                        ui,
+                        "X:",
+                        &mut context.euclidean.offset_x,
+                        1,
+                        -1.0 * GRID_SIZE..=GRID_SIZE,
+                    );
+
+                    label_centered_with_drag(
+                        ui,
+                        "Y:",
+                        &mut context.euclidean.offset_y,
+                        1,
+                        -1.0 * GRID_SIZE..=GRID_SIZE,
+                    );
+                    ui.end_row();
+                });
+
+            ui.add_space(10.0);
+
+            Grid::new("OffsetButtonsGrid")
+                .num_columns(2)
+                .min_col_width(50.0)
+                .max_col_width(130.0)
+                .show(ui, |ui| {
+                    ui.vertical_centered(|ui| {
+                        if ui.button("\t\tApply\t\t").clicked() {
+                            context.euclidean.offset_applied = true;
+                        }
+                    });
+
+                    ui.vertical_centered(|ui| {
+                        if ui.button("\t\tReset offset\t\t").clicked() {
+                            context.euclidean.offset_x = 0.0;
+                            context.euclidean.offset_y = 0.0;
+                            context.euclidean.offset_applied = false;
+                        }
+                    });
+                });
+        });
+
+        ui.add_space(10.0);
+
+        ui.group(|ui| {
+            ui.vertical_centered(|ui| {
                 ui.label(RichText::new("Rotation").color(Color32::from_rgb(255, 0, 0)));
             });
 
@@ -215,47 +270,6 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                     ui.end_row();
                 });
         });
-        ui.add_space(10.0);
-
-        ui.group(|ui| {
-            ui.vertical_centered(|ui| {
-                ui.label("Offset");
-            });
-
-            ui.add_space(5.0);
-
-            Grid::new("OffsetGrid")
-                .num_columns(4)
-                .striped(true)
-                .min_col_width(50.0)
-                .show(ui, |ui| {
-                    label_centered_with_drag(
-                        ui,
-                        "X:",
-                        &mut context.euclidean.offset_x,
-                        1,
-                        -1.0 * GRID_SIZE..=GRID_SIZE,
-                    );
-
-                    label_centered_with_drag(
-                        ui,
-                        "Y:",
-                        &mut context.euclidean.offset_y,
-                        1,
-                        -1.0 * GRID_SIZE..=GRID_SIZE,
-                    );
-                    ui.end_row();
-                });
-
-            ui.add_space(10.0);
-
-            ui.vertical_centered(|ui| {
-                if ui.button("\t\tApply\t\t").clicked() {
-                    // TODO: OFFSET APPLY
-                }
-            });
-        });
-
         ui.add_space(10.0);
 
         ui.vertical_centered(|ui| {
