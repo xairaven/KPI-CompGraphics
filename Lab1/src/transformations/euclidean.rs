@@ -17,6 +17,7 @@ pub struct Euclidean {
     pub offset_y: f32,
 
     pub offset_applied: bool,
+    pub rotation_applied: bool,
 }
 
 impl Default for Euclidean {
@@ -25,6 +26,7 @@ impl Default for Euclidean {
             rotation_x: 0.0,
             rotation_y: 0.0,
             rotation_angle: 0.0,
+            rotation_applied: false,
 
             offset_x: 0.0,
             offset_y: 0.0,
@@ -50,14 +52,32 @@ impl Euclidean {
     }
 
     pub fn apply_offset(&mut self, model: &mut Model) {
-        model.offset(Point {
+        let offset_point = Point {
             x: self.offset_x,
             y: self.offset_y,
-        });
+        };
+
+        let points = model.points_mut();
+
+        for point in points {
+            *point = *point + offset_point;
+        }
 
         self.offset_x = 0.0;
         self.offset_y = 0.0;
         self.offset_applied = false;
+    }
+
+    pub fn apply_rotation(&mut self, model: &mut Model) {
+        let points = model.points_mut();
+        for point in points {
+            *point = self.rotate(*point);
+        }
+
+        self.rotation_x = 0.0;
+        self.rotation_y = 0.0;
+        self.rotation_angle = 0.0;
+        self.rotation_applied = false;
     }
 
     pub fn process_offset(&self, model: Vec<Line>) -> Vec<Line> {

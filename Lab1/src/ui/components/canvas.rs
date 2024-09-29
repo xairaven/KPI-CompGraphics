@@ -40,6 +40,9 @@ impl Canvas {
         if context.euclidean.offset_x != 0.0 || context.euclidean.offset_y != 0.0 {
             model_shadow = context.euclidean.process_rotation(model_shadow);
         }
+        if context.euclidean.rotation_applied {
+            context.euclidean.apply_rotation(&mut context.model)
+        }
 
         // Affine
         let model_lines: Vec<Line> = context.affine.affine_convert_line(model_lines);

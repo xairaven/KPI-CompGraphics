@@ -112,18 +112,19 @@ impl Model {
         lines
     }
 
-    pub fn offset(&mut self, offset_point: Point) {
-        self.a = self.a + offset_point;
-        self.b = self.b + offset_point;
-        self.c = self.c + offset_point;
-        self.d = self.d + offset_point;
-        self.e = self.e + offset_point;
-        self.f = self.f + offset_point;
-        self.g = self.g + offset_point;
-        self.h = self.h + offset_point;
-
-        self.i = self.i + offset_point;
-        self.j = self.j + offset_point;
+    pub fn points_mut(&mut self) -> Vec<&mut Point> {
+        vec![
+            &mut self.a,
+            &mut self.b,
+            &mut self.c,
+            &mut self.d,
+            &mut self.e,
+            &mut self.f,
+            &mut self.g,
+            &mut self.h,
+            &mut self.i,
+            &mut self.j,
+        ]
     }
 
     pub fn recalculate_lengths(&mut self) {

@@ -220,7 +220,7 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                     });
 
                     ui.vertical_centered(|ui| {
-                        if ui.button("\t\tReset offset\t\t").clicked() {
+                        if ui.button("\t\tReset\t\t").clicked() {
                             context.euclidean.offset_x = 0.0;
                             context.euclidean.offset_y = 0.0;
                             context.euclidean.offset_applied = false;
@@ -269,6 +269,29 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                         0..=360,
                     );
                     ui.end_row();
+                });
+
+            ui.add_space(10.0);
+
+            Grid::new("RotationButtonsGrid")
+                .num_columns(2)
+                .min_col_width(50.0)
+                .max_col_width(130.0)
+                .show(ui, |ui| {
+                    ui.vertical_centered(|ui| {
+                        if ui.button("\t\tApply\t\t").clicked() {
+                            context.euclidean.rotation_applied = true;
+                        }
+                    });
+
+                    ui.vertical_centered(|ui| {
+                        if ui.button("\t\tReset\t\t").clicked() {
+                            context.euclidean.rotation_x = 0.0;
+                            context.euclidean.rotation_y = 0.0;
+                            context.euclidean.rotation_angle = 0.0;
+                            context.euclidean.rotation_applied = false;
+                        }
+                    });
                 });
         });
         ui.add_space(10.0);
@@ -386,7 +409,7 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
             ui.add_space(10.0);
 
             ui.vertical_centered(|ui| {
-                if ui.button("\t\tReset offset\t\t").clicked() {
+                if ui.button("\t\tReset\t\t").clicked() {
                     context.affine.symmetry_x = 0.0;
                     context.affine.symmetry_y = 0.0;
                 }
