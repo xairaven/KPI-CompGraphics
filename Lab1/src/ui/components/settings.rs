@@ -12,6 +12,7 @@ pub const GRID_SIZE: f32 = 200.0;
 pub const MAX_P_SCROLL_OFFSET: f32 = GRID_SIZE;
 pub const MAX_N_SCROLL_OFFSET: f32 = -1.0 * GRID_SIZE;
 pub const MAX_AFFINE_COEF: f32 = 100.0;
+pub const MAX_PROJECTION_COEF: f32 = 1000.0;
 
 pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui) {
     egui::ScrollArea::vertical().show(ui, |ui| {
@@ -463,21 +464,83 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                 .striped(true)
                 .num_columns(6)
                 .show(ui, |ui| {
-                    label_centered_with_drag(ui, "Xx", &mut context.projective.xx, 1, 0..=100);
-                    label_centered_with_drag(ui, "Xy", &mut context.projective.xy, 1, 0..=100);
-                    label_centered_with_drag(ui, "wX", &mut context.projective.wx, 1, 0..=100);
+                    label_centered_with_drag(
+                        ui,
+                        "Xx",
+                        &mut context.projective.xx,
+                        1,
+                        0.0..=MAX_PROJECTION_COEF,
+                    );
+                    label_centered_with_drag(
+                        ui,
+                        "Xy",
+                        &mut context.projective.xy,
+                        1,
+                        0.0..=MAX_PROJECTION_COEF,
+                    );
+                    label_centered_with_drag(
+                        ui,
+                        "wX",
+                        &mut context.projective.wx,
+                        1,
+                        0.0..=MAX_PROJECTION_COEF,
+                    );
                     ui.end_row();
 
-                    label_centered_with_drag(ui, "Yx", &mut context.projective.yx, 1, 0..=100);
-                    label_centered_with_drag(ui, "Yy", &mut context.projective.yy, 1, 0..=100);
-                    label_centered_with_drag(ui, "wY", &mut context.projective.wy, 1, 0..=100);
+                    label_centered_with_drag(
+                        ui,
+                        "Yx",
+                        &mut context.projective.yx,
+                        1,
+                        0.0..=MAX_PROJECTION_COEF,
+                    );
+                    label_centered_with_drag(
+                        ui,
+                        "Yy",
+                        &mut context.projective.yy,
+                        1,
+                        0.0..=MAX_PROJECTION_COEF,
+                    );
+                    label_centered_with_drag(
+                        ui,
+                        "wY",
+                        &mut context.projective.wy,
+                        1,
+                        0.0..=MAX_PROJECTION_COEF,
+                    );
                     ui.end_row();
 
-                    label_centered_with_drag(ui, "0x", &mut context.projective.zero_x, 1, 0..=100);
-                    label_centered_with_drag(ui, "0y", &mut context.projective.zero_y, 1, 0..=100);
-                    label_centered_with_drag(ui, "w0", &mut context.projective.w_zero, 1, 0..=100);
+                    label_centered_with_drag(
+                        ui,
+                        "0x",
+                        &mut context.projective.zero_x,
+                        1,
+                        0.0..=MAX_PROJECTION_COEF,
+                    );
+                    label_centered_with_drag(
+                        ui,
+                        "0y",
+                        &mut context.projective.zero_y,
+                        1,
+                        0.0..=MAX_PROJECTION_COEF,
+                    );
+                    label_centered_with_drag(
+                        ui,
+                        "w0",
+                        &mut context.projective.zero_w,
+                        1,
+                        0.0..=MAX_PROJECTION_COEF,
+                    );
                     ui.end_row();
                 });
+
+            ui.add_space(10.0);
+
+            ui.vertical_centered(|ui| {
+                if ui.button("\t\tReset\t\t").clicked() {
+                    context.projective = Default::default();
+                }
+            });
         });
     });
 }

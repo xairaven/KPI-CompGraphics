@@ -67,6 +67,13 @@ impl Canvas {
         }
         let grid_lines: Vec<Line> = context.affine.scaling_convert_line(grid_lines);
 
+        // Projective
+        let model_lines: Vec<Line> = context.projective.convert_line(model_lines);
+        if context.euclidean.offset_x != 0.0 || context.euclidean.offset_y != 0.0 {
+            model_shadow = context.projective.convert_line(model_shadow);
+        }
+        let grid_lines: Vec<Line> = context.projective.convert_line(grid_lines);
+
         // DRAWING
         // Draw grid
         let grid_shapes: Vec<Shape> = grid_lines
@@ -98,6 +105,7 @@ impl Canvas {
             .set_radius(circle::DOT_STANDARD_RADIUS);
         let rotation_dot = context.affine.affine_convert_circle(rotation_dot);
         let rotation_dot = context.affine.scaling_convert_circle(rotation_dot);
+        let rotation_dot = context.projective.convert_circle(rotation_dot);
         let rotation_dot = Circle::shape_dot(
             rotation_dot,
             euclidean::ROTATION_DOT_COLOR,
@@ -112,6 +120,7 @@ impl Canvas {
             .set_radius(circle::DOT_STANDARD_RADIUS);
         let symmetry_dot = context.affine.affine_convert_circle(symmetry_dot);
         let symmetry_dot = context.affine.scaling_convert_circle(symmetry_dot);
+        let symmetry_dot = context.projective.convert_circle(symmetry_dot);
         let symmetry_dot =
             Circle::shape_dot(symmetry_dot, affine::SYMMETRY_DOT_COLOR, self.screen_params);
         painter.add(symmetry_dot);
