@@ -1,7 +1,6 @@
 use crate::models::circle::Circle;
 use crate::models::line::Line;
 use crate::models::point::Point;
-use nalgebra::Matrix3;
 
 pub struct Projective {
     pub xx: f32,
@@ -18,15 +17,15 @@ pub struct Projective {
 impl Default for Projective {
     fn default() -> Self {
         Self {
-            xx: 1.0,
+            xx: 500.0,
             xy: 0.0,
-            wx: 1.0,
+            wx: 2.0,
             yx: 0.0,
-            yy: 1.0,
-            wy: 1.0,
+            yy: 500.0,
+            wy: 2.0,
             zero_x: 0.0,
             zero_y: 0.0,
-            zero_w: 250.0,
+            zero_w: 500.0,
         }
     }
 }
@@ -66,10 +65,7 @@ impl Projective {
             return circle;
         }
 
-        let point_vector = circle.center.to_vector();
-        let matrix = self.get_matrix();
-
-        let answer = point_vector * matrix;
+        let point = self.convert_point(Point::new(circle.center.x, circle.center.y));
 
         let mut radius = (self.xx + self.yy) / 2.0;
         if radius < 2.5 {
@@ -77,31 +73,19 @@ impl Projective {
         }
 
         Circle {
-            center: Point::new(answer.x, answer.y),
+            center: Point::new(point.x, point.y),
             radius,
         }
     }
 
     fn convert_point(&self, point: Point) -> Point {
-        let point_vector = point.to_vector();
-        let matrix = self.get_matrix();
+        let x =
+            (self.zero_x * self.zero_w + self.xx * self.wx * point.x + self.xy * self.wy * point.y)
+                / (self.zero_w + self.wx * point.x + self.wy * point.y);
+        let y =
+            (self.zero_y * self.zero_w + self.yx * self.wx * point.x + self.yy * self.wy * point.y)
+                / (self.zero_w + self.wx * point.x + self.wy * point.y);
 
-        let answer = point_vector * matrix;
-
-        Point::new(answer.x, answer.y)
-    }
-
-    fn get_matrix(&self) -> Matrix3<f32> {
-        Matrix3::new(
-            self.xx * self.wx / 100.0,
-            self.xy * self.wx / 100.0,
-            self.wx / 100.0,
-            self.yx * self.wy / 100.0,
-            self.yy * self.wy / 100.0,
-            self.wy / 100.0,
-            self.zero_x * self.zero_w / 100.0,
-            self.zero_y * self.zero_w / 100.0,
-            self.zero_w / 100.0,
-        )
+        Point::new(x, y)
     }
 }
