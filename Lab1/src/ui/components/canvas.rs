@@ -40,11 +40,18 @@ impl Canvas {
         }
 
         // Affine
-        let model_lines: Vec<Line> = context.affine.convert_line(model_lines);
+        let model_lines: Vec<Line> = context.affine.affine_convert_line(model_lines);
         if context.euclidean.offset_x != 0.0 || context.euclidean.offset_y != 0.0 {
-            model_shadow = context.affine.convert_line(model_shadow);
+            model_shadow = context.affine.affine_convert_line(model_shadow);
         }
-        let grid_lines: Vec<Line> = context.affine.convert_line(grid_lines);
+        let grid_lines: Vec<Line> = context.affine.affine_convert_line(grid_lines);
+
+        // Affine Scaling
+        let model_lines: Vec<Line> = context.affine.scaling_convert_line(model_lines);
+        if context.euclidean.offset_x != 0.0 || context.euclidean.offset_y != 0.0 {
+            model_shadow = context.affine.scaling_convert_line(model_shadow);
+        }
+        let grid_lines: Vec<Line> = context.affine.scaling_convert_line(grid_lines);
 
         // DRAWING
         // Draw grid
@@ -75,7 +82,8 @@ impl Canvas {
             .euclidean
             .rotation_dot()
             .set_radius(ROTATION_DOT_RADIUS);
-        let rotation_dot = context.affine.convert_circle(rotation_dot);
+        let rotation_dot = context.affine.affine_convert_circle(rotation_dot);
+        let rotation_dot = context.affine.scaling_convert_circle(rotation_dot);
         let rotation_dot = Euclidean::shape_rotation_dot(rotation_dot, self.screen_params);
         painter.add(rotation_dot);
 
