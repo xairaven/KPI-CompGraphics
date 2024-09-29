@@ -1,3 +1,4 @@
+use crate::math::angle::Angle;
 use crate::models::line::Line;
 use crate::models::point::Point;
 use eframe::epaint::{Color32, Stroke};
@@ -12,8 +13,12 @@ pub struct Grid {
     pub tick_unit_x: Point,
     pub tick_unit_y: Point,
 
+    pub arrows_length: f32,
+    pub tick_marks_length: f32,
+
     pub axis_stroke: Stroke,
     pub grid_stroke: Stroke,
+    pub marks_stroke: Stroke,
 }
 
 impl Default for Grid {
@@ -28,8 +33,12 @@ impl Default for Grid {
             tick_unit_x: Point::new(10.0, 0.0),
             tick_unit_y: Point::new(0.0, 10.0),
 
+            arrows_length: 5.0,
+            tick_marks_length: 3.0,
+
             axis_stroke: Stroke::new(1.8, Color32::from_rgb(0, 0, 0)),
             grid_stroke: Stroke::new(0.8, Color32::from_rgb(200, 200, 200)),
+            marks_stroke: Stroke::new(1.0, Color32::from_rgb(0, 0, 0)),
         }
     }
 }
@@ -80,6 +89,85 @@ impl Grid {
         lines.push(Line::new(point_origin, axis_x_end, self.axis_stroke));
         lines.push(Line::new(point_origin, axis_y_end, self.axis_stroke));
 
+        for line in self.axis_arrows(axis_x_end, axis_y_end) {
+            lines.push(line);
+        }
+        for line in self.tick_marks() {
+            lines.push(line);
+        }
+
         lines
+    }
+
+    fn axis_arrows(&self, x_end: Point, y_end: Point) -> Vec<Line> {
+        let degree = Angle::from_degree(45.0).radian();
+        let delta = self.arrows_length * f32::sin(degree);
+
+        let stroke = self.axis_stroke;
+
+        let first_arrow_y = Line::new(
+            y_end,
+            Point {
+                x: y_end.x - delta,
+                y: y_end.y - delta,
+            },
+            stroke,
+        );
+        let second_arrow_y = Line::new(
+            y_end,
+            Point {
+                x: y_end.x + delta,
+                y: y_end.y - delta,
+            },
+            stroke,
+        );
+
+        let first_arrow_x = Line::new(
+            x_end,
+            Point {
+                x: x_end.x - delta,
+                y: x_end.y - delta,
+            },
+            stroke,
+        );
+        let second_arrow_x = Line::new(
+            x_end,
+            Point {
+                x: x_end.x - delta,
+                y: x_end.y + delta,
+            },
+            stroke,
+        );
+
+        vec![first_arrow_x, second_arrow_x, first_arrow_y, second_arrow_y]
+    }
+
+    fn tick_marks(&self) -> Vec<Line> {
+        let stroke = self.marks_stroke;
+
+        let tick_ox = Line::new(
+            Point {
+                x: self.tick_unit_x.x,
+                y: self.tick_unit_x.y + self.tick_marks_length,
+            },
+            Point {
+                x: self.tick_unit_x.x,
+                y: self.tick_unit_x.y - self.tick_marks_length,
+            },
+            stroke,
+        );
+        let tick_oy = Line::new(
+            Point {
+                x: self.tick_unit_y.x + self.tick_marks_length,
+                y: self.tick_unit_y.y,
+            },
+            Point {
+                x: self.tick_unit_y.x - self.tick_marks_length,
+                y: self.tick_unit_y.y,
+            },
+            stroke,
+        );
+
+        vec![tick_ox, tick_oy]
     }
 }
