@@ -1,4 +1,5 @@
 use crate::math::angle::Angle;
+use crate::models::circle::Circle;
 use crate::models::line::Line;
 use crate::models::model::Model;
 use crate::models::point::Point;
@@ -108,19 +109,19 @@ impl Euclidean {
         Matrix3::new(m11, m12, 0.0, m21, m22, 0.0, m31, m32, 1.0)
     }
 
-    pub fn rotation_dot(&self) -> Point {
-        Point {
-            x: self.rotation_x,
-            y: self.rotation_y,
+    pub fn rotation_dot(&self) -> Circle {
+        Circle {
+            center: Point::new(self.rotation_x, self.rotation_y),
+            ..Default::default()
         }
     }
 
-    pub fn shape_rotation_dot(point: Point, radius: f32, screen_params: ScreenParams) -> Shape {
-        let screen_point = point.to_screen_pos2(screen_params);
+    pub fn shape_rotation_dot(circle: Circle, screen_params: ScreenParams) -> Shape {
+        let screen_point = circle.to_screen_pos2(screen_params);
 
-        let radius = screen_params.convert_single(radius);
+        let radius = screen_params.convert_single(circle.radius);
 
-        if point.x == 0.0 && point.y == 0.0 {
+        if circle.center.x == 0.0 && circle.center.y == 0.0 {
             return Shape::circle_filled(screen_point, radius, Color32::from_white_alpha(0));
         }
 

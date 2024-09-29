@@ -1,3 +1,4 @@
+use crate::models::circle::Circle;
 use crate::models::line::Line;
 use crate::models::point::Point;
 use nalgebra::Matrix3;
@@ -57,7 +58,19 @@ impl Affine {
             .collect()
     }
 
-    pub fn convert_point(&self, point: Point) -> Point {
+    pub fn convert_circle(&self, circle: Circle) -> Circle {
+        let point_vector = circle.center.to_vector();
+        let matrix = self.get_affine_matrix();
+
+        let answer = point_vector * matrix;
+
+        Circle {
+            center: Point::new(answer.x, answer.y),
+            radius: (self.xx + self.yy) / 2.0,
+        }
+    }
+
+    fn convert_point(&self, point: Point) -> Point {
         let point_vector = point.to_vector();
         let matrix = self.get_affine_matrix();
 

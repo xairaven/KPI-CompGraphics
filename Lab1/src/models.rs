@@ -1,3 +1,4 @@
+pub mod circle;
 pub mod grid;
 pub mod line;
 pub mod model;

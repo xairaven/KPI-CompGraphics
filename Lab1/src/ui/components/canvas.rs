@@ -71,12 +71,12 @@ impl Canvas {
         }
 
         // Draw Euclidean Rotation Dot
-        // TODO: Something with radius
-        let rotation_dot = context.euclidean.rotation_dot();
-        let radius = ROTATION_DOT_RADIUS;
-        let rotation_dot = context.affine.convert_point(rotation_dot);
-        let radius = context.affine.xx * radius;
-        let rotation_dot = Euclidean::shape_rotation_dot(rotation_dot, radius, self.screen_params);
+        let rotation_dot = context
+            .euclidean
+            .rotation_dot()
+            .set_radius(ROTATION_DOT_RADIUS);
+        let rotation_dot = context.affine.convert_circle(rotation_dot);
+        let rotation_dot = Euclidean::shape_rotation_dot(rotation_dot, self.screen_params);
         painter.add(rotation_dot);
 
         response
