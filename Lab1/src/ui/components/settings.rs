@@ -386,8 +386,9 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
             ui.add_space(10.0);
 
             ui.vertical_centered(|ui| {
-                if ui.button("\t\tApply\t\t").clicked() {
-                    // TODO: POINT SYMMETRY APPLY
+                if ui.button("\t\tReset offset\t\t").clicked() {
+                    context.affine.symmetry_x = 0.0;
+                    context.affine.symmetry_y = 0.0;
                 }
             });
         });
