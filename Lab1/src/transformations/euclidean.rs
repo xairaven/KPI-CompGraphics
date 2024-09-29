@@ -5,7 +5,7 @@ use crate::models::screen_params::ScreenParams;
 use egui::{Color32, Shape};
 use nalgebra::Matrix3;
 
-pub const ROTATION_DOT_RADIUS: f32 = 5.0;
+pub const ROTATION_DOT_RADIUS: f32 = 2.5;
 
 pub struct Euclidean {
     pub rotation_x: f32,
@@ -34,36 +34,55 @@ impl Default for Euclidean {
 }
 
 impl Euclidean {
-    pub fn process_rotation(&self, model: Vec<Line>, screen_params: ScreenParams) -> Vec<Line> {
-        if self.rotation_x == 0.0 && self.rotation_y == 0.0 && self.rotation_angle == 0.0 {
+    pub fn process_rotation(&self, model: Vec<Line>) -> Vec<Line> {
+        if self.rotation_angle == 0.0 {
             return model;
         };
 
         model
             .iter()
             .map(|line| {
-                let start = self.rotate(line.start, screen_params);
-                let end = self.rotate(line.end, screen_params);
+                let start = self.rotate(line.start);
+                let end = self.rotate(line.end);
                 Line::new(start, end, line.stroke)
             })
             .collect()
     }
 
-    pub fn rotate(&self, point: Point, screen_params: ScreenParams) -> Point {
-        // Already in screen coordinates
-        let point_vector = point.to_vector();
+    pub fn process_offset(&self, model: Vec<Line>) -> Vec<Line> {
+        if self.offset_x == 0.0 && self.offset_y == 0.0 {
+            return model;
+        }
 
-        // Getting matrix. Coordinates are converting to screen
-        let matrix = self.get_rotation_matrix(screen_params);
+        model
+            .iter()
+            .map(|line| {
+                let start = self.offset(line.start);
+                let end = self.offset(line.end);
+                Line::new(start, end, line.stroke)
+            })
+            .collect()
+    }
+
+    pub fn rotate(&self, point: Point) -> Point {
+        let point_vector = point.to_vector();
+        let matrix = self.get_rotation_matrix();
 
         let answer = point_vector * matrix;
 
         Point::new(answer.x, answer.y)
     }
 
-    fn get_rotation_matrix(&self, screen_params: ScreenParams) -> Matrix3<f32> {
+    pub fn offset(&self, point: Point) -> Point {
+        Point {
+            x: point.x + self.offset_x,
+            y: point.y + self.offset_y,
+        }
+    }
+
+    fn get_rotation_matrix(&self) -> Matrix3<f32> {
         let angle = Angle::from_degree(self.rotation_angle).radian();
-        let rotation_point = Point::new(self.rotation_x, self.rotation_y).to_screen(screen_params);
+        let rotation_point = Point::new(self.rotation_x, self.rotation_y);
 
         let m11 = f32::cos(angle);
         let m12 = f32::sin(angle);
@@ -84,18 +103,12 @@ impl Euclidean {
         }
         .to_screen_pos2(screen_params);
 
+        let radius = screen_params.convert_single(ROTATION_DOT_RADIUS);
+
         if self.rotation_x == 0.0 && self.rotation_y == 0.0 {
-            return Shape::circle_filled(
-                rotation_center,
-                ROTATION_DOT_RADIUS,
-                Color32::from_white_alpha(0),
-            );
+            return Shape::circle_filled(rotation_center, radius, Color32::from_white_alpha(0));
         }
 
-        Shape::circle_filled(
-            rotation_center,
-            ROTATION_DOT_RADIUS,
-            self.rotation_dot_color,
-        )
+        Shape::circle_filled(rotation_center, radius, self.rotation_dot_color)
     }
 }

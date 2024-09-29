@@ -21,6 +21,10 @@ impl Default for ScreenParams {
 }
 
 impl ScreenParams {
+    pub fn convert_single(&self, value: f32) -> f32 {
+        value / 10.0 * self.px_per_cm
+    }
+
     pub fn convert_xy(&self, x: f32, y: f32) -> (f32, f32) {
         let new_x = (x / 10.0 * self.px_per_cm) + INIT_X - self.offset_x;
         let new_y = self.canvas_height - INIT_Y - (y / 10.0 * self.px_per_cm) + self.offset_y;

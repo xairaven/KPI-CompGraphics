@@ -20,12 +20,13 @@ impl Canvas {
         context.resize.update_values(&mut context.model);
 
         // Get model lines
-        let model_lines: Vec<Line> = context.model.lines_to_draw(self.screen_params);
+        let model_lines: Vec<Line> = context.model.lines();
 
         // Euclidean Rotation
-        let model_lines: Vec<Line> = context
-            .euclidean
-            .process_rotation(model_lines, self.screen_params);
+        let model_lines: Vec<Line> = context.euclidean.process_rotation(model_lines);
+
+        // Euclidean Offset
+        let model_lines: Vec<Line> = context.euclidean.process_offset(model_lines);
 
         // DRAWING
         // Draw grid
@@ -38,10 +39,13 @@ impl Canvas {
         painter.extend(grid_shapes);
 
         // Draw model
-        let model_shapes: Vec<Shape> = model_lines.iter().map(|line| line.to_shape()).collect();
+        let model_shapes: Vec<Shape> = model_lines
+            .iter()
+            .map(|line| line.to_screen_shape(self.screen_params))
+            .collect();
         painter.extend(model_shapes);
 
-        // Draw Euclidean Dot
+        // Draw Euclidean Rotation Dot
         let rotation_dot = context.euclidean.shape_rotation_dot(self.screen_params);
         painter.add(rotation_dot);
 

@@ -7,8 +7,10 @@ use egui::{Color32, DragValue, Grid, RichText, Slider};
 pub const MAX_RESIZING: u32 = 300;
 pub const MAX_ROTATION_DOT_CORDS: u32 = 200;
 
-pub const MAX_P_SCROLL_OFFSET: f32 = 200.0;
-pub const MAX_N_SCROLL_OFFSET: f32 = -200.0;
+pub const GRID_SIZE: f32 = 200.0;
+
+pub const MAX_P_SCROLL_OFFSET: f32 = GRID_SIZE;
+pub const MAX_N_SCROLL_OFFSET: f32 = -1.0 * GRID_SIZE;
 
 pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui) {
     egui::ScrollArea::vertical().show(ui, |ui| {
@@ -227,9 +229,21 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                 .striped(true)
                 .min_col_width(50.0)
                 .show(ui, |ui| {
-                    label_centered_with_drag(ui, "X:", &mut context.euclidean.offset_x, 1, 0..=100);
+                    label_centered_with_drag(
+                        ui,
+                        "X:",
+                        &mut context.euclidean.offset_x,
+                        1,
+                        -1.0 * GRID_SIZE..=GRID_SIZE,
+                    );
 
-                    label_centered_with_drag(ui, "Y:", &mut context.euclidean.offset_y, 1, 0..=100);
+                    label_centered_with_drag(
+                        ui,
+                        "Y:",
+                        &mut context.euclidean.offset_y,
+                        1,
+                        -1.0 * GRID_SIZE..=GRID_SIZE,
+                    );
                     ui.end_row();
                 });
 
