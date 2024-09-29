@@ -1,11 +1,11 @@
 use crate::context::Context;
+use crate::transformations::{affine, euclidean};
 use crate::ui::components::canvas::Canvas;
 use crate::utils::egui::label_centered_with_drag;
 use egui::style::HandleShape;
-use egui::{Color32, DragValue, Grid, RichText, Slider};
+use egui::{DragValue, Grid, RichText, Slider};
 
 pub const MAX_RESIZING: u32 = 300;
-pub const MAX_ROTATION_DOT_CORDS: u32 = 200;
 
 pub const GRID_SIZE: f32 = 200.0;
 
@@ -233,7 +233,7 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
 
         ui.group(|ui| {
             ui.vertical_centered(|ui| {
-                ui.label(RichText::new("Rotation").color(Color32::from_rgb(255, 0, 0)));
+                ui.label(RichText::new("Rotation").color(euclidean::ROTATION_DOT_COLOR));
             });
 
             ui.add_space(5.0);
@@ -248,7 +248,7 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                         "X:",
                         &mut context.euclidean.rotation_x,
                         1,
-                        0..=MAX_ROTATION_DOT_CORDS,
+                        0.0..=GRID_SIZE,
                     );
                     ui.end_row();
 
@@ -257,7 +257,7 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                         "Y:",
                         &mut context.euclidean.rotation_y,
                         1,
-                        0..=MAX_ROTATION_DOT_CORDS,
+                        0.0..=GRID_SIZE,
                     );
                     ui.end_row();
 
@@ -357,7 +357,7 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
 
         ui.group(|ui| {
             ui.vertical_centered(|ui| {
-                ui.label("Point symmetry");
+                ui.label(RichText::new("Point symmetry").color(affine::SYMMETRY_DOT_COLOR));
             });
 
             ui.add_space(5.0);
@@ -366,8 +366,20 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                 .min_col_width(50.0)
                 .num_columns(4)
                 .show(ui, |ui| {
-                    label_centered_with_drag(ui, "X:", &mut context.affine.symmetry_x, 1, -10..=10);
-                    label_centered_with_drag(ui, "Y:", &mut context.affine.symmetry_y, 1, -10..=10);
+                    label_centered_with_drag(
+                        ui,
+                        "X:",
+                        &mut context.affine.symmetry_x,
+                        1,
+                        0.0..=GRID_SIZE,
+                    );
+                    label_centered_with_drag(
+                        ui,
+                        "Y:",
+                        &mut context.affine.symmetry_y,
+                        1,
+                        0.0..=GRID_SIZE,
+                    );
                     ui.end_row();
                 });
 

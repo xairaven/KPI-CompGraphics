@@ -3,11 +3,9 @@ use crate::models::circle::Circle;
 use crate::models::line::Line;
 use crate::models::model::Model;
 use crate::models::point::Point;
-use crate::models::screen_params::ScreenParams;
-use egui::{Color32, Shape};
+use egui::Color32;
 use nalgebra::Matrix3;
 
-pub const ROTATION_DOT_RADIUS: f32 = 2.5;
 pub const ROTATION_DOT_COLOR: Color32 = Color32::from_rgb(255, 0, 0);
 
 pub struct Euclidean {
@@ -114,17 +112,5 @@ impl Euclidean {
             center: Point::new(self.rotation_x, self.rotation_y),
             ..Default::default()
         }
-    }
-
-    pub fn shape_rotation_dot(circle: Circle, screen_params: ScreenParams) -> Shape {
-        let screen_point = circle.to_screen_pos2(screen_params);
-
-        let radius = screen_params.convert_single(circle.radius);
-
-        if circle.center.x == 0.0 && circle.center.y == 0.0 {
-            return Shape::circle_filled(screen_point, radius, Color32::from_white_alpha(0));
-        }
-
-        Shape::circle_filled(screen_point, radius, ROTATION_DOT_COLOR)
     }
 }

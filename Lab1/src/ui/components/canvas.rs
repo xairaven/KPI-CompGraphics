@@ -1,7 +1,9 @@
 use crate::context::Context;
+use crate::models::circle;
+use crate::models::circle::Circle;
 use crate::models::line::Line;
 use crate::models::screen_params::ScreenParams;
-use crate::transformations::euclidean::{Euclidean, ROTATION_DOT_RADIUS};
+use crate::transformations::{affine, euclidean};
 use eframe::epaint::Shape;
 use egui::{Color32, Frame, Response, Sense};
 
@@ -53,6 +55,12 @@ impl Canvas {
         }
         let grid_lines: Vec<Line> = context.affine.scaling_convert_line(grid_lines);
 
+        // Affine Point Symmetry
+        let model_lines: Vec<Line> = context.affine.symmetry_convert_line(model_lines);
+        if context.euclidean.offset_x != 0.0 || context.euclidean.offset_y != 0.0 {
+            model_shadow = context.affine.symmetry_convert_line(model_shadow);
+        }
+
         // DRAWING
         // Draw grid
         let grid_shapes: Vec<Shape> = grid_lines
@@ -81,11 +89,26 @@ impl Canvas {
         let rotation_dot = context
             .euclidean
             .rotation_dot()
-            .set_radius(ROTATION_DOT_RADIUS);
+            .set_radius(circle::DOT_STANDARD_RADIUS);
         let rotation_dot = context.affine.affine_convert_circle(rotation_dot);
         let rotation_dot = context.affine.scaling_convert_circle(rotation_dot);
-        let rotation_dot = Euclidean::shape_rotation_dot(rotation_dot, self.screen_params);
+        let rotation_dot = Circle::shape_dot(
+            rotation_dot,
+            euclidean::ROTATION_DOT_COLOR,
+            self.screen_params,
+        );
         painter.add(rotation_dot);
+
+        // Draw Affine Symmetry Point
+        let symmetry_dot = context
+            .affine
+            .symmetry_dot()
+            .set_radius(circle::DOT_STANDARD_RADIUS);
+        let symmetry_dot = context.affine.affine_convert_circle(symmetry_dot);
+        let symmetry_dot = context.affine.scaling_convert_circle(symmetry_dot);
+        let symmetry_dot =
+            Circle::shape_dot(symmetry_dot, affine::SYMMETRY_DOT_COLOR, self.screen_params);
+        painter.add(symmetry_dot);
 
         response
     }

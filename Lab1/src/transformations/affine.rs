@@ -1,7 +1,11 @@
 use crate::models::circle::Circle;
 use crate::models::line::Line;
 use crate::models::point::Point;
+use crate::models::screen_params::ScreenParams;
+use eframe::epaint::{Color32, Shape};
 use nalgebra::Matrix3;
+
+pub const SYMMETRY_DOT_COLOR: Color32 = Color32::from_rgb(255, 0, 255);
 
 pub struct Affine {
     pub xx: f32,
@@ -137,6 +141,30 @@ impl Affine {
         Point::new(answer.x, answer.y)
     }
 
+    pub fn symmetry_convert_line(&self, lines: Vec<Line>) -> Vec<Line> {
+        if self.symmetry_x == 0.0 && self.symmetry_y == 0.0 {
+            return lines;
+        };
+
+        lines
+            .iter()
+            .map(|line| {
+                let start = self.symmetry_convert_point(line.start);
+                let end = self.symmetry_convert_point(line.end);
+                Line::new(start, end, line.stroke)
+            })
+            .collect()
+    }
+
+    fn symmetry_convert_point(&self, point: Point) -> Point {
+        let point_vector = point.to_vector();
+        let matrix = self.get_symmetry_matrix();
+
+        let answer = point_vector * matrix;
+
+        Point::new(answer.x, answer.y)
+    }
+
     fn get_affine_matrix(&self) -> Matrix3<f32> {
         Matrix3::new(
             self.xx,
@@ -163,5 +191,40 @@ impl Affine {
             0.0,
             1.0,
         )
+    }
+
+    fn get_symmetry_matrix(&self) -> Matrix3<f32> {
+        Matrix3::new(
+            -1.0,
+            0.0,
+            0.0,
+            0.0,
+            -1.0,
+            0.0,
+            2.0 * self.symmetry_x,
+            2.0 * self.symmetry_y,
+            1.0,
+        )
+    }
+
+    pub fn symmetry_dot(&self) -> Circle {
+        Circle {
+            center: Point::new(self.symmetry_x, self.symmetry_y),
+            ..Default::default()
+        }
+    }
+
+    pub fn shape_symmetry_dot(
+        circle: Circle, color: Color32, screen_params: ScreenParams,
+    ) -> Shape {
+        let screen_point = circle.to_screen_pos2(screen_params);
+
+        let radius = screen_params.convert_single(circle.radius);
+
+        if circle.center.x == 0.0 && circle.center.y == 0.0 {
+            return Shape::circle_filled(screen_point, radius, Color32::from_white_alpha(0));
+        }
+
+        Shape::circle_filled(screen_point, radius, color)
     }
 }
