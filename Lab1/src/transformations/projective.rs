@@ -67,10 +67,7 @@ impl Projective {
 
         let point = self.convert_point(Point::new(circle.center.x, circle.center.y));
 
-        let mut radius = (self.xx + self.yy) / 2.0;
-        if radius < 2.5 {
-            radius = 2.5;
-        }
+        let radius = 2.5;
 
         Circle {
             center: Point::new(point.x, point.y),
