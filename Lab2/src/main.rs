@@ -1,12 +1,19 @@
 use crate::config::AppConfig;
 
 pub mod config;
+pub mod context;
 pub mod errors;
 pub mod logger;
+pub mod models;
+
 pub mod ui {
     pub mod app;
     pub mod components;
     pub mod core;
+    pub mod styles {
+        pub mod colors;
+        pub mod strokes;
+    }
 
     pub mod windows {
         pub mod main_window;

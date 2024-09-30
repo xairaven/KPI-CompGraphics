@@ -8,10 +8,10 @@ pub fn show(app: &mut App, ui: &mut egui::Ui, _ctx: &egui::Context) {
         .default_width(components::settings::SETTINGS_PANEL_WIDTH)
         .show_separator_line(true)
         .show_inside(ui, |ui| {
-            // components::settings::show_panel(&mut app.context, &mut app.canvas, ui);
+            components::settings::show_panel(&mut app.context, &mut app.canvas, ui);
         });
 
     CentralPanel::default().show_inside(ui, |ui| {
-        // app.canvas.show_content(ui, &mut app.context);
+        app.canvas.show_content(&mut app.context, ui);
     });
 }

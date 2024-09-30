@@ -1,8 +1,13 @@
+use crate::context::Context;
+use crate::ui::components::canvas::Canvas;
 use crate::ui::windows::main_window;
 use egui::ThemePreference;
 
 #[derive(Default)]
-pub struct App {}
+pub struct App {
+    pub canvas: Canvas,
+    pub context: Context,
+}
 
 impl App {
     pub fn new(cc: &eframe::CreationContext<'_>, theme: ThemePreference) -> Self {
