@@ -1,0 +1,1 @@
+pub const SETTINGS_PANEL_WIDTH: f32 = 250.0;
