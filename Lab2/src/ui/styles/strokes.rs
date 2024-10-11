@@ -12,3 +12,7 @@ pub fn axis_red() -> Stroke {
 pub fn grid_gray() -> Stroke {
     Stroke::new(0.8, colors::GRAY)
 }
+
+pub fn model_black() -> Stroke {
+    Stroke::new(2.0, colors::BLACK)
+}
