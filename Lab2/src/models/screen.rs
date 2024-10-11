@@ -1,3 +1,4 @@
+use crate::models::grid;
 use crate::models::point::Point;
 
 #[derive(Debug, Clone, Copy)]
@@ -21,15 +22,18 @@ impl Default for ScreenParams {
 
 impl ScreenParams {
     pub fn convert_single(&self, value: f32) -> f32 {
-        value / 10.0 * self.px_per_cm
+        value / grid::UNIT_LENGTH * self.px_per_cm
     }
 
     pub fn convert_point(&self, point: Point) -> Point {
         debug_assert!(!point.converted_to_screen);
 
         Point {
-            x: self.canvas_center.x + (point.x / 10.0 * self.px_per_cm) - self.offset_x,
-            y: self.canvas_center.y + (point.y / 10.0 * self.px_per_cm) + self.offset_y,
+            x: self.canvas_center.x + (point.x / grid::UNIT_LENGTH * self.px_per_cm)
+                - self.offset_x,
+            y: self.canvas_center.y
+                + (point.y / grid::UNIT_LENGTH * self.px_per_cm)
+                + self.offset_y,
             converted_to_screen: true,
         }
     }

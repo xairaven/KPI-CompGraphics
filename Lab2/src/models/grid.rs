@@ -2,6 +2,8 @@ use crate::models::line::Line;
 use crate::models::point::Point;
 use crate::ui::styles::strokes;
 
+pub const UNIT_LENGTH: f32 = 1.0;
+
 pub struct Grid {
     pub ticks_amount: i32,
 
@@ -16,8 +18,8 @@ impl Default for Grid {
             ticks_amount: 20,
 
             origin: Point::new(0.0, 0.0),
-            unit_x: Point::new(10.0, 0.0),
-            unit_y: Point::new(0.0, 10.0),
+            unit_x: Point::new(UNIT_LENGTH, 0.0),
+            unit_y: Point::new(0.0, UNIT_LENGTH),
         }
     }
 }
