@@ -17,9 +17,13 @@ impl Canvas {
     pub fn process(&mut self, context: &mut Context) {
         // Creating grid:
         self.grid_lines = context.grid.lines();
+
+        // Creating model:
+        let lines: Vec<Line> = vec![];
+        self.model_lines = lines;
     }
 
-    pub fn draw(&mut self, context: &mut Context, ui: &mut egui::Ui) -> Response {
+    pub fn draw(&mut self, ui: &mut egui::Ui) -> Response {
         let painter_size = ui.available_size_before_wrap();
         let (response, painter) = ui.allocate_painter(painter_size, Sense::hover());
         self.screen_params.canvas_center = Point::from_pos2(response.rect.center());
@@ -32,6 +36,14 @@ impl Canvas {
             .collect();
         painter.extend(grid_shapes);
 
+        // Draw model:
+        let model_shapes: Vec<Shape> = self
+            .model_lines
+            .iter()
+            .map(|line| line.to_screen(self.screen_params).to_shape())
+            .collect();
+        painter.extend(model_shapes);
+
         response
     }
 
@@ -40,7 +52,7 @@ impl Canvas {
             .fill(Color32::from_rgb(255, 255, 255))
             .show(ui, |ui| {
                 self.process(context);
-                self.draw(context, ui);
+                self.draw(ui);
             });
     }
 }
