@@ -20,7 +20,7 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
             ui.add(
                 DragValue::new(&mut canvas.screen_params.px_per_cm)
                     .speed(1)
-                    .range(10..=100),
+                    .range(10..=150),
             );
         });
 
