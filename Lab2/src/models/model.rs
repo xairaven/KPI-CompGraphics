@@ -32,20 +32,18 @@ impl Model {
             .windows(2)
             .map(|pair| Line::new(pair[0], pair[1], stroke))
             .collect();
-        if let Some(first) = outer_points.first() {
-            if let Some(last) = outer_points.last() {
-                outer_lines.push(Line::new(*first, *last, stroke));
-            }
-        }
 
         let mut inner_lines: Vec<Line> = inner_points
             .windows(2)
             .map(|pair| Line::new(pair[0], pair[1], stroke))
             .collect();
-        if let Some(first) = inner_points.first() {
-            if let Some(last) = inner_points.last() {
-                inner_lines.push(Line::new(*first, *last, stroke));
-            }
+
+        // Connecting
+        if let (Some(first), Some(last)) = (outer_points.first(), outer_points.last()) {
+            outer_lines.push(Line::new(*first, *last, stroke));
+        }
+        if let (Some(first), Some(last)) = (inner_points.first(), inner_points.last()) {
+            inner_lines.push(Line::new(*first, *last, stroke));
         }
 
         outer_lines.append(&mut inner_lines);
