@@ -83,7 +83,7 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                     ui.add(
                         DragValue::new(&mut context.model.a)
                             .speed(0.05)
-                            .range(0..=10),
+                            .range(-10..=10),
                     );
 
                     ui.label("B:");

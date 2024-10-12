@@ -1,7 +1,7 @@
 use crate::models::line::Line;
 use crate::models::point::Point;
 use crate::ui::styles::strokes;
-use std::collections::VecDeque;
+use eframe::epaint::Stroke;
 
 pub const X_BOUND: f32 = 20.0;
 pub const X_STEP: f32 = 0.01;
@@ -24,53 +24,74 @@ impl Default for Model {
 
 impl Model {
     pub fn lines(&self) -> Vec<Line> {
-        let (outer_points, inner_points) = self.points();
+        let points = self.points();
 
         let stroke = strokes::model_black();
 
-        let mut outer_lines: Vec<Line> = outer_points
+        let mut lines: Vec<Line> = vec![];
+
+        let mut outer_upper_lines = points[0]
             .windows(2)
             .map(|pair| Line::new(pair[0], pair[1], stroke))
             .collect();
-
-        let mut inner_lines: Vec<Line> = inner_points
+        let mut outer_lower_lines = points[1]
             .windows(2)
             .map(|pair| Line::new(pair[0], pair[1], stroke))
             .collect();
+        let mut inner_upper_lines = points[2]
+            .windows(2)
+            .map(|pair| Self::divide_nan_lines(pair, stroke))
+            .collect();
+        let mut inner_lower_lines = points[3]
+            .windows(2)
+            .map(|pair| Self::divide_nan_lines(pair, stroke))
+            .collect();
 
-        // Connecting
-        if let (Some(first), Some(last)) = (outer_points.first(), outer_points.last()) {
-            outer_lines.push(Line::new(*first, *last, stroke));
-        }
-        if let (Some(first), Some(last)) = (inner_points.first(), inner_points.last()) {
-            inner_lines.push(Line::new(*first, *last, stroke));
-        }
+        // EDGE CASES
+        // if (a > 0)
 
-        outer_lines.append(&mut inner_lines);
+        // APPENDS
+        lines.append(&mut outer_upper_lines);
+        lines.append(&mut outer_lower_lines);
+        lines.append(&mut inner_upper_lines);
+        lines.append(&mut inner_lower_lines);
 
-        outer_lines
+        lines
     }
 
-    pub fn points(&self) -> (Vec<Point>, Vec<Point>) {
-        let mut outer_circle: VecDeque<Point> = VecDeque::new();
-        let mut inner_circle: VecDeque<Point> = VecDeque::new();
+    pub fn points(&self) -> Vec<Vec<Point>> {
+        let mut outer_upper: Vec<Point> = vec![];
+        let mut outer_lower: Vec<Point> = vec![];
+        let mut inner_upper: Vec<Point> = vec![];
+        let mut inner_lower: Vec<Point> = vec![];
 
         let mut x = -X_BOUND;
         while x < X_BOUND {
             if let Some(point) = self.get_point(Model::outer_circle_formula, x) {
-                outer_circle.push_back(point);
-                outer_circle.push_front(Point::new(point.x, -point.y));
+                outer_upper.push(point);
+                outer_lower.push(Point::new(point.x, -point.y));
             }
 
             if let Some(point) = self.get_point(Model::inner_circle_formula, x) {
-                inner_circle.push_back(point);
-                inner_circle.push_front(Point::new(point.x, -point.y));
+                inner_upper.push(point);
+                inner_lower.push(Point::new(point.x, -point.y));
             }
 
             x += X_STEP;
         }
 
-        (Vec::from(outer_circle), Vec::from(inner_circle))
+        vec![outer_upper, outer_lower, inner_upper, inner_lower]
+    }
+
+    fn divide_nan_lines(pair: &[Point], stroke: Stroke) -> Line {
+        let mut line = Line::transparent(pair[0], pair[1]);
+
+        if f32::abs(line.start.x - line.end.x) > X_STEP + (X_STEP / 10.0) {
+            return line;
+        }
+
+        line.stroke = stroke;
+        line
     }
 
     pub fn outer_circle_formula(x: f32, a: f32, b: f32, c: f32) -> f32 {
