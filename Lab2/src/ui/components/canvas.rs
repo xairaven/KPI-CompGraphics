@@ -19,8 +19,8 @@ impl Canvas {
         self.grid_lines = context.grid.lines();
 
         // Creating model:
-        let lines: Vec<Line> = vec![];
-        self.model_lines = lines;
+        let points = context.model.lines();
+        self.model_lines = points;
     }
 
     pub fn draw(&mut self, ui: &mut egui::Ui) -> Response {
