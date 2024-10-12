@@ -49,6 +49,21 @@ impl Model {
 
         // EDGE CASES
         // if (a > 0)
+        if self.a > 0.0 {
+            if let (Some(first), Some(second)) = (points[0].last(), points[1].last()) {
+                lines.push(Line::new(*first, *second, stroke));
+            }
+        } else if self.a == 0.0 {
+            if let (Some(first), Some(second)) = (points[0].first(), points[1].first()) {
+                lines.push(Line::new(*first, *second, stroke));
+            }
+            if let (Some(first), Some(second)) = (points[0].last(), points[1].last()) {
+                lines.push(Line::new(*first, *second, stroke));
+            }
+        } else if let (Some(first), Some(second)) = (points[0].first(), points[1].first()) {
+            lines.push(Line::new(*first, *second, stroke));
+        }
+        // Transparent Line case
 
         // APPENDS
         lines.append(&mut outer_upper_lines);
