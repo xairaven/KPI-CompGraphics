@@ -51,6 +51,11 @@ impl Canvas {
         Frame::canvas(ui.style())
             .fill(Color32::from_rgb(255, 255, 255))
             .show(ui, |ui| {
+                ui.input(|i| {
+                    let delta = i.smooth_scroll_delta.y;
+                    self.screen_params.px_per_cm += delta * 0.1;
+                });
+
                 self.process(context);
                 self.draw(ui);
             });

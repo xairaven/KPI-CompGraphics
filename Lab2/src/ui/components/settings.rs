@@ -1,8 +1,11 @@
 use crate::context::Context;
 use crate::ui::components::canvas::Canvas;
-use egui::{DragValue, Grid, RichText};
+use egui::style::HandleShape;
+use egui::{DragValue, Grid, RichText, Slider};
 
 pub const SETTINGS_PANEL_WIDTH: f32 = 250.0;
+pub const GRID_SIZE: f32 = 200.0;
+pub const MAX_SCROLL_OFFSET: f32 = GRID_SIZE;
 
 pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui) {
     egui::ScrollArea::vertical().show(ui, |ui| {
@@ -17,8 +20,41 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
             ui.add(
                 DragValue::new(&mut canvas.screen_params.px_per_cm)
                     .speed(1)
-                    .range(1..=100),
+                    .range(10..=100),
             );
+        });
+
+        ui.add_space(10.0);
+
+        ui.group(|ui| {
+            ui.vertical_centered(|ui| {
+                ui.label("Scroll");
+
+                Grid::new("ScrollGrid")
+                    .min_col_width(100.0)
+                    .num_columns(2)
+                    .show(ui, |ui| {
+                        ui.label("Horizontal:");
+                        ui.add(
+                            Slider::new(
+                                &mut canvas.screen_params.offset_x,
+                                -MAX_SCROLL_OFFSET..=MAX_SCROLL_OFFSET,
+                            )
+                            .handle_shape(HandleShape::Rect { aspect_ratio: 0.5 }),
+                        );
+                        ui.end_row();
+
+                        ui.label("Vertical:");
+                        ui.add(
+                            Slider::new(
+                                &mut canvas.screen_params.offset_y,
+                                -MAX_SCROLL_OFFSET..=MAX_SCROLL_OFFSET,
+                            )
+                            .handle_shape(HandleShape::Rect { aspect_ratio: 0.5 }),
+                        );
+                        ui.end_row();
+                    });
+            });
         });
 
         ui.add_space(10.0);
