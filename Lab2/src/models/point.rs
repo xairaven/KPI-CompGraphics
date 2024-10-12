@@ -1,5 +1,6 @@
 use crate::models::screen::ScreenParams;
 use eframe::emath::Pos2;
+use eframe::epaint::{Color32, Shape};
 
 #[derive(Debug, Default, Clone, Copy)]
 pub struct Point {
@@ -33,6 +34,10 @@ impl Point {
 
     pub fn to_screen(&self, screen_params: ScreenParams) -> Self {
         screen_params.convert_point(*self)
+    }
+
+    pub fn to_shape(&self, radius: f32, color: Color32) -> Shape {
+        Shape::circle_filled(self.to_pos2(), radius, color)
     }
 
     pub fn with_converted_checked(&self) -> Self {
