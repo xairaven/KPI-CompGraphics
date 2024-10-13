@@ -66,15 +66,25 @@ impl Model {
             connection_elements.push(*point);
         }
         // Transparent Lines
-        let transparent_upper = inner_upper_lines.iter().find(|line| line.is_transparent());
-        let transparent_lower = inner_lower_lines.iter().find(|line| line.is_transparent());
+        let transparent_upper = inner_upper_lines
+            .iter()
+            .enumerate()
+            .find(|line| line.1.is_transparent());
+        let transparent_lower = inner_lower_lines
+            .iter()
+            .enumerate()
+            .find(|line| line.1.is_transparent());
         if let (Some(upper_line), Some(lower_line)) = (transparent_upper, transparent_lower) {
             let mut points = vec![
-                upper_line.start,
-                upper_line.end,
-                lower_line.start,
-                lower_line.end,
+                upper_line.1.start,
+                upper_line.1.end,
+                lower_line.1.start,
+                lower_line.1.end,
             ];
+
+            // Deleting transparent lines
+            inner_upper_lines.remove(upper_line.0);
+            inner_lower_lines.remove(lower_line.0);
             connection_elements.append(&mut points);
         }
 
