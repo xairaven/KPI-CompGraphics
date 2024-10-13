@@ -1,5 +1,6 @@
 use crate::context::Context;
 use crate::models::model;
+use crate::operations::curve_point;
 use crate::operations::curve_point::Direction;
 use crate::ui::components::canvas::Canvas;
 use crate::ui::styles::colors;
@@ -188,6 +189,15 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                     ui.label("Coordinates: ");
                     ui.label(format!("X: {:.2}", context.curve_point.dot.center.x));
                     ui.label(format!("Y: {:.2}", context.curve_point.dot.center.y));
+
+                    ui.end_row();
+
+                    ui.label("Speed: ");
+                    ui.add(
+                        DragValue::new(&mut context.curve_point.speed)
+                            .speed(1)
+                            .range(curve_point::MIN_SPEED..=curve_point::MAX_SPEED),
+                    );
                 });
         });
 

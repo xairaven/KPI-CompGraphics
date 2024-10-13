@@ -1,6 +1,9 @@
 use crate::models::dot::Dot;
 use crate::models::line::Line;
 
+pub const MIN_SPEED: u32 = 1;
+pub const MAX_SPEED: u32 = 10;
+
 pub struct CurvePoint {
     pub index: u32,
     pub length: u32,
@@ -9,6 +12,7 @@ pub struct CurvePoint {
     pub is_running: bool,
     pub is_visible: bool,
     pub direction: Direction,
+    pub speed: u32,
 }
 
 pub enum Direction {
@@ -25,6 +29,7 @@ impl Default for CurvePoint {
             is_running: false,
             is_visible: false,
             direction: Direction::Right,
+            speed: 1,
         }
     }
 }
@@ -46,22 +51,29 @@ impl CurvePoint {
         // Getting dot
         self.dot = Dot::from_point(&model_lines[self.index as usize].start);
 
+        // If length 1, there's no way to do animation
         if self.length == 1 {
             return;
         }
 
+        // Speed can't be greater than length
+        if self.speed > self.length {
+            self.speed = self.length - 1;
+        }
+
         // Do we need to hop on next circle?
         match self.direction {
-            Direction::Left if self.index == 0 => {
-                self.index = (model_lines.len() as i32 - 1) as u32;
+            Direction::Left if (self.index as i32 - self.speed as i32) < 0 => {
+                self.index =
+                    (model_lines.len() as i32 + self.index as i32 - self.speed as i32) as u32;
             },
-            Direction::Right if self.index + 1 == model_lines.len() as u32 => {
-                self.index = 0;
+            Direction::Right if self.index + self.speed > model_lines.len() as u32 - 1 => {
+                self.index = self.index + self.speed - model_lines.len() as u32;
             },
             _ => {},
         }
 
-        self.index = (self.index as i32 + self.direction_coefficient()) as u32;
+        self.index = (self.index as i32 + self.speed as i32 * self.direction_coefficient()) as u32;
     }
 
     pub fn default_state(&mut self) {
