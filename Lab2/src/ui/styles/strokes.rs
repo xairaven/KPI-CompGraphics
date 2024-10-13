@@ -9,7 +9,7 @@ pub fn axis_red() -> Stroke {
     Stroke::new(2.0, colors::DARK_RED)
 }
 
-pub fn derivative_blue() -> Stroke {
+pub fn tangent_blue() -> Stroke {
     Stroke::new(2.0, colors::BLUE)
 }
 

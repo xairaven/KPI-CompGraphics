@@ -1,9 +1,10 @@
 use crate::context::Context;
+use crate::math;
 use crate::models::line::Line;
 use crate::models::point::Point;
 use crate::models::screen::ScreenParams;
 use crate::operations::curve_props::CurveProperties;
-use crate::ui::styles::colors;
+use crate::ui::styles::{colors, strokes};
 use eframe::epaint::{Color32, Shape};
 use egui::{Frame, Response, Sense};
 
@@ -31,6 +32,28 @@ impl Canvas {
         // Creating model:
         let model_lines = context.model.lines();
 
+        // Tangent Line
+        if context.curve_point.is_visible && context.curve_props.is_tangent_enabled {
+            let curve_point = context.curve_point.dot.center;
+
+            let tangent_point = CurveProperties::tangent_point(
+                curve_point.x,
+                curve_point.y,
+                context.model.a,
+                context.model.b,
+            );
+
+            if let Some(point) = tangent_point {
+                let line = math::vector::line_with_center(
+                    curve_point,
+                    point,
+                    10.0,
+                    strokes::tangent_blue(),
+                );
+                self.tangent_line = Some(line);
+            }
+        }
+
         // Curve Point
         if context.curve_point.is_visible && context.curve_point.is_running {
             context.curve_point.step(&model_lines);
@@ -38,16 +61,6 @@ impl Canvas {
 
             if context.animation_settings.is_running {
                 context.animation_settings.is_running = Default::default();
-            }
-
-            if context.curve_props.is_tangent_enabled {
-                let curve_point = context.curve_point.dot.center;
-                self.tangent_line = CurveProperties::tangent_line(
-                    curve_point.x,
-                    curve_point.y,
-                    context.model.a,
-                    context.model.b,
-                );
             }
         }
 
@@ -76,7 +89,7 @@ impl Canvas {
             .collect();
         painter.extend(model_shapes);
 
-        // Draw derivative
+        // Draw tangent
         if context.curve_props.is_tangent_enabled {
             if let Some(line) = self.tangent_line {
                 painter.add(line.to_screen(self.screen_params).to_shape());

@@ -9,6 +9,7 @@ pub mod errors;
 pub mod logger;
 pub mod math {
     pub mod derivative;
+    pub mod vector;
 }
 pub mod models;
 pub mod operations {
