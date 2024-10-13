@@ -22,6 +22,10 @@ impl Line {
         }
     }
 
+    pub fn is_transparent(&self) -> bool {
+        self.stroke == Stroke::default()
+    }
+
     pub fn to_shape(&self) -> Shape {
         Shape::line(vec![self.start.to_pos2(), self.end.to_pos2()], self.stroke)
     }

@@ -2,6 +2,9 @@ use crate::models::line::Line;
 use crate::models::point::Point;
 use crate::ui::styles::strokes;
 use eframe::epaint::Stroke;
+use rust_decimal::prelude::ToPrimitive;
+use rust_decimal::Decimal;
+use std::collections::HashMap;
 
 pub const X_BOUND: f32 = 20.0;
 pub const X_STEP: f32 = 0.01;
@@ -24,57 +27,69 @@ impl Default for Model {
 
 impl Model {
     pub fn lines(&self) -> Vec<Line> {
-        let points = self.points();
+        let (outer_upper, outer_lower, inner_upper, inner_lower) = self.points();
 
         let stroke = strokes::model_black();
 
         let mut lines: Vec<Line> = vec![];
 
-        let mut outer_upper_lines = points[0]
+        let mut outer_upper_lines: Vec<Line> = outer_upper
             .windows(2)
             .map(|pair| Line::new(pair[0], pair[1], stroke))
             .collect();
-        let mut outer_lower_lines = points[1]
+        let mut outer_lower_lines: Vec<Line> = outer_lower
             .windows(2)
             .map(|pair| Line::new(pair[0], pair[1], stroke))
             .collect();
-        let mut inner_upper_lines = points[2]
+        let mut inner_upper_lines: Vec<Line> = inner_upper
             .windows(2)
             .map(|pair| Self::divide_nan_lines(pair, stroke))
             .collect();
-        let mut inner_lower_lines = points[3]
+        let mut inner_lower_lines: Vec<Line> = inner_lower
             .windows(2)
             .map(|pair| Self::divide_nan_lines(pair, stroke))
             .collect();
 
-        // EDGE CASES
-        // if (a > 0)
-        if self.a > 0.0 {
-            if let (Some(first), Some(second)) = (points[0].last(), points[1].last()) {
-                lines.push(Line::new(*first, *second, stroke));
-            }
-        } else if self.a == 0.0 {
-            if let (Some(first), Some(second)) = (points[0].first(), points[1].first()) {
-                lines.push(Line::new(*first, *second, stroke));
-            }
-            if let (Some(first), Some(second)) = (points[0].last(), points[1].last()) {
-                lines.push(Line::new(*first, *second, stroke));
-            }
-        } else if let (Some(first), Some(second)) = (points[0].first(), points[1].first()) {
-            lines.push(Line::new(*first, *second, stroke));
+        // Connections
+        let connection_elements_option = vec![
+            outer_upper.first(),
+            outer_upper.last(),
+            outer_lower.first(),
+            outer_lower.last(),
+            inner_upper.first(),
+            inner_upper.last(),
+            inner_lower.first(),
+            inner_lower.last(),
+        ];
+        let mut connection_elements = vec![];
+        for point in connection_elements_option.into_iter().flatten() {
+            connection_elements.push(*point);
         }
-        // Transparent Line case
+        // Transparent Lines
+        let transparent_upper = inner_upper_lines.iter().find(|line| line.is_transparent());
+        let transparent_lower = inner_lower_lines.iter().find(|line| line.is_transparent());
+        if let (Some(upper_line), Some(lower_line)) = (transparent_upper, transparent_lower) {
+            let mut points = vec![
+                upper_line.start,
+                upper_line.end,
+                lower_line.start,
+                lower_line.end,
+            ];
+            connection_elements.append(&mut points);
+        }
 
-        // APPENDS
+        let mut connection_lines = Self::connect_edge_points(connection_elements);
+
         lines.append(&mut outer_upper_lines);
         lines.append(&mut outer_lower_lines);
         lines.append(&mut inner_upper_lines);
         lines.append(&mut inner_lower_lines);
+        lines.append(&mut connection_lines);
 
         lines
     }
 
-    pub fn points(&self) -> Vec<Vec<Point>> {
+    pub fn points(&self) -> (Vec<Point>, Vec<Point>, Vec<Point>, Vec<Point>) {
         let mut outer_upper: Vec<Point> = vec![];
         let mut outer_lower: Vec<Point> = vec![];
         let mut inner_upper: Vec<Point> = vec![];
@@ -95,7 +110,36 @@ impl Model {
             x += X_STEP;
         }
 
-        vec![outer_upper, outer_lower, inner_upper, inner_lower]
+        (outer_upper, outer_lower, inner_upper, inner_lower)
+    }
+
+    fn connect_edge_points(points: Vec<Point>) -> Vec<Line> {
+        let mut map: HashMap<Decimal, Vec<f32>> = HashMap::default();
+        for point in points {
+            map.entry(Decimal::from_f32_retain(point.x).unwrap())
+                .or_default()
+                .push(point.y);
+        }
+
+        let mut lines: Vec<Line> = vec![];
+        for (x, y_values) in map {
+            let mut values = y_values.clone();
+            values.sort_unstable_by(|a, b| a.partial_cmp(b).unwrap());
+
+            let x = x.to_f32().unwrap();
+
+            if values.len() % 2 == 0 && !values.is_empty() {
+                for i in (0..values.len()).step_by(2) {
+                    lines.push(Line::new(
+                        Point::new(x, values[i]),
+                        Point::new(x, values[i + 1]),
+                        strokes::model_black(),
+                    ));
+                }
+            }
+        }
+
+        lines
     }
 
     fn divide_nan_lines(pair: &[Point], stroke: Stroke) -> Line {
