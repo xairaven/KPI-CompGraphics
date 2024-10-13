@@ -129,6 +129,8 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                     if ui.button("Start / Stop").clicked() {
                         context.animation_settings.is_running =
                             !context.animation_settings.is_running;
+
+                        context.curve_point = Default::default();
                     }
                 });
             });
@@ -137,7 +139,7 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
         ui.add_space(10.0);
 
         ui.vertical_centered(|ui| {
-            ui.label(RichText::new("Curve Point").strong());
+            ui.label(RichText::new("Curve Point").color(colors::PINK));
         });
         ui.add_space(5.0);
         ui.group(|ui| {
@@ -148,10 +150,10 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                 .show(ui, |ui| {
                     ui.label("Status: ");
 
-                    if context.curve_point.is_hidden {
-                        ui.label(RichText::new("Hidden").color(colors::RED));
-                    } else {
+                    if context.curve_point.is_visible {
                         ui.label(RichText::new("Visible").color(colors::LIME));
+                    } else {
+                        ui.label(RichText::new("Hidden").color(colors::RED));
                     };
 
                     if context.curve_point.is_running {
@@ -163,18 +165,20 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                     ui.end_row();
 
                     if ui.button("Show / Hide").clicked() {
-                        context.curve_point.is_hidden = !context.curve_point.is_hidden;
+                        context.curve_point.is_visible = !context.curve_point.is_visible;
 
-                        if context.curve_point.is_hidden {
+                        if !context.curve_point.is_visible {
                             context.curve_point = Default::default()
+                        } else {
+                            context.animation_settings = Default::default();
                         }
                     }
 
-                    if ui.button("⏪").clicked() && !context.curve_point.is_hidden {
+                    if ui.button("⏪").clicked() && context.curve_point.is_visible {
                         context.curve_point.is_running = !context.curve_point.is_running;
                         context.curve_point.direction = Direction::Left;
                     }
-                    if ui.button("⏩").clicked() && !context.curve_point.is_hidden {
+                    if ui.button("⏩").clicked() && context.curve_point.is_visible {
                         context.curve_point.is_running = !context.curve_point.is_running;
                         context.curve_point.direction = Direction::Right;
                     }
@@ -182,8 +186,8 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                     ui.end_row();
 
                     ui.label("Coordinates: ");
-                    ui.label(format!("X: {:.2}", context.curve_point.point.x));
-                    ui.label(format!("Y: {:.2}", context.curve_point.point.y));
+                    ui.label(format!("X: {:.2}", context.curve_point.dot.center.x));
+                    ui.label(format!("Y: {:.2}", context.curve_point.dot.center.y));
                 });
         });
 

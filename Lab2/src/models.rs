@@ -1,3 +1,4 @@
+pub mod dot;
 pub mod grid;
 pub mod line;
 pub mod model;
