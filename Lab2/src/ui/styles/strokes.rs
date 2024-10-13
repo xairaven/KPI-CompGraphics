@@ -36,3 +36,7 @@ pub fn model_purple() -> Stroke {
 pub fn model_yellow() -> Stroke {
     Stroke::new(2.0, colors::YELLOW)
 }
+
+pub fn normal_aqua() -> Stroke {
+    Stroke::new(2.0, colors::AQUA)
+}

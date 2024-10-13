@@ -3,10 +3,10 @@ use crate::math;
 use crate::models::line::Line;
 use crate::models::point::Point;
 use crate::models::screen::ScreenParams;
-use crate::operations::curve_props::{CurveProperties, TANGENT_LINE_LENGTH};
+use crate::operations::curve_props::{CurveProperties, NORMAL_LINE_LENGTH, TANGENT_LINE_LENGTH};
 use crate::ui::styles::{colors, strokes};
 use eframe::epaint::{Color32, Shape};
-use egui::{Frame, Response, Sense};
+use egui::{Frame, Response, Sense, Stroke};
 
 #[derive(Default)]
 pub struct Canvas {
@@ -16,6 +16,7 @@ pub struct Canvas {
     pub model_lines: Vec<Line>,
 
     pub tangent_line: Option<Line>,
+    pub normal_line: Option<Line>,
 }
 
 impl Canvas {
@@ -32,26 +33,22 @@ impl Canvas {
         // Creating model:
         let model_lines = context.model.lines();
 
-        // Tangent Line
+        // Tangent & Normal Lines
         if context.curve_point.is_visible && context.curve_props.is_tangent_enabled {
-            let curve_point = context.curve_point.dot.center;
-
-            let tangent_point = CurveProperties::tangent_point(
-                curve_point.x,
-                curve_point.y,
-                context.model.a,
-                context.model.b,
+            self.tangent_line = Self::build_prop_line(
+                context,
+                TANGENT_LINE_LENGTH,
+                strokes::tangent_blue(),
+                CurveProperties::tangent_point,
             );
-
-            if let Some(point) = tangent_point {
-                let line = math::vector::line_with_center(
-                    curve_point,
-                    point,
-                    TANGENT_LINE_LENGTH,
-                    strokes::tangent_blue(),
-                );
-                self.tangent_line = Some(line);
-            }
+        }
+        if context.curve_point.is_visible && context.curve_props.is_normal_enabled {
+            self.normal_line = Self::build_prop_line(
+                context,
+                NORMAL_LINE_LENGTH,
+                strokes::normal_aqua(),
+                CurveProperties::normal_point,
+            );
         }
 
         // Curve Point
@@ -96,6 +93,13 @@ impl Canvas {
             }
         }
 
+        // Draw normal
+        if context.curve_props.is_normal_enabled {
+            if let Some(line) = self.normal_line {
+                painter.add(line.to_screen(self.screen_params).to_shape());
+            }
+        }
+
         // Draw curve dot:
         if context.curve_point.is_visible {
             let shape = context
@@ -120,5 +124,21 @@ impl Canvas {
                 self.process(ui, context);
                 self.draw(ui, context);
             });
+    }
+
+    fn build_prop_line(
+        context: &Context, length: f32, stroke: Stroke,
+        function: fn(f32, f32, f32, f32) -> Option<Point>,
+    ) -> Option<Line> {
+        let curve_point = context.curve_point.dot.center;
+
+        let point = function(
+            curve_point.x,
+            curve_point.y,
+            context.model.a,
+            context.model.b,
+        );
+
+        point.map(|point| math::vector::line_with_center(curve_point, point, length, stroke))
     }
 }
