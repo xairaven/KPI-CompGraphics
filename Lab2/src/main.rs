@@ -8,7 +8,9 @@ pub mod context;
 pub mod errors;
 pub mod logger;
 pub mod models;
-
+pub mod operations {
+    pub mod animation;
+}
 pub mod ui {
     pub mod app;
     pub mod components;

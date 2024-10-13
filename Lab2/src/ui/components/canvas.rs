@@ -14,9 +14,15 @@ pub struct Canvas {
 }
 
 impl Canvas {
-    pub fn process(&mut self, context: &mut Context) {
+    pub fn process(&mut self, context: &mut Context, ui: &mut egui::Ui) {
         // Creating grid:
         self.grid_lines = context.grid.lines();
+
+        // Animation:
+        if context.animation_settings.is_running {
+            context.animation_settings.step(&mut context.model);
+            ui.ctx().request_repaint();
+        }
 
         // Creating model:
         let points = context.model.lines();
@@ -55,8 +61,7 @@ impl Canvas {
                     let delta = i.smooth_scroll_delta.y;
                     self.screen_params.px_per_cm += delta * 0.1;
                 });
-
-                self.process(context);
+                self.process(context, ui);
                 self.draw(ui);
             });
     }

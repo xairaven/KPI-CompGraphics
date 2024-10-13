@@ -8,6 +8,7 @@ use std::collections::HashMap;
 
 pub const X_BOUND: f32 = 20.0;
 pub const X_STEP: f32 = 0.01;
+pub const PARAMETERS_MAX: i32 = 10;
 
 pub struct Model {
     pub a: f32,

@@ -1,5 +1,7 @@
 use crate::context::Context;
+use crate::models::model;
 use crate::ui::components::canvas::Canvas;
+use crate::ui::styles::colors;
 use egui::style::HandleShape;
 use egui::{DragValue, Grid, RichText, Slider};
 
@@ -61,8 +63,10 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
 
         ui.vertical_centered(|ui| {
             if ui.button("Reset to Default Settings").clicked() {
-                context.model = Default::default();
                 canvas.screen_params = Default::default();
+                context.animation_settings = Default::default();
+                context.grid = Default::default();
+                context.model = Default::default();
             }
         });
 
@@ -83,25 +87,49 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                     ui.add(
                         DragValue::new(&mut context.model.a)
                             .speed(0.05)
-                            .range(-10..=10),
+                            .range(-model::PARAMETERS_MAX..=model::PARAMETERS_MAX),
                     );
 
                     ui.label("B:");
                     ui.add(
                         DragValue::new(&mut context.model.b)
                             .speed(0.05)
-                            .range(-10..=10),
+                            .range(-model::PARAMETERS_MAX..=model::PARAMETERS_MAX),
                     );
 
                     ui.label("C:");
                     ui.add(
                         DragValue::new(&mut context.model.c)
                             .speed(0.05)
-                            .range(-10..=10),
+                            .range(-model::PARAMETERS_MAX..=model::PARAMETERS_MAX),
                     );
 
                     ui.end_row();
                 })
+        });
+
+        ui.add_space(10.0);
+
+        ui.vertical_centered(|ui| {
+            ui.label(RichText::new("Animation").strong());
+        });
+        ui.add_space(5.0);
+        ui.group(|ui| {
+            ui.horizontal_wrapped(|ui| {
+                ui.label("Status: ");
+                if context.animation_settings.is_running {
+                    ui.label(RichText::new("Running!").color(colors::LIME));
+                } else {
+                    ui.label(RichText::new("Stopped.").color(colors::RED));
+                };
+
+                ui.vertical_centered(|ui| {
+                    if ui.button("Start / Stop").clicked() {
+                        context.animation_settings.is_running =
+                            !context.animation_settings.is_running;
+                    }
+                });
+            });
         });
 
         ui.add_space(10.0);
