@@ -1,5 +1,6 @@
 use crate::context::Context;
 use crate::models::model;
+use crate::operations::curve_point::Direction;
 use crate::ui::components::canvas::Canvas;
 use crate::ui::styles::colors;
 use egui::style::HandleShape;
@@ -65,6 +66,7 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
             if ui.button("Reset to Default Settings").clicked() {
                 canvas.screen_params = Default::default();
                 context.animation_settings = Default::default();
+                context.curve_point = Default::default();
                 context.grid = Default::default();
                 context.model = Default::default();
             }
@@ -130,6 +132,59 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                     }
                 });
             });
+        });
+
+        ui.add_space(10.0);
+
+        ui.vertical_centered(|ui| {
+            ui.label(RichText::new("Curve Point").strong());
+        });
+        ui.add_space(5.0);
+        ui.group(|ui| {
+            Grid::new("CurvePointGrid")
+                .num_columns(3)
+                .min_col_width(50.0)
+                .spacing([40.0, 10.0])
+                .show(ui, |ui| {
+                    ui.label("Status: ");
+
+                    if context.curve_point.is_hidden {
+                        ui.label(RichText::new("Hidden").color(colors::RED));
+                    } else {
+                        ui.label(RichText::new("Visible").color(colors::LIME));
+                    };
+
+                    if context.curve_point.is_running {
+                        ui.label(RichText::new("Running").color(colors::LIME));
+                    } else {
+                        ui.label(RichText::new("Stopped").color(colors::RED));
+                    };
+
+                    ui.end_row();
+
+                    if ui.button("Show / Hide").clicked() {
+                        context.curve_point.is_hidden = !context.curve_point.is_hidden;
+
+                        if context.curve_point.is_hidden {
+                            context.curve_point = Default::default()
+                        }
+                    }
+
+                    if ui.button("⏪").clicked() && !context.curve_point.is_hidden {
+                        context.curve_point.is_running = !context.curve_point.is_running;
+                        context.curve_point.direction = Direction::Left;
+                    }
+                    if ui.button("⏩").clicked() && !context.curve_point.is_hidden {
+                        context.curve_point.is_running = !context.curve_point.is_running;
+                        context.curve_point.direction = Direction::Right;
+                    }
+
+                    ui.end_row();
+
+                    ui.label("Coordinates: ");
+                    ui.label(format!("X: {:.2}", context.curve_point.point.x));
+                    ui.label(format!("Y: {:.2}", context.curve_point.point.y));
+                });
         });
 
         ui.add_space(10.0);

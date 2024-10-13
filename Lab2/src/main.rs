@@ -10,6 +10,7 @@ pub mod logger;
 pub mod models;
 pub mod operations {
     pub mod animation;
+    pub mod curve_point;
 }
 pub mod ui {
     pub mod app;
