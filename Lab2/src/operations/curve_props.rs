@@ -19,7 +19,8 @@ impl CurveProperties {
     fn tangent_end(x: f32, y: f32, a: f32, b: f32) -> Option<Point> {
         let derivative = Self::derivative(x, y, a, b);
 
-        let end = Point::new(0.0, y + derivative * (0.0 - x));
+        let random_x = 25.0;
+        let end = Point::new(random_x, y + derivative * (random_x - x));
 
         if end.y.is_finite() {
             Some(end)
