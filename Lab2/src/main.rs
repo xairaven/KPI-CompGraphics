@@ -7,6 +7,9 @@ pub mod config;
 pub mod context;
 pub mod errors;
 pub mod logger;
+pub mod math {
+    pub mod derivative;
+}
 pub mod models;
 pub mod operations {
     pub mod animation;
