@@ -3,7 +3,7 @@ use crate::math;
 use crate::models::line::Line;
 use crate::models::point::Point;
 use crate::models::screen::ScreenParams;
-use crate::operations::curve_props::CurveProperties;
+use crate::operations::curve_props::{CurveProperties, TANGENT_LINE_LENGTH};
 use crate::ui::styles::{colors, strokes};
 use eframe::epaint::{Color32, Shape};
 use egui::{Frame, Response, Sense};
@@ -47,7 +47,7 @@ impl Canvas {
                 let line = math::vector::line_with_center(
                     curve_point,
                     point,
-                    10.0,
+                    TANGENT_LINE_LENGTH,
                     strokes::tangent_blue(),
                 );
                 self.tangent_line = Some(line);

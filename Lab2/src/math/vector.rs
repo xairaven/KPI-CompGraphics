@@ -11,8 +11,16 @@ fn unit_vector(a: Point, b: Point) -> Point {
 pub fn line_with_center(center: Point, another_point: Point, length: f32, stroke: Stroke) -> Line {
     let unit = unit_vector(center, another_point);
 
-    let start = Point::new(center.x - length * unit.x, center.y - length * unit.y);
-    let end = Point::new(center.x + length * unit.x, center.y + length * unit.y);
+    let half_length = length / 2.0;
+
+    let start = Point::new(
+        center.x - half_length * unit.x,
+        center.y - half_length * unit.y,
+    );
+    let end = Point::new(
+        center.x + half_length * unit.x,
+        center.y + half_length * unit.y,
+    );
 
     Line::new(start, end, stroke)
 }

@@ -1,6 +1,8 @@
 use crate::math::derivative::derivative;
 use crate::models::point::Point;
 
+pub const TANGENT_LINE_LENGTH: f32 = 5.0;
+
 #[derive(Default)]
 pub struct CurveProperties {
     pub is_tangent_enabled: bool,
