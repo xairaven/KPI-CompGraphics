@@ -202,5 +202,20 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
         });
 
         ui.add_space(10.0);
+
+        ui.vertical_centered(|ui| {
+            ui.label(RichText::new("Characteristics").strong());
+        });
+        ui.add_space(5.0);
+        ui.checkbox(&mut context.curve_props.is_tangent_enabled, "Tangent");
+        if !context.curve_point.is_visible {
+            context.curve_props.is_tangent_enabled = false;
+        }
+        ui.checkbox(&mut context.curve_props.is_normal_enabled, "Normal");
+        if !context.curve_point.is_visible {
+            context.curve_props.is_normal_enabled = false;
+        }
+
+        ui.add_space(10.0);
     });
 }

@@ -11,6 +11,7 @@ pub mod models;
 pub mod operations {
     pub mod animation;
     pub mod curve_point;
+    pub mod curve_props;
 }
 pub mod ui {
     pub mod app;
