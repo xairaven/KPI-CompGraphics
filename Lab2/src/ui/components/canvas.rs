@@ -2,6 +2,7 @@ use crate::context::Context;
 use crate::models::line::Line;
 use crate::models::point::Point;
 use crate::models::screen::ScreenParams;
+use crate::operations::curve_props::CurveProperties;
 use crate::ui::styles::colors;
 use eframe::epaint::{Color32, Shape};
 use egui::{Frame, Response, Sense};
@@ -12,6 +13,8 @@ pub struct Canvas {
 
     pub grid_lines: Vec<Line>,
     pub model_lines: Vec<Line>,
+
+    pub tangent_line: Option<Line>,
 }
 
 impl Canvas {
@@ -35,6 +38,16 @@ impl Canvas {
 
             if context.animation_settings.is_running {
                 context.animation_settings.is_running = Default::default();
+            }
+
+            if context.curve_props.is_tangent_enabled {
+                let curve_point = context.curve_point.dot.center;
+                self.tangent_line = CurveProperties::tangent_line(
+                    curve_point.x,
+                    curve_point.y,
+                    context.model.a,
+                    context.model.b,
+                );
             }
         }
 
@@ -62,6 +75,13 @@ impl Canvas {
             .map(|line| line.to_screen(self.screen_params).to_shape())
             .collect();
         painter.extend(model_shapes);
+
+        // Draw derivative
+        if context.curve_props.is_tangent_enabled {
+            if let Some(line) = self.tangent_line {
+                painter.add(line.to_screen(self.screen_params).to_shape());
+            }
+        }
 
         // Draw curve dot:
         if context.curve_point.is_visible {
