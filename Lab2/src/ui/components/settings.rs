@@ -192,6 +192,11 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
 
                     ui.end_row();
 
+                    ui.label("Curvature Radius: ");
+                    ui.label(format!("{:.2} cm.", context.curve_point.curvature_radius));
+
+                    ui.end_row();
+
                     ui.label("Speed: ");
                     ui.add(
                         DragValue::new(&mut context.curve_point.speed)

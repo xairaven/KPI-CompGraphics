@@ -1,5 +1,7 @@
+use crate::math::derivative::{derivative, second_derivative};
 use crate::models::dot::Dot;
 use crate::models::line::Line;
+use crate::models::model::Model;
 
 pub const MIN_SPEED: u32 = 1;
 pub const MAX_SPEED: u32 = 10;
@@ -8,6 +10,7 @@ pub struct CurvePoint {
     pub index: u32,
     pub length: u32,
     pub dot: Dot,
+    pub curvature_radius: f32,
 
     pub is_running: bool,
     pub is_visible: bool,
@@ -26,6 +29,8 @@ impl Default for CurvePoint {
             index: 0,
             length: 0,
             dot: Default::default(),
+            curvature_radius: 0.0,
+
             is_running: false,
             is_visible: false,
             direction: Direction::Right,
@@ -92,5 +97,16 @@ impl CurvePoint {
             Direction::Left => -1,
             Direction::Right => 1,
         }
+    }
+
+    pub fn update_curvature_radius(&mut self, model: &Model) {
+        let point = self.dot.center;
+
+        let derivative = derivative(point.x, point.y, model.a, model.b);
+        let second_derivative = second_derivative(point.x, point.y, model.a, model.b);
+
+        let radius = (1.0 + derivative.powf(2.0)).powf(3.0 / 2.0) / f32::abs(second_derivative);
+
+        self.curvature_radius = radius;
     }
 }

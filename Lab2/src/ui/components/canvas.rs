@@ -42,6 +42,11 @@ impl Canvas {
         // Euclidean Rotation
         let model_lines = context.rotation.process(model_lines);
 
+        // Curvature Radius
+        if context.curve_point.is_visible {
+            context.curve_point.update_curvature_radius(&context.model);
+        }
+
         // Tangent & Normal Lines
         if context.curve_point.is_visible && context.curve_props.is_tangent_enabled {
             self.tangent_line = Self::build_prop_line(
