@@ -36,6 +36,12 @@ impl Canvas {
         // Creating model:
         let model_lines = context.model.lines();
 
+        // Euclidean Offset
+        let model_lines = context.offset.process(model_lines);
+
+        // Euclidean Rotation
+        let model_lines = context.rotation.process(model_lines);
+
         // Tangent & Normal Lines
         if context.curve_point.is_visible && context.curve_props.is_tangent_enabled {
             self.tangent_line = Self::build_prop_line(
@@ -133,6 +139,16 @@ impl Canvas {
                 .dot
                 .to_screen(self.screen_params)
                 .to_shape(colors::PINK);
+            painter.add(shape);
+        }
+
+        // Draw rotation dot:
+        if context.rotation.x != 0.0 || context.rotation.y != 0.0 {
+            let shape = context
+                .rotation
+                .dot()
+                .to_screen(self.screen_params)
+                .to_shape(colors::GREEN);
             painter.add(shape);
         }
 

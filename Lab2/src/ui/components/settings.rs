@@ -1,5 +1,5 @@
 use crate::context::Context;
-use crate::models::model;
+use crate::models::{grid, model};
 use crate::operations::curve_point;
 use crate::operations::curve_point::Direction;
 use crate::ui::components::canvas::Canvas;
@@ -68,8 +68,11 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                 canvas.screen_params = Default::default();
                 context.animation_settings = Default::default();
                 context.curve_point = Default::default();
+                context.curve_props = Default::default();
                 context.grid = Default::default();
                 context.model = Default::default();
+                context.offset = Default::default();
+                context.rotation = Default::default();
             }
         });
 
@@ -239,5 +242,102 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
             &mut context.curve_props.is_inflection_enabled,
             RichText::new("Inflection points").color(colors::ORANGE),
         );
+
+        ui.add_space(10.0);
+
+        ui.vertical_centered(|ui| {
+            ui.label(RichText::new("Euclidean Transformations").strong());
+        });
+
+        ui.add_space(5.0);
+
+        ui.group(|ui| {
+            ui.vertical_centered(|ui| {
+                ui.label("Offset");
+            });
+
+            ui.add_space(5.0);
+
+            Grid::new("OffsetGrid")
+                .num_columns(4)
+                .striped(true)
+                .min_col_width(50.0)
+                .show(ui, |ui| {
+                    ui.label("X: ");
+                    ui.add(
+                        DragValue::new(&mut context.offset.x)
+                            .speed(1)
+                            .range(-grid::DEFAULT_TICKS..=grid::DEFAULT_TICKS),
+                    );
+
+                    ui.label("Y: ");
+                    ui.add(
+                        DragValue::new(&mut context.offset.y)
+                            .speed(1)
+                            .range(-grid::DEFAULT_TICKS..=grid::DEFAULT_TICKS),
+                    );
+
+                    ui.end_row();
+                });
+
+            ui.add_space(10.0);
+
+            ui.vertical_centered(|ui| {
+                if ui.button("\t\tReset\t\t").clicked() {
+                    context.offset = Default::default();
+                }
+            });
+        });
+
+        ui.add_space(10.0);
+
+        ui.group(|ui| {
+            ui.vertical_centered(|ui| {
+                ui.label(RichText::new("Rotation").color(colors::GREEN));
+            });
+
+            ui.add_space(5.0);
+
+            Grid::new("RotationGrid")
+                .num_columns(2)
+                .striped(true)
+                .min_col_width(125.0)
+                .show(ui, |ui| {
+                    ui.label("X: ");
+                    ui.add(
+                        DragValue::new(&mut context.rotation.x)
+                            .speed(1)
+                            .range(-grid::DEFAULT_TICKS..=grid::DEFAULT_TICKS),
+                    );
+
+                    ui.end_row();
+
+                    ui.label("Y: ");
+                    ui.add(
+                        DragValue::new(&mut context.rotation.y)
+                            .speed(1)
+                            .range(-grid::DEFAULT_TICKS..=grid::DEFAULT_TICKS),
+                    );
+
+                    ui.end_row();
+
+                    ui.label("Angle: ");
+                    ui.add(
+                        DragValue::new(&mut context.rotation.angle)
+                            .speed(1)
+                            .range(0..=360),
+                    );
+                    ui.end_row();
+                });
+
+            ui.add_space(10.0);
+
+            ui.vertical_centered(|ui| {
+                if ui.button("\t\tReset\t\t").clicked() {
+                    context.rotation = Default::default();
+                }
+            });
+        });
+        ui.add_space(10.0);
     });
 }

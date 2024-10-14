@@ -3,6 +3,7 @@ use crate::models::point::Point;
 use crate::ui::styles::strokes;
 
 pub const UNIT_LENGTH: f32 = 1.0;
+pub const DEFAULT_TICKS: i32 = 20;
 
 pub struct Grid {
     pub ticks_amount: i32,
@@ -15,7 +16,7 @@ pub struct Grid {
 impl Default for Grid {
     fn default() -> Self {
         Self {
-            ticks_amount: 20,
+            ticks_amount: DEFAULT_TICKS,
 
             origin: Point::new(0.0, 0.0),
             unit_x: Point::new(UNIT_LENGTH, 0.0),

@@ -1,6 +1,7 @@
 use crate::models::screen::ScreenParams;
 use eframe::emath::Pos2;
 use eframe::epaint::{Color32, Shape};
+use nalgebra::SMatrix;
 
 #[derive(Debug, Default, Clone, Copy)]
 pub struct Point {
@@ -18,6 +19,10 @@ impl Point {
             y,
             converted_to_screen: false,
         }
+    }
+
+    pub fn to_vector(&self) -> SMatrix<f32, 1, 3> {
+        SMatrix::<f32, 1, 3>::new(self.x, self.y, 1.0)
     }
 
     pub fn to_pos2(&self) -> Pos2 {

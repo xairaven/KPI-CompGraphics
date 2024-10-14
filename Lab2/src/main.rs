@@ -8,6 +8,7 @@ pub mod context;
 pub mod errors;
 pub mod logger;
 pub mod math {
+    pub mod angle;
     pub mod derivative;
     pub mod vector;
 }
@@ -16,6 +17,8 @@ pub mod operations {
     pub mod animation;
     pub mod curve_point;
     pub mod curve_props;
+    pub mod offset;
+    pub mod rotate;
 }
 pub mod ui {
     pub mod app;
