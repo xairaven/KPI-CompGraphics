@@ -229,5 +229,9 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
             "Curve Length: {:.2} cm.",
             context.curve_props.length
         ));
+        ui.checkbox(
+            &mut context.curve_props.is_infliction_enabled,
+            "Infliction points",
+        );
     });
 }

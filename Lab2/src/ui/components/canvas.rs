@@ -1,5 +1,6 @@
 use crate::context::Context;
 use crate::math;
+use crate::models::dot::Dot;
 use crate::models::line::Line;
 use crate::models::point::Point;
 use crate::models::screen::ScreenParams;
@@ -17,6 +18,8 @@ pub struct Canvas {
 
     pub tangent_line: Option<Line>,
     pub normal_line: Option<Line>,
+
+    pub inflection_points: Vec<Point>,
 }
 
 impl Canvas {
@@ -64,6 +67,12 @@ impl Canvas {
         // Characteristics: Length
         context.curve_props.length(&model_lines);
 
+        // Inflection points
+        if context.curve_props.is_infliction_enabled {
+            self.inflection_points =
+                CurveProperties::inflection_points(&model_lines, context.model.a, context.model.b);
+        }
+
         // Passing to draw
         self.model_lines = model_lines;
     }
@@ -101,6 +110,20 @@ impl Canvas {
             if let Some(line) = self.normal_line {
                 painter.add(line.to_screen(self.screen_params).to_shape());
             }
+        }
+
+        // Draw inflection points
+        if context.curve_props.is_infliction_enabled {
+            let shapes: Vec<Shape> = self
+                .inflection_points
+                .iter()
+                .map(|point| {
+                    Dot::from_point(point)
+                        .to_screen(self.screen_params)
+                        .to_shape(colors::YELLOW)
+                })
+                .collect();
+            painter.extend(shapes);
         }
 
         // Draw curve dot:
