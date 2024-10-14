@@ -146,7 +146,7 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
         ui.group(|ui| {
             Grid::new("CurvePointGrid")
                 .num_columns(3)
-                .min_col_width(50.0)
+                .min_col_width(40.0)
                 .spacing([40.0, 10.0])
                 .show(ui, |ui| {
                     ui.label("Status: ");
