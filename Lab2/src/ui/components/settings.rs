@@ -212,6 +212,10 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
             ui.label(RichText::new("Properties").strong());
         });
         ui.add_space(5.0);
+        ui.label(format!(
+            "Curve Length: {:.2} cm.",
+            context.curve_props.length
+        ));
         ui.checkbox(
             &mut context.curve_props.is_tangent_enabled,
             RichText::new("Tangent").color(colors::BLUE),
@@ -226,20 +230,6 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
         if !context.curve_point.is_visible {
             context.curve_props.is_normal_enabled = false;
         }
-
-        ui.add_space(5.0);
-        ui.separator();
-        ui.add_space(5.0);
-
-        ui.vertical_centered(|ui| {
-            ui.label(RichText::new("Characteristics").strong());
-        });
-        ui.add_space(5.0);
-
-        ui.label(format!(
-            "Curve Length: {:.2} cm.",
-            context.curve_props.length
-        ));
         ui.checkbox(
             &mut context.curve_props.is_inflection_enabled,
             RichText::new("Inflection points").color(colors::ORANGE),
