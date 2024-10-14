@@ -204,7 +204,7 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
         ui.add_space(10.0);
 
         ui.vertical_centered(|ui| {
-            ui.label(RichText::new("Characteristics").strong());
+            ui.label(RichText::new("Properties").strong());
         });
         ui.add_space(5.0);
         ui.checkbox(&mut context.curve_props.is_tangent_enabled, "Tangent");
@@ -216,6 +216,18 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
             context.curve_props.is_normal_enabled = false;
         }
 
-        ui.add_space(10.0);
+        ui.add_space(5.0);
+        ui.separator();
+        ui.add_space(5.0);
+
+        ui.vertical_centered(|ui| {
+            ui.label(RichText::new("Characteristics").strong());
+        });
+        ui.add_space(5.0);
+
+        ui.label(format!(
+            "Curve Length: {:.2} cm.",
+            context.curve_props.length
+        ));
     });
 }

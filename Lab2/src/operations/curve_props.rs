@@ -1,4 +1,5 @@
 use crate::math::derivative::derivative;
+use crate::models::line::Line;
 use crate::models::point::Point;
 
 pub const TANGENT_LINE_LENGTH: f32 = 5.0;
@@ -9,6 +10,8 @@ const RANDOM_X: f32 = 25.0;
 pub struct CurveProperties {
     pub is_tangent_enabled: bool,
     pub is_normal_enabled: bool,
+
+    pub length: f32,
 }
 
 impl CurveProperties {
@@ -34,5 +37,11 @@ impl CurveProperties {
         } else {
             None
         }
+    }
+
+    pub fn length(&mut self, model_lines: &[Line]) {
+        let sum: f32 = model_lines.iter().map(|line| line.length()).sum();
+
+        self.length = sum;
     }
 }

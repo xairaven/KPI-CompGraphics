@@ -61,6 +61,9 @@ impl Canvas {
             }
         }
 
+        // Characteristics: Length
+        context.curve_props.length(&model_lines);
+
         // Passing to draw
         self.model_lines = model_lines;
     }
