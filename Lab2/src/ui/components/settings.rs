@@ -259,9 +259,8 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
             ui.add_space(5.0);
 
             Grid::new("OffsetGrid")
-                .num_columns(4)
-                .striped(true)
-                .min_col_width(50.0)
+                .num_columns(5)
+                .min_col_width(30.0)
                 .show(ui, |ui| {
                     ui.label("X: ");
                     ui.add(
@@ -277,16 +276,10 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                             .range(-grid::DEFAULT_TICKS..=grid::DEFAULT_TICKS),
                     );
 
-                    ui.end_row();
+                    if ui.button("\t\tReset\t\t").clicked() {
+                        context.offset = Default::default();
+                    }
                 });
-
-            ui.add_space(10.0);
-
-            ui.vertical_centered(|ui| {
-                if ui.button("\t\tReset\t\t").clicked() {
-                    context.offset = Default::default();
-                }
-            });
         });
 
         ui.add_space(10.0);
