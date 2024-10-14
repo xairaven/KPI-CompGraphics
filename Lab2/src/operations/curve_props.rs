@@ -13,7 +13,7 @@ pub struct CurveProperties {
     pub is_tangent_enabled: bool,
     pub is_normal_enabled: bool,
 
-    pub is_infliction_enabled: bool,
+    pub is_inflection_enabled: bool,
 
     pub length: f32,
 }

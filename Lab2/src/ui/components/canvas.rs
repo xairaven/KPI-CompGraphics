@@ -68,7 +68,7 @@ impl Canvas {
         context.curve_props.length(&model_lines);
 
         // Inflection points
-        if context.curve_props.is_infliction_enabled {
+        if context.curve_props.is_inflection_enabled {
             self.inflection_points =
                 CurveProperties::inflection_points(&model_lines, context.model.a, context.model.b);
         }
@@ -113,14 +113,14 @@ impl Canvas {
         }
 
         // Draw inflection points
-        if context.curve_props.is_infliction_enabled {
+        if context.curve_props.is_inflection_enabled {
             let shapes: Vec<Shape> = self
                 .inflection_points
                 .iter()
                 .map(|point| {
                     Dot::from_point(point)
                         .to_screen(self.screen_params)
-                        .to_shape(colors::YELLOW)
+                        .to_shape(colors::ORANGE)
                 })
                 .collect();
             painter.extend(shapes);
