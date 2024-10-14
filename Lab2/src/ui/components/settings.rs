@@ -86,8 +86,7 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
         ui.group(|ui| {
             Grid::new("ParametersGrid")
                 .num_columns(6)
-                .striped(true)
-                .min_col_width(25.0)
+                .min_col_width(35.0)
                 .show(ui, |ui| {
                     ui.label("A:");
                     ui.add(
@@ -109,9 +108,7 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                             .speed(0.05)
                             .range(-model::PARAMETERS_MAX..=model::PARAMETERS_MAX),
                     );
-
-                    ui.end_row();
-                })
+                });
         });
 
         ui.add_space(10.0);
@@ -292,9 +289,8 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
             ui.add_space(5.0);
 
             Grid::new("RotationGrid")
-                .num_columns(2)
-                .striped(true)
-                .min_col_width(125.0)
+                .num_columns(6)
+                .min_col_width(35.0)
                 .show(ui, |ui| {
                     ui.label("X: ");
                     ui.add(
@@ -303,8 +299,6 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                             .range(-grid::DEFAULT_TICKS..=grid::DEFAULT_TICKS),
                     );
 
-                    ui.end_row();
-
                     ui.label("Y: ");
                     ui.add(
                         DragValue::new(&mut context.rotation.y)
@@ -312,15 +306,12 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                             .range(-grid::DEFAULT_TICKS..=grid::DEFAULT_TICKS),
                     );
 
-                    ui.end_row();
-
                     ui.label("Angle: ");
                     ui.add(
                         DragValue::new(&mut context.rotation.angle)
                             .speed(1)
-                            .range(0..=360),
+                            .range(-360..=360),
                     );
-                    ui.end_row();
                 });
 
             ui.add_space(10.0);

@@ -6,9 +6,14 @@ pub struct Angle {
 
 impl Angle {
     pub fn from_degree(degree: f32) -> Self {
+        let mut local_degree = degree;
+        if degree < 0.0 {
+            local_degree = 360.0 + degree;
+        }
+
         Self {
-            degree,
-            radian: degree * (std::f64::consts::PI as f32) / 180.0,
+            degree: local_degree,
+            radian: local_degree * (std::f64::consts::PI as f32) / 180.0,
         }
     }
 
