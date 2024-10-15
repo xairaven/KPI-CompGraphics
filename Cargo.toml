@@ -4,6 +4,7 @@ resolver = "2"
 members = [
     "Lab1",
     "Lab2",
+    "Lab3",
 ]
 
 [profile.release]
