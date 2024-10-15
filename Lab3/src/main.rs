@@ -31,6 +31,7 @@ pub mod errors {
     pub mod log;
 }
 pub mod geometry {
+    pub mod line;
     pub mod point;
 }
 pub mod graphics {
