@@ -18,3 +18,8 @@ fern = "0.6.2"           # Logger.
 log = "0.4.22"          # Logging facade.
 nalgebra = "0.33.0"     # Matrices, linear algebra.
 thiserror = "1.0.64"    # Custom enum errors.
+uuid = { version = "1.11.0", features = [
+    "v4",                      # Lets you generate random UUIDs
+    "fast-rng",                # Use a faster (but still sufficiently random) RNG
+    "macro-diagnostics",       # Enable better diagnostics for compile-time UUIDs
+] }
