@@ -11,6 +11,8 @@ pub struct Grid {
     pub unit_x: Point,
     pub unit_y: Point,
 
+    pub is_enabled: bool,
+
     pub axis_x_stroke: Stroke,
     pub axis_y_stroke: Stroke,
     pub grid_stroke: Stroke,
@@ -22,6 +24,8 @@ impl Default for Grid {
             origin: Point::new(0.0, 0.0),
             unit_x: Point::new(DEFAULT_UNIT_LENGTH, 0.0),
             unit_y: Point::new(0.0, DEFAULT_UNIT_LENGTH),
+
+            is_enabled: false,
 
             axis_x_stroke: strokes::axis_red(),
             axis_y_stroke: strokes::axis_green(),
