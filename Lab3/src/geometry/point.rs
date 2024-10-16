@@ -30,7 +30,11 @@ impl Point {
     }
 
     pub fn from_pos2(pos: Pos2) -> Self {
-        Self::new(pos.x, pos.y)
+        Self {
+            x: pos.x,
+            y: pos.y,
+            converted_to_screen: true,
+        }
     }
 
     pub fn to_screen(&self, screen_params: ScreenParams) -> Self {
