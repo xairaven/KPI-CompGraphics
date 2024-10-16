@@ -34,4 +34,5 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
 
 fn reset_to_defaults(context: &mut Context, canvas: &mut Canvas) {
     canvas.screen_params = Default::default();
+    context.grid = Default::default();
 }

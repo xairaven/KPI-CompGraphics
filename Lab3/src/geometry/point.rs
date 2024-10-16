@@ -34,7 +34,7 @@ impl Point {
     }
 
     pub fn to_screen(&self, screen_params: ScreenParams) -> Self {
-        screen_params.convert_point(*self)
+        screen_params.point_cm_to_px(*self)
     }
 
     pub fn to_shape(&self, radius: f32, color: Color32) -> Shape {
