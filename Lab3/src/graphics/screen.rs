@@ -1,4 +1,6 @@
 use crate::geometry::point::Point;
+use crate::traits::positionable::Positionable;
+use egui::Vec2;
 
 pub const MIN_PX_PER_CM: f32 = 10.0;
 pub const MAX_PX_PER_CM: f32 = 100.0;
@@ -27,28 +29,34 @@ impl ScreenParams {
         value / self.grid_unit_length * self.px_per_cm
     }
 
-    pub fn point_cm_to_px(&self, point: Point) -> Point {
-        debug_assert!(!point.converted_to_screen);
+    pub fn point_cm_to_px<T: Positionable>(&self, point: T) -> T {
+        debug_assert!(!point.is_converted_checked());
 
-        Point {
-            x: self.canvas_center.x + (point.x / self.grid_unit_length * self.px_per_cm),
-            y: self.canvas_center.y - (point.y / self.grid_unit_length * self.px_per_cm),
-            converted_to_screen: true,
-        }
+        let x = self.canvas_center.x + (point.x() / self.grid_unit_length * self.px_per_cm);
+        let y = self.canvas_center.y - (point.y() / self.grid_unit_length * self.px_per_cm);
+
+        T::new(x, y).with_converted_checked()
     }
 
     pub fn value_px_to_cm(&self, value: f32) -> f32 {
         value / self.px_per_cm * self.grid_unit_length
     }
 
-    pub fn point_px_to_cm(&self, point: Point) -> Point {
-        debug_assert!(point.converted_to_screen);
+    pub fn point_px_to_cm<T: Positionable>(&self, point: T) -> T {
+        debug_assert!(point.is_converted_checked());
 
-        Point {
-            x: (point.x * self.grid_unit_length / self.px_per_cm) - self.canvas_center.x,
-            y: (point.y * self.grid_unit_length / self.px_per_cm) + self.canvas_center.y,
-            converted_to_screen: false,
-        }
+        let x = (point.x() * self.grid_unit_length / self.px_per_cm) - self.canvas_center.x;
+        let y = (point.y() * self.grid_unit_length / self.px_per_cm) + self.canvas_center.y;
+
+        T::new(x, y).with_converted_unchecked()
+    }
+
+    pub fn vec2_px_to_cm(&self, vec: Vec2) -> Vec2 {
+        Vec2::new(self.value_px_to_cm(vec.x), -self.value_px_to_cm(vec.y))
+    }
+
+    pub fn vec2_cm_to_px(&self, vec: Vec2) -> Vec2 {
+        Vec2::new(self.value_cm_to_px(vec.x), -self.value_cm_to_px(vec.y))
     }
 }
 

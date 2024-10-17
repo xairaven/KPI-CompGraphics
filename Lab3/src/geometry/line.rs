@@ -1,22 +1,22 @@
-use crate::geometry::point::Point;
 use crate::graphics::screen::ScreenParams;
+use crate::traits::positionable::Positionable;
 use eframe::epaint::Shape;
 use egui::Stroke;
 
 #[derive(Debug, Default, Clone, Copy)]
-pub struct Line {
-    pub start: Point,
-    pub end: Point,
+pub struct Line<T: Positionable + Clone + Copy> {
+    pub start: T,
+    pub end: T,
 
     pub stroke: Stroke,
 }
 
-impl Line {
-    pub fn new(start: Point, end: Point, stroke: Stroke) -> Self {
+impl<T: Positionable + Clone + Copy> Line<T> {
+    pub fn new(start: T, end: T, stroke: Stroke) -> Self {
         Self { start, end, stroke }
     }
 
-    pub fn transparent(start: Point, end: Point) -> Self {
+    pub fn transparent(start: T, end: T) -> Self {
         Self {
             start,
             end,
@@ -41,6 +41,8 @@ impl Line {
     }
 
     pub fn length(&self) -> f32 {
-        f32::sqrt((self.end.x - self.start.x).powf(2.0) + (self.end.y - self.start.y).powf(2.0))
+        f32::sqrt(
+            (self.end.x() - self.start.x()).powf(2.0) + (self.end.y() - self.start.y()).powf(2.0),
+        )
     }
 }

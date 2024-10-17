@@ -1,10 +1,14 @@
 use crate::graphics::screen::ScreenParams;
 use crate::traits::positionable::Positionable;
-use eframe::emath::Pos2;
+use eframe::emath::{Pos2, Rect, Vec2};
 use eframe::epaint::{CircleShape, Color32, Shape, Stroke};
+use egui::{Id, Response, Sense};
+use uuid::Uuid;
 
-#[derive(Debug, Default, Clone, Copy)]
-pub struct Point {
+#[derive(Debug, Clone, Copy)]
+pub struct MoveablePoint {
+    pub id: Id,
+
     pub x: f32,
     pub y: f32,
 
@@ -12,9 +16,30 @@ pub struct Point {
     pub converted_to_screen: bool,
 }
 
-impl Positionable for Point {
+impl MoveablePoint {
+    fn generate_id() -> Id {
+        Id::new(Uuid::new_v4())
+    }
+
+    pub fn update_self(
+        &mut self, radius: f32, screen_params: ScreenParams, ui: &egui::Ui, response: &Response,
+    ) {
+        let size = Vec2::splat(2.0 * radius);
+
+        let area = Rect::from_center_size(self.to_screen(screen_params).to_pos2(), size);
+
+        let response = ui.interact(area, response.id.with(self.id), Sense::drag());
+
+        let offset = screen_params.vec2_px_to_cm(response.drag_delta());
+        self.x += offset.x;
+        self.y += offset.y;
+    }
+}
+
+impl Positionable for MoveablePoint {
     fn new(x: f32, y: f32) -> Self {
         Self {
+            id: Self::generate_id(),
             x,
             y,
             converted_to_screen: false,
@@ -31,6 +56,7 @@ impl Positionable for Point {
 
     fn from_pos2(pos: Pos2) -> Self {
         Self {
+            id: Self::generate_id(),
             x: pos.x,
             y: pos.y,
             converted_to_screen: true,
@@ -58,6 +84,7 @@ impl Positionable for Point {
 
     fn with_converted_checked(&self) -> Self {
         Self {
+            id: self.id,
             x: self.x,
             y: self.y,
             converted_to_screen: true,
@@ -66,6 +93,7 @@ impl Positionable for Point {
 
     fn with_converted_unchecked(&self) -> Self {
         Self {
+            id: self.id,
             x: self.x,
             y: self.y,
             converted_to_screen: false,

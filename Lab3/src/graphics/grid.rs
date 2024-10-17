@@ -1,6 +1,7 @@
 use crate::geometry::line::Line;
 use crate::geometry::point::Point;
 use crate::graphics::screen::ScreenParams;
+use crate::traits::positionable::Positionable;
 use crate::ui::styles::strokes;
 use eframe::epaint::Stroke;
 
@@ -35,7 +36,7 @@ impl Default for Grid {
 }
 
 impl Grid {
-    pub fn lines(&mut self, screen_params: ScreenParams) -> Vec<Line> {
+    pub fn lines(&mut self, screen_params: ScreenParams) -> Vec<Line<Point>> {
         self.unit_x = Point::new(screen_params.grid_unit_length, 0.0);
         self.unit_y = Point::new(0.0, screen_params.grid_unit_length);
 
@@ -61,7 +62,7 @@ impl Grid {
             stroke: self.axis_y_stroke,
         };
 
-        let mut lines: Vec<Line> = vec![];
+        let mut lines: Vec<Line<Point>> = vec![];
 
         // OY Grid
         for i in (-ticks.0 as i32)..=(ticks.0 as i32) {

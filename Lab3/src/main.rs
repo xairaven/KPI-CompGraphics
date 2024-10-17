@@ -32,6 +32,7 @@ pub mod errors {
 }
 pub mod geometry {
     pub mod line;
+    pub mod moveable_point;
     pub mod point;
 }
 pub mod graphics {
@@ -43,7 +44,11 @@ pub mod math {
     pub mod angle;
 }
 pub mod models {
+    pub mod bezier_point;
     pub mod model;
+}
+pub mod traits {
+    pub mod positionable;
 }
 pub mod ui {
     pub mod app;

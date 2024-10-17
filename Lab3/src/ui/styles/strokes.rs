@@ -13,10 +13,18 @@ pub fn axis_red() -> Stroke {
     Stroke::new(AXIS_WIDTH, colors::DARK_RED)
 }
 
-pub fn model_black() -> Stroke {
-    Stroke::new(MODEL_WIDTH, colors::BLACK)
+pub fn bezier_outline(width: f32) -> Stroke {
+    Stroke::new(width, colors::BLACK)
 }
 
 pub fn grid_gray() -> Stroke {
     Stroke::new(GRID_WIDTH, colors::GRAY)
+}
+
+pub fn model_black() -> Stroke {
+    Stroke::new(MODEL_WIDTH, colors::BLACK)
+}
+
+pub fn skeleton_dark_grey(width: f32) -> Stroke {
+    Stroke::new(width, colors::DARK_GRAY)
 }
