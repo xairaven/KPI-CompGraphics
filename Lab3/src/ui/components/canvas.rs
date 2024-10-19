@@ -80,11 +80,24 @@ impl Canvas {
         painter.extend(point_shapes);
 
         // Updating model
-        context.model.points.iter_mut().for_each(|bezier| {
-            bezier
-                .point
-                .update_self(points_radius, self.screen_params, ui, &response)
-        });
+        context
+            .model
+            .points
+            .iter_mut()
+            .enumerate()
+            .for_each(|(index, bezier)| {
+                bezier
+                    .point
+                    .update_self(points_radius, self.screen_params, ui, &response);
+
+                bezier.point.show_tooltip(
+                    index + 1,
+                    points_radius,
+                    self.screen_params,
+                    ui,
+                    &response,
+                );
+            });
 
         response
     }

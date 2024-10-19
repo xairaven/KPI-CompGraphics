@@ -34,6 +34,24 @@ impl MoveablePoint {
         self.x += offset.x;
         self.y += offset.y;
     }
+
+    pub fn show_tooltip(
+        &self, index: usize, radius: f32, screen_params: ScreenParams, ui: &egui::Ui,
+        response: &Response,
+    ) {
+        let size = Vec2::splat(2.0 * radius);
+
+        let area = Rect::from_center_size(self.to_screen(screen_params).to_pos2(), size);
+
+        let response = ui.interact(area, response.id.with(self.id), Sense::hover());
+
+        let label = format!(
+            "Point #{index}.\nCoordinates:\n- X: {}\n- Y: {}",
+            self.x, self.y
+        );
+
+        response.on_hover_text(label);
+    }
 }
 
 impl Positionable for MoveablePoint {
