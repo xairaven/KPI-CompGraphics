@@ -1,6 +1,7 @@
 use crate::context::Context;
 use crate::graphics::screen::{MAX_PX_PER_CM, MIN_PX_PER_CM};
 use crate::ui::components::canvas::Canvas;
+use crate::ui::styles::colors;
 use egui::{DragValue, Grid, RichText};
 
 pub const SETTINGS_PANEL_WIDTH: f32 = 250.0;
@@ -158,6 +159,30 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
         ui.add_space(10.0);
 
         ui.checkbox(&mut context.model.is_skeleton_enabled, "Display Skeleton");
+
+        ui.add_space(10.0);
+
+        ui.vertical_centered(|ui| {
+            ui.label(RichText::new("Animation").strong());
+        });
+        ui.add_space(5.0);
+        ui.group(|ui| {
+            ui.horizontal_wrapped(|ui| {
+                ui.label("Status: ");
+                if context.animation_settings.is_running {
+                    ui.label(RichText::new("Running!").color(colors::LIME));
+                } else {
+                    ui.label(RichText::new("Stopped.").color(colors::RED));
+                };
+
+                ui.vertical_centered(|ui| {
+                    if ui.button("Start / Stop").clicked() {
+                        context.animation_settings.is_running =
+                            !context.animation_settings.is_running;
+                    }
+                });
+            });
+        });
 
         ui.add_space(10.0);
     });

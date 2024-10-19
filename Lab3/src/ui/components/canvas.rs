@@ -18,10 +18,16 @@ pub struct Canvas {
 }
 
 impl Canvas {
-    pub fn process(&mut self, _ui: &mut egui::Ui, context: &mut Context) {
+    pub fn process(&mut self, ui: &mut egui::Ui, context: &mut Context) {
         // Creating grid:
         if context.grid.is_enabled {
             self.grid_lines = context.grid.lines(self.screen_params)
+        }
+
+        // Animation:
+        if context.animation_settings.is_running {
+            // context.animation_settings.step(&mut context.model);
+            ui.ctx().request_repaint();
         }
 
         // Creating skeleton:
