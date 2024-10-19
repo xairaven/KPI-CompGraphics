@@ -34,6 +34,7 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
 
         ui.collapsing("Grid Settings", |ui| {
             ui.checkbox(&mut context.grid.is_enabled, "Enable Grid");
+            ui.checkbox(&mut canvas.screen_params.is_dragging_offset_enabled, "Enable Drag & Offset");
 
             ui.add_space(5.0);
 
@@ -69,6 +70,9 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
             ui.vertical_centered(|ui| {
                 if ui.button("Reset Settings").clicked() {
                     context.grid = Default::default();
+                    canvas.screen_params.grid_unit_length = 1.0;
+                    canvas.screen_params.offset = (0.0, 0.0);
+                    canvas.screen_params.is_dragging_offset_enabled = true;
                 }
             });
         });

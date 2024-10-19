@@ -12,6 +12,7 @@ pub struct ScreenParams {
     pub resolution: Resolution,
     pub px_per_cm: f32,
 
+    pub is_dragging_offset_enabled: bool,
     pub offset: (f32, f32),
 }
 
@@ -22,6 +23,8 @@ impl Default for ScreenParams {
             grid_unit_length: 1.0,
             resolution: Default::default(),
             px_per_cm: 20.0,
+
+            is_dragging_offset_enabled: true,
             offset: (0.0, 0.0),
         }
     }
@@ -69,7 +72,7 @@ impl ScreenParams {
     }
 
     pub fn update_self_offset(&mut self, ui: &egui::Ui, response: &Response) {
-        if response.dragged() {
+        if self.is_dragging_offset_enabled && response.dragged() {
             ui.ctx().set_cursor_icon(egui::CursorIcon::Grab);
 
             let delta = response.drag_delta();
