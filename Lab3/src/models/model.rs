@@ -1,6 +1,7 @@
 use crate::geometry::line::Line;
 use crate::geometry::point::Point;
 use crate::graphics::screen::ScreenParams;
+use crate::models::bezier_curve::bezier_curve;
 use crate::models::bezier_point::BezierPoint;
 use crate::traits::positionable::Positionable;
 use crate::ui::styles::{colors, strokes};
@@ -15,6 +16,9 @@ pub struct Model {
 
     pub skeleton_stroke: Stroke,
 
+    pub model_stroke: Stroke,
+    pub model_step: f32,
+
     pub are_tooltips_enabled: bool,
 
     pub radius: f32,
@@ -28,7 +32,10 @@ impl Default for Model {
             fill_control: colors::RED,
             fill_defining: colors::GREEN,
 
-            skeleton_stroke: strokes::skeleton_dark_grey(0.1),
+            skeleton_stroke: strokes::skeleton_dark_grey(0.05),
+
+            model_stroke: strokes::model_black(0.1),
+            model_step: 0.1,
 
             are_tooltips_enabled: false,
 
@@ -51,6 +58,30 @@ impl Model {
                 Line::new(start, end, stroke)
             })
             .collect()
+    }
+
+    pub fn lines(&self, screen_params: ScreenParams) -> Vec<Line<Point>> {
+        let mut stroke = self.model_stroke;
+        stroke.width = screen_params.value_cm_to_px(self.model_stroke.width);
+
+        let mut vec: Vec<Line<Point>> = vec![];
+
+        self.points.windows(3).for_each(|triad| {
+            let control_first = &triad[0];
+            let defining = &triad[1];
+            let control_second = &triad[2];
+
+            bezier_curve(
+                &mut vec,
+                &stroke,
+                self.model_step,
+                &control_first.point,
+                &control_second.point,
+                &defining.point,
+            )
+        });
+
+        vec
     }
 
     pub fn default_points() -> Vec<BezierPoint> {

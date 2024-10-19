@@ -13,6 +13,7 @@ pub struct Canvas {
     pub screen_params: ScreenParams,
 
     pub grid_lines: Vec<Line<Point>>,
+    pub model_lines: Vec<Line<Point>>,
     pub skeleton_lines: Vec<Line<Point>>,
 }
 
@@ -23,8 +24,11 @@ impl Canvas {
             self.grid_lines = context.grid.lines(self.screen_params)
         }
 
-        // Creating model:
+        // Creating skeleton:
         self.skeleton_lines = context.model.skeleton_lines(self.screen_params);
+
+        // Creating model:
+        self.model_lines = context.model.lines(self.screen_params);
     }
 
     pub fn draw(&mut self, ui: &mut egui::Ui, context: &mut Context) -> Response {
@@ -42,6 +46,14 @@ impl Canvas {
                 .collect();
             painter.extend(grid_shapes);
         }
+
+        // Draw model lines
+        let model_lines: Vec<Shape> = self
+            .model_lines
+            .iter()
+            .map(|line| line.to_screen(self.screen_params).to_shape())
+            .collect();
+        painter.extend(model_lines);
 
         // Draw skeleton lines
         let skeleton_lines: Vec<Shape> = self

@@ -44,6 +44,7 @@ pub mod math {
     pub mod angle;
 }
 pub mod models {
+    pub mod bezier_curve;
     pub mod bezier_point;
     pub mod model;
 }
