@@ -128,6 +128,34 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
         });
 
         ui.add_space(10.0);
+
+        ui.collapsing("Model Settings", |ui| {
+            Grid::new("PointStrokes").num_columns(2).show(ui, |ui| {
+                ui.label("Stroke:");
+                ui.add(&mut context.model.model_stroke);
+
+                ui.end_row();
+
+                ui.label("Bezier step:");
+                ui.add(DragValue::new(&mut context.model.bezier_step)
+                           .speed(0.01)
+                           .range(0.01..=0.5));
+            });
+
+            ui.add_space(10.0);
+
+            ui.vertical_centered(|ui| {
+                if ui.button("Reset Settings").clicked() {
+                    context.model = Default::default();
+                }
+            });
+        });
+
+        ui.add_space(10.0);
+
+        ui.checkbox(&mut context.model.is_skeleton_enabled, "Display Skeleton");
+
+        ui.add_space(10.0);
     });
 }
 

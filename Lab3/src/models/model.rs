@@ -17,9 +17,10 @@ pub struct Model {
     pub skeleton_stroke: Stroke,
 
     pub model_stroke: Stroke,
-    pub model_step: f32,
+    pub bezier_step: f32,
 
     pub are_tooltips_enabled: bool,
+    pub is_skeleton_enabled: bool,
 
     pub radius: f32,
 }
@@ -35,9 +36,10 @@ impl Default for Model {
             skeleton_stroke: strokes::skeleton_dark_grey(0.05),
 
             model_stroke: strokes::model_black(0.1),
-            model_step: 0.1,
+            bezier_step: 0.1,
 
             are_tooltips_enabled: false,
+            is_skeleton_enabled: false,
 
             radius: 0.1,
         }
@@ -74,7 +76,7 @@ impl Model {
             bezier_curve(
                 &mut vec,
                 &stroke,
-                self.model_step,
+                self.bezier_step,
                 &control_first.point,
                 &control_second.point,
                 &defining.point,
