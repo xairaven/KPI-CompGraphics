@@ -23,7 +23,7 @@ impl MoveablePoint {
 
     pub fn update_self(
         &mut self, radius: f32, screen_params: ScreenParams, ui: &egui::Ui, response: &Response,
-    ) {
+    ) -> bool {
         let size = Vec2::splat(2.0 * radius);
 
         let area = Rect::from_center_size(self.to_screen(screen_params).to_pos2(), size);
@@ -33,6 +33,8 @@ impl MoveablePoint {
         let offset = screen_params.vec2_px_to_cm(response.drag_delta());
         self.x += offset.x;
         self.y += offset.y;
+
+        offset.x != 0.0 || offset.y != 0.0
     }
 
     pub fn show_tooltip(

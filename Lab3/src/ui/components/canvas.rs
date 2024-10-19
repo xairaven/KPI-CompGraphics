@@ -94,6 +94,7 @@ impl Canvas {
                 .collect();
             painter.extend(point_shapes);
 
+            let mut updated_position = false;
             // Updating model
             context
                 .model
@@ -101,9 +102,10 @@ impl Canvas {
                 .iter_mut()
                 .enumerate()
                 .for_each(|(index, bezier)| {
-                    bezier
-                        .point
-                        .update_self(points_radius, self.screen_params, ui, &response);
+                    updated_position =
+                        bezier
+                            .point
+                            .update_self(points_radius, self.screen_params, ui, &response);
 
                     if context.model.are_tooltips_enabled {
                         bezier.point.show_tooltip(
@@ -115,6 +117,10 @@ impl Canvas {
                         );
                     }
                 });
+
+            if updated_position {
+                ui.ctx().request_repaint();
+            }
         }
 
         response
