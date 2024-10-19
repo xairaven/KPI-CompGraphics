@@ -26,7 +26,9 @@ impl Canvas {
 
         // Animation:
         if context.animation_settings.is_running {
-            // context.animation_settings.step(&mut context.model);
+            context
+                .animation_settings
+                .process_animation(&mut context.model);
             ui.ctx().request_repaint();
         }
 
