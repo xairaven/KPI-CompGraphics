@@ -90,13 +90,15 @@ impl Canvas {
                     .point
                     .update_self(points_radius, self.screen_params, ui, &response);
 
-                bezier.point.show_tooltip(
-                    index + 1,
-                    points_radius,
-                    self.screen_params,
-                    ui,
-                    &response,
-                );
+                if context.model.are_tooltips_enabled {
+                    bezier.point.show_tooltip(
+                        index + 1,
+                        points_radius,
+                        self.screen_params,
+                        ui,
+                        &response,
+                    );
+                }
             });
 
         response

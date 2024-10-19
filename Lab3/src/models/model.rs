@@ -15,6 +15,8 @@ pub struct Model {
 
     pub skeleton_stroke: Stroke,
 
+    pub are_tooltips_enabled: bool,
+
     pub radius: f32,
 }
 
@@ -27,6 +29,8 @@ impl Default for Model {
             fill_defining: colors::GREEN,
 
             skeleton_stroke: strokes::skeleton_dark_grey(0.1),
+
+            are_tooltips_enabled: false,
 
             radius: 0.1,
         }
