@@ -192,4 +192,5 @@ fn reset_to_defaults(context: &mut Context, canvas: &mut Canvas) {
     canvas.screen_params = Default::default();
     context.grid = Default::default();
     context.model = Default::default();
+    context.animation_settings = Default::default();
 }

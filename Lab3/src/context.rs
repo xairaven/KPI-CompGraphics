@@ -1,6 +1,6 @@
 use crate::graphics::grid::Grid;
-use crate::models::animation::AnimationSettings;
 use crate::models::model::Model;
+use crate::operations::animation::AnimationSettings;
 
 #[derive(Default)]
 pub struct Context {

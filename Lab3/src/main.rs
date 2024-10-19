@@ -44,10 +44,12 @@ pub mod math {
     pub mod angle;
 }
 pub mod models {
-    pub mod animation;
     pub mod bezier_curve;
     pub mod bezier_point;
     pub mod model;
+}
+pub mod operations {
+    pub mod animation;
 }
 pub mod traits {
     pub mod positionable;
