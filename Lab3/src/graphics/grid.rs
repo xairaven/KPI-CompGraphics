@@ -40,32 +40,53 @@ impl Grid {
         self.unit_x = Point::new(screen_params.grid_unit_length, 0.0);
         self.unit_y = Point::new(0.0, screen_params.grid_unit_length);
 
-        let half_width = screen_params
-            .value_px_to_cm(screen_params.resolution.width - screen_params.canvas_center.x);
-        let half_height = screen_params
-            .value_px_to_cm(screen_params.resolution.height - screen_params.canvas_center.y);
+        let offset = (screen_params.offset.0, screen_params.offset.1);
 
-        let ticks = (
-            (half_width - (half_width % self.unit_x.x)) / self.unit_x.x,
-            (half_height - (half_height % self.unit_y.y)) / self.unit_y.y,
+        // Sides of grid: left and right
+        let width = (
+            screen_params.value_px_to_cm(
+                screen_params.resolution.width - screen_params.canvas_center.x + offset.0,
+            ),
+            screen_params.value_px_to_cm(
+                screen_params.resolution.width - screen_params.canvas_center.x - offset.0,
+            ),
+        );
+
+        // Sides of grid: bottom and top
+        let height = (
+            screen_params.value_px_to_cm(
+                screen_params.resolution.height - screen_params.canvas_center.y - offset.1,
+            ),
+            screen_params.value_px_to_cm(
+                screen_params.resolution.height - screen_params.canvas_center.y + offset.1,
+            ),
+        );
+
+        let ticks_x = (
+            (width.0 - (width.0 % self.unit_x.x)) / self.unit_x.x,
+            (width.1 - (width.1 % self.unit_x.x)) / self.unit_x.x,
+        );
+        let ticks_y = (
+            (height.0 - (height.0 % self.unit_y.y)) / self.unit_y.y,
+            (height.1 - (height.1 % self.unit_y.y)) / self.unit_y.y,
         );
 
         let axis_x = Line {
-            start: Point::new(-half_width, self.unit_x.y),
-            end: Point::new(half_width, self.unit_x.y),
+            start: Point::new(-width.0, self.unit_x.y),
+            end: Point::new(width.1, self.unit_x.y),
             stroke: self.axis_x_stroke,
         };
 
         let axis_y = Line {
-            start: Point::new(self.unit_y.x, -half_height),
-            end: Point::new(self.unit_y.x, half_height),
+            start: Point::new(self.unit_y.x, -height.0),
+            end: Point::new(self.unit_y.x, height.1),
             stroke: self.axis_y_stroke,
         };
 
         let mut lines: Vec<Line<Point>> = vec![];
 
         // OY Grid
-        for i in (-ticks.0 as i32)..=(ticks.0 as i32) {
+        for i in (-ticks_x.0 as i32)..=(ticks_x.1 as i32) {
             if i == 0 {
                 continue;
             }
@@ -79,7 +100,7 @@ impl Grid {
         }
 
         // OX Grid
-        for i in (-ticks.1 as i32)..=(ticks.1 as i32) {
+        for i in (-ticks_y.0 as i32)..=(ticks_y.1 as i32) {
             if i == 0 {
                 continue;
             }

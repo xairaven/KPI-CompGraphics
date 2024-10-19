@@ -35,7 +35,7 @@ impl Canvas {
 
     pub fn draw(&mut self, ui: &mut egui::Ui, context: &mut Context) -> Response {
         let painter_size = ui.available_size_before_wrap();
-        let (response, painter) = ui.allocate_painter(painter_size, Sense::hover());
+        let (response, painter) = ui.allocate_painter(painter_size, Sense::click_and_drag());
         self.screen_params.canvas_center = Point::from_pos2(response.rect.center());
         self.screen_params.resolution = Resolution::from(response.rect.max.x, response.rect.max.y);
 
@@ -122,6 +122,9 @@ impl Canvas {
                 ui.ctx().request_repaint();
             }
         }
+
+        // Check for dragging
+        self.screen_params.update_self_offset(ui, &response);
 
         response
     }

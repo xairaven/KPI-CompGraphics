@@ -1,6 +1,6 @@
 use crate::geometry::point::Point;
 use crate::traits::positionable::Positionable;
-use egui::Vec2;
+use egui::{Response, Vec2};
 
 pub const MIN_PX_PER_CM: f32 = 10.0;
 pub const MAX_PX_PER_CM: f32 = 100.0;
@@ -11,6 +11,8 @@ pub struct ScreenParams {
     pub grid_unit_length: f32,
     pub resolution: Resolution,
     pub px_per_cm: f32,
+
+    pub offset: (f32, f32),
 }
 
 impl Default for ScreenParams {
@@ -20,6 +22,7 @@ impl Default for ScreenParams {
             grid_unit_length: 1.0,
             resolution: Default::default(),
             px_per_cm: 20.0,
+            offset: (0.0, 0.0),
         }
     }
 }
@@ -32,8 +35,11 @@ impl ScreenParams {
     pub fn point_cm_to_px<T: Positionable>(&self, point: T) -> T {
         debug_assert!(!point.is_converted_checked());
 
-        let x = self.canvas_center.x + (point.x() / self.grid_unit_length * self.px_per_cm);
-        let y = self.canvas_center.y - (point.y() / self.grid_unit_length * self.px_per_cm);
+        let x = self.canvas_center.x
+            + (point.x() / self.grid_unit_length * self.px_per_cm)
+            + self.offset.0;
+        let y = self.canvas_center.y - (point.y() / self.grid_unit_length * self.px_per_cm)
+            + self.offset.1;
 
         T::new(x, y).with_converted_checked()
     }
@@ -45,8 +51,11 @@ impl ScreenParams {
     pub fn point_px_to_cm<T: Positionable>(&self, point: T) -> T {
         debug_assert!(point.is_converted_checked());
 
-        let x = (point.x() * self.grid_unit_length / self.px_per_cm) - self.canvas_center.x;
-        let y = (point.y() * self.grid_unit_length / self.px_per_cm) + self.canvas_center.y;
+        let x = (point.x() * self.grid_unit_length / self.px_per_cm) - self.canvas_center.x
+            + self.offset.0;
+        let y = (point.y() * self.grid_unit_length / self.px_per_cm)
+            + self.canvas_center.y
+            + self.offset.1;
 
         T::new(x, y).with_converted_unchecked()
     }
@@ -57,6 +66,18 @@ impl ScreenParams {
 
     pub fn vec2_cm_to_px(&self, vec: Vec2) -> Vec2 {
         Vec2::new(self.value_cm_to_px(vec.x), -self.value_cm_to_px(vec.y))
+    }
+
+    pub fn update_self_offset(&mut self, ui: &egui::Ui, response: &Response) {
+        if response.dragged() {
+            ui.ctx().set_cursor_icon(egui::CursorIcon::Grab);
+
+            let delta = response.drag_delta();
+            let dragging_coefficient = 1.0;
+
+            self.offset.0 += delta.x * dragging_coefficient;
+            self.offset.1 += delta.y * dragging_coefficient;
+        }
     }
 }
 
