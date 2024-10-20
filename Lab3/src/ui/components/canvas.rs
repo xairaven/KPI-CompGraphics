@@ -111,7 +111,6 @@ impl Canvas {
                 .collect();
             painter.extend(point_shapes);
 
-            let mut updated_position = false;
             // Updating model
             context
                 .model
@@ -119,10 +118,9 @@ impl Canvas {
                 .iter_mut()
                 .enumerate()
                 .for_each(|(index, bezier)| {
-                    updated_position =
-                        bezier
-                            .point
-                            .update_self(dot_radius, self.screen_params, ui, &response);
+                    bezier
+                        .point
+                        .update_self(dot_radius, self.screen_params, ui, &response);
 
                     if context.model.are_tooltips_enabled {
                         bezier.point.show_tooltip(
@@ -134,10 +132,6 @@ impl Canvas {
                         );
                     }
                 });
-
-            if updated_position {
-                ui.ctx().request_repaint();
-            }
         }
 
         // Offset Dot
@@ -149,15 +143,10 @@ impl Canvas {
                 .to_dot(dot_radius, colors::BLUE, outline_stroke);
             painter.add(offset_dot);
 
-            let updated = context.euclidean_offset.dot.update_self(
-                dot_radius,
-                self.screen_params,
-                ui,
-                &response,
-            );
-            if updated {
-                ui.ctx().request_repaint();
-            }
+            context
+                .euclidean_offset
+                .dot
+                .update_self(dot_radius, self.screen_params, ui, &response);
         }
 
         // Check for dragging
