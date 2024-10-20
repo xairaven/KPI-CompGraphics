@@ -232,14 +232,14 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
         Grid::new("RotationGrid").num_columns(2).show(ui, |ui| {
             ui.label("Rotation X: ");
             ui.add(
-                DragValue::new(&mut context.euclidean_rotation.x).speed(0.1)
+                DragValue::new(&mut context.euclidean_rotation.dot.x).speed(0.1)
             );
 
             ui.end_row();
 
             ui.label("Rotation Y: ");
             ui.add(
-                DragValue::new(&mut context.euclidean_rotation.y).speed(0.1)
+                DragValue::new(&mut context.euclidean_rotation.dot.y).speed(0.1)
             );
 
             ui.end_row();

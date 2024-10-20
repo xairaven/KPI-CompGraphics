@@ -29,6 +29,11 @@ impl Canvas {
             context.euclidean_offset.process(&mut context.model);
         }
 
+        // Euclidean Rotation
+        if context.euclidean_rotation.is_enabled {
+            context.euclidean_rotation.process(&mut context.model);
+        }
+
         // Animation:
         if context.animation_settings.is_running {
             context.euclidean_offset = Default::default();
@@ -136,17 +141,34 @@ impl Canvas {
 
         // Offset Dot
         if context.euclidean_offset.is_enabled {
-            let offset_dot = context
+            let dot = context
                 .euclidean_offset
                 .dot
                 .to_screen(self.screen_params)
                 .to_dot(dot_radius, colors::BLUE, outline_stroke);
-            painter.add(offset_dot);
+            painter.add(dot);
 
             context
                 .euclidean_offset
                 .dot
                 .update_self(dot_radius, self.screen_params, ui, &response);
+        }
+
+        // Rotation Dot
+        if context.euclidean_rotation.is_enabled {
+            let dot = context
+                .euclidean_rotation
+                .dot
+                .to_screen(self.screen_params)
+                .to_dot(dot_radius, colors::YELLOW, outline_stroke);
+            painter.add(dot);
+
+            context.euclidean_rotation.dot.update_self(
+                dot_radius,
+                self.screen_params,
+                ui,
+                &response,
+            );
         }
 
         // Check for dragging
