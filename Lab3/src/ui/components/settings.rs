@@ -185,6 +185,79 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
         });
 
         ui.add_space(10.0);
+
+        ui.vertical_centered(|ui| {
+            ui.label(RichText::new("Euclidean Transformations").strong());
+        });
+
+        ui.add_space(5.0);
+
+        ui.checkbox(&mut context.euclidean_offset.is_enabled,
+                    RichText::new("Enable Offset").color(colors::BLUE));
+
+        ui.add_space(5.0);
+
+        Grid::new("OffsetGrid").num_columns(2).show(ui, |ui| {
+            ui.label("Offset X: ");
+            ui.add(
+                DragValue::new(&mut context.euclidean_offset.x).speed(0.1)
+            );
+
+            ui.end_row();
+
+            ui.label("Offset Y: ");
+            ui.add(
+                DragValue::new(&mut context.euclidean_offset.y).speed(0.1)
+            );
+        });
+
+        ui.add_space(5.0);
+
+        ui.vertical_centered_justified(|ui| {
+            if ui.button("Reset").clicked() {
+                context.euclidean_offset = Default::default();
+            }
+        });
+
+        ui.add_space(5.0);
+        ui.separator();
+        ui.add_space(5.0);
+
+        ui.checkbox(&mut context.euclidean_rotation.is_enabled,
+                    RichText::new("Enable Rotation").color(colors::YELLOW));
+
+        ui.add_space(5.0);
+
+        Grid::new("RotationGrid").num_columns(2).show(ui, |ui| {
+            ui.label("Rotation X: ");
+            ui.add(
+                DragValue::new(&mut context.euclidean_rotation.x).speed(0.1)
+            );
+
+            ui.end_row();
+
+            ui.label("Rotation Y: ");
+            ui.add(
+                DragValue::new(&mut context.euclidean_rotation.y).speed(0.1)
+            );
+
+            ui.end_row();
+
+            ui.label("Rotation Angle: ");
+            ui.add(
+                DragValue::new(&mut context.euclidean_rotation.angle)
+                    .speed(1)
+                    .range(-360..=360),
+            );
+        });
+
+        ui.add_space(5.0);
+
+        ui.vertical_centered_justified(|ui| {
+            if ui.button("Reset").clicked() {
+                context.euclidean_rotation = Default::default();
+            }
+        });
     });
 }
 
@@ -193,4 +266,6 @@ fn reset_to_defaults(context: &mut Context, canvas: &mut Canvas) {
     context.grid = Default::default();
     context.model = Default::default();
     context.animation_settings = Default::default();
+    context.euclidean_offset = Default::default();
+    context.euclidean_rotation = Default::default();
 }

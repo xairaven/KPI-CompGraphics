@@ -50,6 +50,8 @@ pub mod models {
 }
 pub mod operations {
     pub mod animation;
+    pub mod offset;
+    pub mod rotation;
 }
 pub mod traits {
     pub mod positionable;
