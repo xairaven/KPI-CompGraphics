@@ -1,10 +1,12 @@
-use crate::geometry::line::Line;
 use crate::geometry::moveable_point::MoveablePoint;
+use crate::models::model::Model;
 use crate::traits::positionable::Positionable;
 
 pub struct Offset {
     pub is_enabled: bool,
     pub dot: MoveablePoint,
+
+    pub old: (f32, f32),
 }
 
 impl Default for Offset {
@@ -12,30 +14,43 @@ impl Default for Offset {
         Self {
             is_enabled: false,
             dot: MoveablePoint::new(0.0, 0.0),
+            old: (0.0, 0.0),
         }
     }
 }
 
 impl Offset {
-    pub fn process<T: Positionable + Clone + Copy>(
-        &self, model_lines: Vec<Line<T>>,
-    ) -> Vec<Line<T>> {
+    pub fn process(&mut self, model: &mut Model) {
         if self.dot.x == 0.0 && self.dot.y == 0.0 {
-            return model_lines;
+            return;
         };
 
-        model_lines
-            .iter()
-            .map(|line| {
-                let start = self.point(line.start);
-                let end = self.point(line.end);
-
-                Line::new(start, end, line.stroke)
-            })
-            .collect()
+        let delta = (self.dot.x - self.old.0, self.dot.y - self.old.1);
+        model.points.iter_mut().for_each(|bezier| {
+            self.update_point(&mut bezier.point, delta);
+        });
+        self.old = (self.dot.x, self.dot.y);
     }
 
-    pub fn point<T: Positionable + Clone + Copy>(&self, point: T) -> T {
-        T::new(point.x() + self.dot.x, point.y() + self.dot.y)
+    pub fn update_point(&mut self, point: &mut MoveablePoint, delta: (f32, f32)) {
+        point.x += delta.0;
+        point.y += delta.1;
+    }
+
+    pub fn checkout_status(&mut self, model: &mut Model) {
+        let enabled = self.is_enabled;
+
+        self.old = (0.0, 0.0);
+        self.dot = MoveablePoint::new(0.0, 0.0);
+
+        if enabled {
+            let first = model.points.first();
+            if let Some(bezier) = first {
+                self.dot.x = bezier.point.x;
+                self.dot.y = bezier.point.y;
+
+                self.old = (bezier.point.x, bezier.point.y);
+            }
+        }
     }
 }

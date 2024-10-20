@@ -24,11 +24,16 @@ impl Canvas {
             self.grid_lines = context.grid.lines(self.screen_params)
         }
 
-        // // Euclidean Offset
-        // if context.euclidean_offset.is_enabled {}
+        // Euclidean Offset
+        if context.euclidean_offset.is_enabled {
+            context.euclidean_offset.process(&mut context.model);
+        }
 
         // Animation:
         if context.animation_settings.is_running {
+            context.euclidean_offset = Default::default();
+            context.euclidean_rotation = Default::default();
+
             context
                 .animation_settings
                 .process_animation(&mut context.model);

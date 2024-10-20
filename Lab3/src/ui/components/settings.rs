@@ -192,8 +192,10 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
 
         ui.add_space(5.0);
 
-        ui.checkbox(&mut context.euclidean_offset.is_enabled,
-                    RichText::new("Enable Offset").color(colors::BLUE));
+        if ui.checkbox(&mut context.euclidean_offset.is_enabled,
+                    RichText::new("Enable Offset").color(colors::BLUE)).clicked() {
+            context.euclidean_offset.checkout_status(&mut context.model);
+        };
 
         ui.add_space(5.0);
 
