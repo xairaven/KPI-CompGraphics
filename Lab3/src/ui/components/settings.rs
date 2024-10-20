@@ -200,14 +200,14 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
         Grid::new("OffsetGrid").num_columns(2).show(ui, |ui| {
             ui.label("Offset X: ");
             ui.add(
-                DragValue::new(&mut context.euclidean_offset.x).speed(0.1)
+                DragValue::new(&mut context.euclidean_offset.dot.x).speed(0.1)
             );
 
             ui.end_row();
 
             ui.label("Offset Y: ");
             ui.add(
-                DragValue::new(&mut context.euclidean_offset.y).speed(0.1)
+                DragValue::new(&mut context.euclidean_offset.dot.y).speed(0.1)
             );
         });
 

@@ -24,6 +24,9 @@ impl Canvas {
             self.grid_lines = context.grid.lines(self.screen_params)
         }
 
+        // // Euclidean Offset
+        // if context.euclidean_offset.is_enabled {}
+
         // Animation:
         if context.animation_settings.is_running {
             context
@@ -65,6 +68,15 @@ impl Canvas {
             .collect();
         painter.extend(model_lines);
 
+        // Dot radius
+        let dot_radius = self.screen_params.value_cm_to_px(context.model.radius);
+
+        // Outline stroke for all dots:
+        let mut outline_stroke = context.model.outline;
+        outline_stroke.width = self
+            .screen_params
+            .value_cm_to_px(context.model.outline.width);
+
         if context.model.is_skeleton_enabled {
             // Draw skeleton lines
             let skeleton_lines: Vec<Shape> = self
@@ -74,27 +86,19 @@ impl Canvas {
                 .collect();
             painter.extend(skeleton_lines);
 
-            // Skeleton point radius
-            let points_radius = self.screen_params.value_cm_to_px(context.model.radius);
-
             // Draw skeleton points:
             let point_shapes: Vec<Shape> = context
                 .model
                 .points
                 .iter()
                 .map(|bezier| {
-                    let mut outline_stroke = context.model.outline;
-                    outline_stroke.width = self
-                        .screen_params
-                        .value_cm_to_px(context.model.outline.width);
-
                     let color = match bezier.kind {
                         BezierPointType::Control => context.model.fill_control,
                         BezierPointType::Defining => context.model.fill_defining,
                     };
 
                     bezier.point.to_screen(self.screen_params).to_dot(
-                        points_radius,
+                        dot_radius,
                         color,
                         outline_stroke,
                     )
@@ -113,12 +117,12 @@ impl Canvas {
                     updated_position =
                         bezier
                             .point
-                            .update_self(points_radius, self.screen_params, ui, &response);
+                            .update_self(dot_radius, self.screen_params, ui, &response);
 
                     if context.model.are_tooltips_enabled {
                         bezier.point.show_tooltip(
                             index + 1,
-                            points_radius,
+                            dot_radius,
                             self.screen_params,
                             ui,
                             &response,
@@ -127,6 +131,26 @@ impl Canvas {
                 });
 
             if updated_position {
+                ui.ctx().request_repaint();
+            }
+        }
+
+        // Offset Dot
+        if context.euclidean_offset.is_enabled {
+            let offset_dot = context
+                .euclidean_offset
+                .dot
+                .to_screen(self.screen_params)
+                .to_dot(dot_radius, colors::BLUE, outline_stroke);
+            painter.add(offset_dot);
+
+            let updated = context.euclidean_offset.dot.update_self(
+                dot_radius,
+                self.screen_params,
+                ui,
+                &response,
+            );
+            if updated {
                 ui.ctx().request_repaint();
             }
         }
