@@ -177,8 +177,7 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
 
                 ui.vertical_centered(|ui| {
                     if ui.button("Start / Stop").clicked() {
-                        context.animation_settings.is_running =
-                            !context.animation_settings.is_running;
+                        context.animation_settings.checkout_status(&mut context.model);
                     }
                 });
             });

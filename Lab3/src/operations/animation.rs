@@ -4,7 +4,8 @@ use crate::models::model::Model;
 pub struct AnimationSettings {
     pub is_running: bool,
 
-    pub figure_state: Vec<BezierPoint>,
+    figure_state: Vec<BezierPoint>,
+    model_state: Vec<BezierPoint>,
 
     step: i32,
     max_steps: i32,
@@ -16,6 +17,7 @@ impl Default for AnimationSettings {
         Self {
             is_running: false,
             figure_state: Self::figure_state(),
+            model_state: vec![],
 
             step: 0,
             max_steps: 150,
@@ -26,19 +28,18 @@ impl Default for AnimationSettings {
 
 impl AnimationSettings {
     pub fn process_animation(&mut self, model: &mut Model) {
-        let model_default = Model::default_points();
-        let figure_default = &self.figure_state;
-
-        assert_eq!(model.points.len(), model_default.len());
-        assert_eq!(model.points.len(), figure_default.len());
+        assert_eq!(model.points.len(), self.figure_state.len());
+        assert_eq!(model.points.len(), self.model_state.len());
         assert_eq!(model.points.len(), 121);
 
         let length = model.points.len();
         for i in 0..length {
-            let x = model_default[i].point.x * (1.0 - (self.step as f32 / self.max_steps as f32))
-                + figure_default[i].point.x * (self.step as f32 / self.max_steps as f32);
-            let y = model_default[i].point.y * (1.0 - (self.step as f32 / self.max_steps as f32))
-                + figure_default[i].point.y * (self.step as f32 / self.max_steps as f32);
+            let x = self.model_state[i].point.x
+                * (1.0 - (self.step as f32 / self.max_steps as f32))
+                + self.figure_state[i].point.x * (self.step as f32 / self.max_steps as f32);
+            let y = self.model_state[i].point.y
+                * (1.0 - (self.step as f32 / self.max_steps as f32))
+                + self.figure_state[i].point.y * (self.step as f32 / self.max_steps as f32);
 
             model.points[i].point.x = x;
             model.points[i].point.y = y;
@@ -80,5 +81,15 @@ impl AnimationSettings {
         points.push(points[0]);
 
         points
+    }
+
+    pub fn checkout_status(&mut self, model: &mut Model) {
+        self.is_running = !self.is_running;
+
+        if self.is_running {
+            self.model_state = model.points.clone();
+        } else {
+            self.model_state = vec![];
+        }
     }
 }
