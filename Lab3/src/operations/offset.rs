@@ -1,12 +1,16 @@
 use crate::geometry::moveable_point::MoveablePoint;
 use crate::models::model::Model;
 use crate::traits::positionable::Positionable;
+use crate::ui::styles::colors;
+use egui::Color32;
 
 pub struct Offset {
     pub is_enabled: bool,
     pub dot: MoveablePoint,
 
     pub old: (f32, f32),
+
+    pub color: Color32,
 }
 
 impl Default for Offset {
@@ -15,6 +19,8 @@ impl Default for Offset {
             is_enabled: false,
             dot: MoveablePoint::new(0.0, 0.0),
             old: (0.0, 0.0),
+
+            color: colors::BLUE,
         }
     }
 }

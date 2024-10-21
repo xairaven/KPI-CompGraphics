@@ -187,7 +187,7 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
         ui.add_space(5.0);
 
         if ui.checkbox(&mut context.euclidean_offset.is_enabled,
-                    RichText::new("Enable Offset").color(colors::BLUE)).clicked() {
+                    RichText::new("Enable Offset").color(context.euclidean_offset.color)).clicked() {
             context.euclidean_offset.checkout_status(&mut context.model);
         };
 
@@ -205,6 +205,15 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
             ui.add(
                 DragValue::new(&mut context.euclidean_offset.dot.y).speed(0.1)
             );
+
+            ui.end_row();
+
+            ui.label("Dot Color: ");
+            egui::color_picker::color_edit_button_srgba(
+                ui,
+                &mut context.euclidean_offset.color,
+                egui::color_picker::Alpha::Opaque,
+            );
         });
 
         ui.add_space(5.0);
@@ -220,7 +229,7 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
         ui.add_space(5.0);
 
         ui.checkbox(&mut context.euclidean_rotation.is_enabled,
-                    RichText::new("Enable Rotation").color(colors::YELLOW));
+                    RichText::new("Enable Rotation").color(context.euclidean_rotation.color));
 
         ui.add_space(5.0);
 
@@ -244,6 +253,15 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                 DragValue::new(&mut context.euclidean_rotation.angle)
                     .speed(1)
                     .range(-360..=360),
+            );
+
+            ui.end_row();
+
+            ui.label("Dot Color: ");
+            egui::color_picker::color_edit_button_srgba(
+                ui,
+                &mut context.euclidean_rotation.color,
+                egui::color_picker::Alpha::Opaque,
             );
         });
 

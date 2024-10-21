@@ -2,6 +2,8 @@ use crate::geometry::moveable_point::MoveablePoint;
 use crate::math::angle::Angle;
 use crate::models::model::Model;
 use crate::traits::positionable::Positionable;
+use crate::ui::styles::colors;
+use egui::Color32;
 use nalgebra::Matrix3;
 
 pub struct Rotation {
@@ -11,6 +13,8 @@ pub struct Rotation {
     pub angle: f32,
 
     pub old: (f32, f32, f32),
+
+    pub color: Color32,
 }
 
 impl Default for Rotation {
@@ -22,6 +26,8 @@ impl Default for Rotation {
             angle: 0.0,
 
             old: (0.0, 0.0, 0.0),
+
+            color: colors::YELLOW,
         }
     }
 }

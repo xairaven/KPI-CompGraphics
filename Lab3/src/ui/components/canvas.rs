@@ -143,7 +143,7 @@ impl Canvas {
                 .euclidean_offset
                 .dot
                 .to_screen(self.screen_params)
-                .to_dot(dot_radius, colors::BLUE, outline_stroke);
+                .to_dot(dot_radius, context.euclidean_offset.color, outline_stroke);
             painter.add(dot);
 
             context
@@ -158,7 +158,7 @@ impl Canvas {
                 .euclidean_rotation
                 .dot
                 .to_screen(self.screen_params)
-                .to_dot(dot_radius, colors::YELLOW, outline_stroke);
+                .to_dot(dot_radius, context.euclidean_rotation.color, outline_stroke);
             painter.add(dot);
 
             context.euclidean_rotation.dot.update_self(
