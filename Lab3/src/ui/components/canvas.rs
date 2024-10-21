@@ -4,7 +4,7 @@ use crate::geometry::point::Point;
 use crate::graphics::screen::{Resolution, ScreenParams};
 use crate::models::bezier_point::BezierPointType;
 use crate::traits::positionable::Positionable;
-use crate::ui::styles::colors;
+use crate::ui::styles::{colors, strokes};
 use eframe::epaint::Shape;
 use egui::{Frame, Response, Sense};
 
@@ -82,10 +82,8 @@ impl Canvas {
         let dot_radius = self.screen_params.value_cm_to_px(context.model.radius);
 
         // Outline stroke for all dots:
-        let mut outline_stroke = context.model.outline;
-        outline_stroke.width = self
-            .screen_params
-            .value_cm_to_px(context.model.outline.width);
+        let outline_width = self.screen_params.value_cm_to_px(0.02);
+        let outline_stroke = strokes::bezier_outline(outline_width);
 
         if context.model.is_skeleton_enabled {
             // Draw skeleton lines

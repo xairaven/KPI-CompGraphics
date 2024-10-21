@@ -10,13 +10,12 @@ use egui::{Color32, Stroke};
 pub struct Model {
     pub points: Vec<BezierPoint>,
 
-    pub outline: Stroke,
     pub fill_control: Color32,
     pub fill_defining: Color32,
 
     pub skeleton_stroke: Stroke,
-
     pub model_stroke: Stroke,
+
     pub bezier_step: f32,
 
     pub are_tooltips_enabled: bool,
@@ -29,7 +28,7 @@ impl Default for Model {
     fn default() -> Self {
         Self {
             points: Self::default_points(),
-            outline: strokes::bezier_outline(0.02),
+
             fill_control: colors::RED,
             fill_defining: colors::GREEN,
 

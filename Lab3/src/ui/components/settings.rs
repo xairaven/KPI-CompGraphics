@@ -92,11 +92,6 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
 
                 ui.end_row();
 
-                ui.label("Outline:");
-                ui.add(&mut context.model.outline);
-
-                ui.end_row();
-
                 ui.label("Fill - Control Point:");
                 egui::color_picker::color_edit_button_srgba(
                     ui,
