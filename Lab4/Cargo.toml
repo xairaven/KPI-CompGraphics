@@ -17,7 +17,7 @@ eframe = { version = "0.29.1", default-features = false, features = [
 fern = "0.7.0"                # Logger.
 log = "0.4.22"                # Logging facade.
 nalgebra = "0.33.1"           # Matrices, linear algebra.
-thiserror = "1.0.64"          # Custom enum errors.
+thiserror = "1.0.65"          # Custom enum errors.
 uuid = { version = "1.11.0", features = [
     "v4",                     # Lets you generate random UUIDs.
     "fast-rng",               # Use a faster (but still sufficiently random) RNG.
