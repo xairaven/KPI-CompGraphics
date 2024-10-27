@@ -29,6 +29,14 @@ impl Positionable for Point {
         self.y
     }
 
+    fn set_x(&mut self, x: f32) {
+        self.x = x;
+    }
+
+    fn set_y(&mut self, y: f32) {
+        self.y = y;
+    }
+
     fn from_pos2(pos: Pos2) -> Self {
         Self {
             x: pos.x,

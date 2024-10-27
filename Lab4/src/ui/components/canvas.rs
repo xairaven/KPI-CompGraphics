@@ -111,6 +111,8 @@ impl Canvas {
             painter.extend(point_shapes);
 
             // Updating model
+            let mut changed_points_indexes: Vec<usize> = vec![];
+
             context
                 .model
                 .points
@@ -124,9 +126,12 @@ impl Canvas {
                         &response,
                     );
 
-                    bezier
+                    if bezier
                         .point
-                        .update_on_drag(self.screen_params, ui, &interaction_response);
+                        .update_on_drag(self.screen_params, ui, &interaction_response)
+                    {
+                        changed_points_indexes.push(index);
+                    };
 
                     bezier.update_on_change_smoothness(ui, &interaction_response);
 
@@ -134,6 +139,10 @@ impl Canvas {
                         bezier.point.show_tooltip(index + 1, interaction_response);
                     }
                 });
+
+            if !changed_points_indexes.is_empty() {
+                context.model.update_smoothness(changed_points_indexes);
+            }
         }
 
         // Offset Dot

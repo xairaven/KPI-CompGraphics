@@ -7,6 +7,8 @@ pub trait Positionable {
     fn new(x: f32, y: f32) -> Self;
     fn x(&self) -> f32;
     fn y(&self) -> f32;
+    fn set_x(&mut self, x: f32);
+    fn set_y(&mut self, y: f32);
     fn to_pos2(&self) -> Pos2 {
         Pos2::from([self.x(), self.y()])
     }

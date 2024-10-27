@@ -42,6 +42,7 @@ pub mod graphics {
 pub mod logger;
 pub mod math {
     pub mod angle;
+    pub mod vector;
 }
 pub mod models {
     pub mod bezier_curve;

@@ -33,7 +33,7 @@ impl MoveablePoint {
 
     pub fn update_on_drag(
         &mut self, screen_params: ScreenParams, ui: &egui::Ui, response: &Response,
-    ) {
+    ) -> bool {
         if response.dragged_by(egui::PointerButton::Primary) {
             let offset = screen_params.vec2_px_to_cm(response.drag_delta());
             self.x += offset.x;
@@ -42,7 +42,11 @@ impl MoveablePoint {
             if offset.x != 0.0 || offset.y != 0.0 {
                 ui.ctx().request_repaint();
             }
+
+            return true;
         }
+
+        false
     }
 
     pub fn show_tooltip(&self, index: usize, response: Response) {
@@ -71,6 +75,14 @@ impl Positionable for MoveablePoint {
 
     fn y(&self) -> f32 {
         self.y
+    }
+
+    fn set_x(&mut self, x: f32) {
+        self.x = x;
+    }
+
+    fn set_y(&mut self, y: f32) {
+        self.y = y;
     }
 
     fn from_pos2(pos: Pos2) -> Self {
