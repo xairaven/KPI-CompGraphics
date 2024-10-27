@@ -38,7 +38,7 @@ impl Default for Model {
             fill_smooth: colors::PEONY,
 
             skeleton_stroke: strokes::skeleton_dark_grey(0.05),
-            tangent_stroke: strokes::tangent_pink(0.05),
+            tangent_stroke: strokes::tangent_pink(0.1),
 
             model_stroke: strokes::model_black(0.1),
             bezier_step: 0.1,
@@ -223,7 +223,7 @@ impl Model {
         ]
     }
 
-    pub fn update_smoothness(&mut self, updated_points_indexes: Vec<usize>) {
+    pub fn update_smoothness(&mut self, updated_points_indexes: &[usize]) {
         updated_points_indexes.iter().for_each(|index| {
             let index = *index;
 
@@ -258,5 +258,41 @@ impl Model {
                 }
             }
         })
+    }
+
+    pub fn tangent_lines(
+        &self, updated_points_indexes: &[usize], screen_params: ScreenParams,
+    ) -> Vec<Line<Point>> {
+        let mut lines: Vec<Line<Point>> = vec![];
+
+        updated_points_indexes.iter().for_each(|index| {
+            let index = *index;
+
+            if index == 0 || index == self.points.len() - 1 {
+                return;
+            }
+
+            for control_point_index in [index - 1, index, index + 1] {
+                if control_point_index != 0 && control_point_index != self.points.len() - 1 {
+                    if let SmoothnessType::Smooth = self.points[control_point_index].smoothness {
+                        let defining_first = self.points[control_point_index - 1];
+                        let defining_second = self.points[control_point_index + 1];
+
+                        let mut stroke = self.tangent_stroke;
+                        stroke.width = screen_params.value_cm_to_px(self.tangent_stroke.width);
+
+                        let line = Line::new(
+                            Point::new(defining_first.point.x, defining_first.point.y),
+                            Point::new(defining_second.point.x, defining_second.point.y),
+                            stroke,
+                        );
+
+                        lines.push(line);
+                    }
+                }
+            }
+        });
+
+        lines
     }
 }

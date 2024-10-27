@@ -141,7 +141,18 @@ impl Canvas {
                 });
 
             if !changed_points_indexes.is_empty() {
-                context.model.update_smoothness(changed_points_indexes);
+                context.model.update_smoothness(&changed_points_indexes);
+
+                // Draw tangent lines:
+                if context.model.is_tangent_enabled {
+                    let tangent_shapes: Vec<Shape> = context
+                        .model
+                        .tangent_lines(&changed_points_indexes, self.screen_params)
+                        .iter()
+                        .map(|line| line.to_screen(self.screen_params).to_shape())
+                        .collect();
+                    painter.extend(tangent_shapes);
+                }
             }
         }
 
