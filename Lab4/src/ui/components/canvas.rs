@@ -2,7 +2,6 @@ use crate::context::Context;
 use crate::geometry::line::Line;
 use crate::geometry::point::Point;
 use crate::graphics::screen::{Resolution, ScreenParams};
-use crate::models::bezier_point::BezierPointType;
 use crate::traits::positionable::Positionable;
 use crate::ui::styles::{colors, strokes};
 use eframe::epaint::Shape;
@@ -100,10 +99,7 @@ impl Canvas {
                 .points
                 .iter()
                 .map(|bezier| {
-                    let color = match bezier.kind {
-                        BezierPointType::Control => context.model.fill_control,
-                        BezierPointType::Defining => context.model.fill_defining,
-                    };
+                    let color = bezier.color(&context.model);
 
                     bezier.point.to_screen(self.screen_params).to_dot(
                         dot_radius,
@@ -121,18 +117,21 @@ impl Canvas {
                 .iter_mut()
                 .enumerate()
                 .for_each(|(index, bezier)| {
+                    let interaction_response = bezier.point.interaction_response(
+                        dot_radius,
+                        self.screen_params,
+                        ui,
+                        &response,
+                    );
+
                     bezier
                         .point
-                        .update_on_drag(dot_radius, self.screen_params, ui, &response);
+                        .update_on_drag(self.screen_params, ui, &interaction_response);
+
+                    bezier.update_on_change_smoothness(ui, &interaction_response);
 
                     if context.model.are_tooltips_enabled {
-                        bezier.point.show_tooltip(
-                            index + 1,
-                            dot_radius,
-                            self.screen_params,
-                            ui,
-                            &response,
-                        );
+                        bezier.point.show_tooltip(index + 1, interaction_response);
                     }
                 });
         }
@@ -146,11 +145,17 @@ impl Canvas {
                 .to_dot(dot_radius, context.euclidean_offset.color, outline_stroke);
             painter.add(dot);
 
-            context.euclidean_offset.dot.update_on_drag(
+            let interaction_response = context.euclidean_offset.dot.interaction_response(
                 dot_radius,
                 self.screen_params,
                 ui,
                 &response,
+            );
+
+            context.euclidean_offset.dot.update_on_drag(
+                self.screen_params,
+                ui,
+                &interaction_response,
             );
         }
 
@@ -163,11 +168,17 @@ impl Canvas {
                 .to_dot(dot_radius, context.euclidean_rotation.color, outline_stroke);
             painter.add(dot);
 
-            context.euclidean_rotation.dot.update_on_drag(
+            let interaction_response = context.euclidean_rotation.dot.interaction_response(
                 dot_radius,
                 self.screen_params,
                 ui,
                 &response,
+            );
+
+            context.euclidean_rotation.dot.update_on_drag(
+                self.screen_params,
+                ui,
+                &interaction_response,
             );
         }
 
