@@ -71,7 +71,7 @@ impl ScreenParams {
         Vec2::new(self.value_cm_to_px(vec.x), -self.value_cm_to_px(vec.y))
     }
 
-    pub fn update_self_offset(&mut self, ui: &egui::Ui, response: &Response) {
+    pub fn update_offset_on_drag(&mut self, ui: &egui::Ui, response: &Response) {
         if self.is_dragging_offset_enabled && response.dragged() {
             ui.ctx().set_cursor_icon(egui::CursorIcon::Grab);
 

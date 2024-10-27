@@ -21,7 +21,7 @@ impl MoveablePoint {
         Id::new(Uuid::new_v4())
     }
 
-    pub fn update_self(
+    pub fn update_on_drag(
         &mut self, radius: f32, screen_params: ScreenParams, ui: &egui::Ui, response: &Response,
     ) {
         let size = Vec2::splat(2.0 * radius);

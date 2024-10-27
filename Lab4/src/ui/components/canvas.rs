@@ -123,7 +123,7 @@ impl Canvas {
                 .for_each(|(index, bezier)| {
                     bezier
                         .point
-                        .update_self(dot_radius, self.screen_params, ui, &response);
+                        .update_on_drag(dot_radius, self.screen_params, ui, &response);
 
                     if context.model.are_tooltips_enabled {
                         bezier.point.show_tooltip(
@@ -146,10 +146,12 @@ impl Canvas {
                 .to_dot(dot_radius, context.euclidean_offset.color, outline_stroke);
             painter.add(dot);
 
-            context
-                .euclidean_offset
-                .dot
-                .update_self(dot_radius, self.screen_params, ui, &response);
+            context.euclidean_offset.dot.update_on_drag(
+                dot_radius,
+                self.screen_params,
+                ui,
+                &response,
+            );
         }
 
         // Rotation Dot
@@ -161,7 +163,7 @@ impl Canvas {
                 .to_dot(dot_radius, context.euclidean_rotation.color, outline_stroke);
             painter.add(dot);
 
-            context.euclidean_rotation.dot.update_self(
+            context.euclidean_rotation.dot.update_on_drag(
                 dot_radius,
                 self.screen_params,
                 ui,
@@ -170,7 +172,7 @@ impl Canvas {
         }
 
         // Check for dragging
-        self.screen_params.update_self_offset(ui, &response);
+        self.screen_params.update_offset_on_drag(ui, &response);
 
         response
     }
