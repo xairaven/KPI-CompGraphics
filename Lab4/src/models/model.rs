@@ -3,7 +3,7 @@ use crate::geometry::point::Point;
 use crate::graphics::screen::ScreenParams;
 use crate::models::bezier_curve;
 use crate::models::bezier_curve::bezier_curve;
-use crate::models::bezier_point::{BezierPoint, BezierPointType, SmoothnessType};
+use crate::models::bezier_point::{BezierPoint, SmoothnessType};
 use crate::traits::positionable::Positionable;
 use crate::ui::styles::{colors, strokes};
 use egui::{Color32, Stroke};
@@ -223,19 +223,14 @@ impl Model {
         updated_points_indexes.iter().for_each(|index| {
             let index = *index;
 
-            // Last elements are control points
             if index == 0 || index == self.points.len() - 1 {
                 return;
             }
 
-            if let BezierPointType::Control = self.points[index].kind {
-                return;
-            }
-
-            for (change, control_point_index) in [index - 1, index + 1].iter().enumerate() {
-                if *control_point_index != 0 && *control_point_index != self.points.len() - 1 {
-                    if let SmoothnessType::Smooth = self.points[*control_point_index].smoothness {
-                        let (left, right) = self.points.split_at_mut(*control_point_index);
+            for control_point_index in [index - 1, index, index + 1] {
+                if control_point_index != 0 && control_point_index != self.points.len() - 1 {
+                    if let SmoothnessType::Smooth = self.points[control_point_index].smoothness {
+                        let (left, right) = self.points.split_at_mut(control_point_index);
                         let defining_first = &mut left[left.len() - 1].point;
 
                         let (mid, right) = right.split_at_mut(1);
@@ -243,11 +238,17 @@ impl Model {
                         let control = &mut mid[0].point;
                         let defining_second = &mut right[0].point;
 
+                        let change = if control_point_index == index - 1 {
+                            1
+                        } else {
+                            2
+                        };
+
                         bezier_curve::c1_continuity(
                             defining_first,
                             control,
                             defining_second,
-                            (change + 1) as u32,
+                            change as u32,
                         );
                     }
                 }
