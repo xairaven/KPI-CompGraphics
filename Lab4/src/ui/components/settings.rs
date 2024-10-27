@@ -84,6 +84,9 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
             ui.checkbox(&mut context.model.are_tooltips_enabled, "Tooltips")
                 .on_hover_text("If you hover the cursor over a control or defining point with 'Tooltips' mode enabled, you will be able to see its number and coordinates.");
 
+            ui.checkbox(&mut context.model.is_tangent_enabled, "Smoothing Tangent")
+                .on_hover_text("When changes related to smoothness adjustments occur, display the tangents on the modified segment.");
+
             Grid::new("PointStrokes").num_columns(2).show(ui, |ui| {
                 ui.label("Radius:");
                 ui.add(
@@ -101,6 +104,11 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
 
                 ui.label("Skeleton:");
                 ui.add(&mut context.model.skeleton_stroke);
+
+                ui.end_row();
+
+                ui.label("Tangent:");
+                ui.add(&mut context.model.tangent_stroke);
 
                 ui.end_row();
 

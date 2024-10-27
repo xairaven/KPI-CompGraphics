@@ -27,3 +27,7 @@ pub fn model_black(width: f32) -> Stroke {
 pub fn skeleton_dark_grey(width: f32) -> Stroke {
     Stroke::new(width, colors::DARK_GRAY)
 }
+
+pub fn tangent_pink(width: f32) -> Stroke {
+    Stroke::new(width, colors::PINK)
+}

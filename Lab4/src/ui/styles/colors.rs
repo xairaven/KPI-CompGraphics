@@ -8,6 +8,7 @@ pub const GRAY: Color32 = Color32::from_rgb(200, 200, 200);
 pub const GREEN: Color32 = Color32::from_rgb(0, 255, 0);
 pub const LIME: Color32 = Color32::from_rgb(50, 205, 50);
 pub const PEONY: Color32 = Color32::from_rgb(162, 25, 255);
+pub const PINK: Color32 = Color32::from_rgb(255, 0, 255);
 pub const RED: Color32 = Color32::from_rgb(255, 0, 0);
 pub const WHITE: Color32 = Color32::from_rgb(255, 255, 255);
 pub const YELLOW: Color32 = Color32::from_rgb(255, 242, 0);

@@ -17,11 +17,13 @@ pub struct Model {
 
     pub skeleton_stroke: Stroke,
     pub model_stroke: Stroke,
+    pub tangent_stroke: Stroke,
 
     pub bezier_step: f32,
 
     pub are_tooltips_enabled: bool,
     pub is_skeleton_enabled: bool,
+    pub is_tangent_enabled: bool,
 
     pub radius: f32,
 }
@@ -36,12 +38,14 @@ impl Default for Model {
             fill_smooth: colors::PEONY,
 
             skeleton_stroke: strokes::skeleton_dark_grey(0.05),
+            tangent_stroke: strokes::tangent_pink(0.05),
 
             model_stroke: strokes::model_black(0.1),
             bezier_step: 0.1,
 
             are_tooltips_enabled: false,
             is_skeleton_enabled: false,
+            is_tangent_enabled: false,
 
             radius: 0.1,
         }
