@@ -12,6 +12,7 @@ pub struct Model {
 
     pub fill_control: Color32,
     pub fill_defining: Color32,
+    pub fill_smooth: Color32,
 
     pub skeleton_stroke: Stroke,
     pub model_stroke: Stroke,
@@ -31,6 +32,7 @@ impl Default for Model {
 
             fill_control: colors::RED,
             fill_defining: colors::GREEN,
+            fill_smooth: colors::PEONY,
 
             skeleton_stroke: strokes::skeleton_dark_grey(0.05),
 

@@ -84,15 +84,27 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
             ui.checkbox(&mut context.model.are_tooltips_enabled, "Tooltips")
                 .on_hover_text("If you hover the cursor over a control or defining point with 'Tooltips' mode enabled, you will be able to see its number and coordinates.");
 
-            ui.add_space(10.0);
-
             Grid::new("PointStrokes").num_columns(2).show(ui, |ui| {
-                ui.label("Skeleton Stroke:");
+                ui.label("Radius:");
+                ui.add(
+                    DragValue::new(&mut context.model.radius)
+                        .speed(0.1)
+                        .range(0.1..=2.0),
+                );
+
+                ui.end_row();
+                ui.end_row();
+
+                ui.label(RichText::new("Styles:").strong());
+
+                ui.end_row();
+
+                ui.label("Skeleton:");
                 ui.add(&mut context.model.skeleton_stroke);
 
                 ui.end_row();
 
-                ui.label("Fill - Control Point:");
+                ui.label("Control (Break) Point:");
                 egui::color_picker::color_edit_button_srgba(
                     ui,
                     &mut context.model.fill_control,
@@ -101,20 +113,20 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
 
                 ui.end_row();
 
-                ui.label("Fill - Defining Point:");
+                ui.label("Control (Smooth) Point:");
                 egui::color_picker::color_edit_button_srgba(
                     ui,
-                    &mut context.model.fill_defining,
+                    &mut context.model.fill_smooth,
                     egui::color_picker::Alpha::Opaque,
                 );
 
                 ui.end_row();
 
-                ui.label("Radius:");
-                ui.add(
-                    DragValue::new(&mut context.model.radius)
-                        .speed(0.1)
-                        .range(0.1..=2.0),
+                ui.label("Defining Point:");
+                egui::color_picker::color_edit_button_srgba(
+                    ui,
+                    &mut context.model.fill_defining,
+                    egui::color_picker::Alpha::Opaque,
                 );
             });
 
