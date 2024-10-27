@@ -41,7 +41,7 @@ fn formula<T: Positionable>(control_first: &T, control_second: &T, defining: &T,
 }
 
 // Change - 1st or 2nd point. If changing second defining point, first (change = 1) have to change.
-pub fn smooth_segment<T: Positionable>(
+pub fn c1_continuity<T: Positionable>(
     defining_first: &mut T, control: &mut T, defining_second: &mut T, change: u32,
 ) {
     let alpha_1 = vector::length(T::new(

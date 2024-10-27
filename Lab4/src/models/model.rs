@@ -243,7 +243,7 @@ impl Model {
                         let control = &mut mid[0].point;
                         let defining_second = &mut right[0].point;
 
-                        bezier_curve::smooth_segment(
+                        bezier_curve::c1_continuity(
                             defining_first,
                             control,
                             defining_second,
