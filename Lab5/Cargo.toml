@@ -16,4 +16,5 @@ eframe = { version = "0.29.1", default-features = false, features = [
 ] }
 fern = "0.7.0"                # Logger.
 log = "0.4.22"                # Logging facade.
+nalgebra = "0.33.2"           # Matrices, linear algebra.
 thiserror = "1.0.65"          # Custom enum errors.
