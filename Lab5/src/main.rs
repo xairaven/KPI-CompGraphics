@@ -17,11 +17,44 @@ fn main() {
         println!("Logger initialization failed. Error: {}", err);
         std::process::exit(1);
     });
+
+    ui::core::start(app_config.name, app_config.theme).unwrap_or_else(|err| {
+        log::error!("{}", err);
+        std::process::exit(1);
+    });
 }
 
 pub mod config;
+pub mod context;
 pub mod errors {
     pub mod env;
     pub mod log;
 }
+pub mod geometry {
+    pub mod line;
+    pub mod point;
+}
+pub mod graphics {
+    pub mod grid;
+    pub mod model;
+    pub mod screen;
+}
 pub mod logger;
+pub mod math {
+    pub mod angle;
+}
+pub mod ui {
+    pub mod app;
+    pub mod core;
+    pub mod components {
+        pub mod canvas;
+        pub mod settings;
+    }
+    pub mod styles {
+        pub mod colors;
+        pub mod strokes;
+    }
+    pub mod windows {
+        pub mod main;
+    }
+}
