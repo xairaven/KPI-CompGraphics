@@ -38,8 +38,10 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                 ui.add(
                     DragValue::new(&mut context.model.angle_z_degrees)
                         .speed(1)
-                        .range(0..=360),
+                        .range(-360..=360),
                 );
+                context.model.hide_bad_angles();
+
                 ui.end_row();
 
                 ui.label("P:");
