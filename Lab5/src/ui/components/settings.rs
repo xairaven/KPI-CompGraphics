@@ -32,7 +32,7 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
 
         ui.add_space(10.0);
 
-        ui.collapsing("Model Settings", |ui| {
+        ui.collapsing("System Settings", |ui| {
             Grid::new("GridStrokes").num_columns(2).show(ui, |ui| {
                 ui.label("Angle Z:");
                 ui.add(

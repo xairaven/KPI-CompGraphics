@@ -16,17 +16,21 @@ pub struct Canvas {
 impl Canvas {
     pub fn process(&mut self, ui: &mut egui::Ui, context: &mut Context) {
         let axes = context.grid.axes_lines(self.screen_params);
+        let model = context.model.lines(10.0, 10.0, self.screen_params);
 
         // Converting lines to 2D
         let mut lines2d: Vec<Line2D> = vec![];
 
+        let angle_y = context.grid.angle_y();
+        let angle_z = context.grid.angle_z();
+        let p = context.grid.p;
         axes.iter().for_each(|line3d| {
-            let angle_y = context.grid.angle_y();
-            let angle_z = context.grid.angle_z();
-            let p = context.grid.p;
-
             let axis2d = line3d.to_line2d(angle_y, angle_z, p);
             lines2d.push(axis2d);
+        });
+        model.iter().for_each(|line3d| {
+            let line = line3d.to_line2d(angle_y, angle_z, p);
+            lines2d.push(line);
         });
 
         self.lines = lines2d;
