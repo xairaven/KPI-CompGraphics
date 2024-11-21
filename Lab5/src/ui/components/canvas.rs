@@ -16,7 +16,7 @@ pub struct Canvas {
 impl Canvas {
     pub fn process(&mut self, ui: &mut egui::Ui, context: &mut Context) {
         let axes = context.grid.axes_lines(self.screen_params);
-        let model = context.model.lines(10.0, 10.0, self.screen_params);
+        let model = context.model.lines(self.screen_params);
 
         // Converting lines to 2D
         let mut lines2d: Vec<Line2D> = vec![];

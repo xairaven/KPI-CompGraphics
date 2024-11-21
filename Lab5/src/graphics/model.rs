@@ -6,18 +6,24 @@ use eframe::epaint::Stroke;
 
 pub struct Model {
     pub stroke: Stroke,
+
+    pub depth: f32,
+    pub radius: f32,
 }
 
 impl Default for Model {
     fn default() -> Self {
         Self {
             stroke: strokes::model_black(0.1),
+
+            depth: 5.0,
+            radius: 10.0,
         }
     }
 }
 
 impl Model {
-    pub fn lines(&self, height: f32, radius: f32, screen_params: ScreenParams) -> Vec<Line3D> {
+    pub fn lines(&self, screen_params: ScreenParams) -> Vec<Line3D> {
         let mut stroke = self.stroke;
         stroke.width = screen_params.value_cm_to_px(self.stroke.width);
 
@@ -25,10 +31,10 @@ impl Model {
         let mut upper_points: Vec<Point3D> = vec![];
 
         for k in 0..=4 {
-            points.push(Self::formula_outer(k, radius, 0.0));
-            points.push(Self::formula_inner(k, radius / 2.0, 0.0));
-            upper_points.push(Self::formula_outer(k, radius, height));
-            upper_points.push(Self::formula_inner(k, radius / 2.0, height));
+            points.push(Self::formula_outer(k, self.radius, 0.0));
+            points.push(Self::formula_inner(k, self.radius / 2.0, 0.0));
+            upper_points.push(Self::formula_outer(k, self.radius, self.depth));
+            upper_points.push(Self::formula_inner(k, self.radius / 2.0, self.depth));
         }
 
         let mut lines: Vec<Line3D> = vec![];

@@ -33,7 +33,7 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
         ui.add_space(10.0);
 
         ui.collapsing("System Settings", |ui| {
-            Grid::new("GridStrokes").num_columns(2).show(ui, |ui| {
+            Grid::new("SystemSettings").num_columns(2).show(ui, |ui| {
                 ui.label("Angle Z:");
                 ui.add(
                     DragValue::new(&mut context.grid.angle_z_degrees)
@@ -51,6 +51,28 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                         .range(-100.0..=100.0),
                 );
                 ui.end_row();
+            });
+        });
+
+        ui.add_space(10.0);
+
+        ui.collapsing("Model Settings", |ui| {
+            Grid::new("ModelSettings").num_columns(2).show(ui, |ui| {
+                ui.label("Radius:");
+                ui.add(
+                    DragValue::new(&mut context.model.radius)
+                        .speed(0.1)
+                        .range(0.1..=20.0),
+                );
+
+                ui.end_row();
+
+                ui.label("Depth:");
+                ui.add(
+                    DragValue::new(&mut context.model.depth)
+                        .speed(0.1)
+                        .range(0.1..=20.0),
+                );
             });
         });
     });
