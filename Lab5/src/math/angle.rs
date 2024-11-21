@@ -1,4 +1,4 @@
-#[derive(Default)]
+#[derive(Debug, Default, Clone, Copy)]
 pub struct Angle {
     degree: f32,
     radian: f32,

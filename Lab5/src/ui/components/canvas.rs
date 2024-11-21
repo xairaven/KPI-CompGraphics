@@ -1,8 +1,6 @@
 use crate::context::Context;
-use crate::geometry::point::Point;
 use crate::graphics::screen::ScreenParams;
-use crate::ui::styles::{colors, strokes};
-use eframe::epaint::Shape;
+use crate::ui::styles::colors;
 use egui::{Frame, Response, Sense};
 
 #[derive(Default)]
@@ -26,7 +24,7 @@ impl Canvas {
             .show(ui, |ui| {
                 ui.input(|i| {
                     let delta = i.smooth_scroll_delta.y;
-                    // self.screen_params.px_per_cm += delta * 0.1;
+                    self.screen_params.px_per_cm += delta * 0.1;
                 });
                 self.process(ui, context);
                 self.draw(ui, context);
