@@ -21,9 +21,9 @@ impl Canvas {
         let mut lines2d: Vec<Line2D> = vec![];
 
         axes.iter().for_each(|line3d| {
-            let angle_y = context.model.angle_y();
-            let angle_z = context.model.angle_z();
-            let p = context.model.p;
+            let angle_y = context.grid.angle_y();
+            let angle_z = context.grid.angle_z();
+            let p = context.grid.p;
 
             let axis2d = line3d.to_line2d(angle_y, angle_z, p);
             lines2d.push(axis2d);

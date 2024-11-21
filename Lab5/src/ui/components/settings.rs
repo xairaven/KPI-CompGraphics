@@ -36,17 +36,17 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
             Grid::new("GridStrokes").num_columns(2).show(ui, |ui| {
                 ui.label("Angle Z:");
                 ui.add(
-                    DragValue::new(&mut context.model.angle_z_degrees)
+                    DragValue::new(&mut context.grid.angle_z_degrees)
                         .speed(1)
                         .range(-360..=360),
                 );
-                context.model.hide_bad_angles();
+                context.grid.hide_bad_angles();
 
                 ui.end_row();
 
                 ui.label("P:");
                 ui.add(
-                    DragValue::new(&mut context.model.p)
+                    DragValue::new(&mut context.grid.p)
                         .speed(0.1)
                         .range(-100.0..=100.0),
                 );
