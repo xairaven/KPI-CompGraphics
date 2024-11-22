@@ -1,7 +1,7 @@
 use crate::ui::styles::colors;
 use eframe::epaint::Stroke;
 
-const AXIS_WIDTH_PX: f32 = 2.0;
+const AXIS_WIDTH_PX: f32 = 1.5;
 
 pub fn axis_blue() -> Stroke {
     Stroke::new(AXIS_WIDTH_PX, colors::BLUE)

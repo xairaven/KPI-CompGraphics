@@ -15,10 +15,10 @@ pub struct Model {
 impl Default for Model {
     fn default() -> Self {
         Self {
-            stroke: strokes::model_black(0.1),
+            stroke: strokes::model_black(0.05),
 
-            radius: 10.0,
-            thickness: 5.0,
+            radius: 5.0,
+            thickness: 2.5,
         }
     }
 }
