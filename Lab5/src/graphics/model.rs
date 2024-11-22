@@ -80,4 +80,12 @@ impl Model {
         let y = radius * f32::sin(angle);
         Point3D::new(x, y, thickness)
     }
+
+    pub fn pivot_point(&self, offset: Point3D) -> Point3D {
+        Point3D::new(
+            0.0 + offset.x,
+            0.0 + offset.y,
+            self.thickness / 2.0 + offset.z,
+        )
+    }
 }

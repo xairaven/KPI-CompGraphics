@@ -44,6 +44,10 @@ impl Offset {
         self.static_x != 0.0 || self.static_y != 0.0 || self.static_z != 0.0
     }
 
+    pub fn statics(&self) -> Point3D {
+        Point3D::new(self.static_x, self.static_y, self.static_z)
+    }
+
     pub fn reset_position(&mut self) {
         self.static_x = 0.0;
         self.static_y = 0.0;

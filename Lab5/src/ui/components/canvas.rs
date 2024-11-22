@@ -17,6 +17,7 @@ impl Canvas {
     pub fn process(&mut self, context: &mut Context) {
         let mut converted_lines: Vec<Line2D> = vec![];
 
+        // Axes processing
         if context.axes.are_enabled {
             let axes = context.axes.lines();
 
@@ -26,8 +27,17 @@ impl Canvas {
             });
         }
 
+        // Model processing
         let mut model = context.model.lines(self.screen_params);
+
+        // Model Offset
         context.offset.apply(&mut model);
+
+        // Model Rotation
+        let pivot_point = context.model.pivot_point(context.offset.statics());
+        context.rotation.apply(&mut model, pivot_point);
+
+        // Model -> 2D
         model.iter().for_each(|line3d| {
             let line = line3d.to_line2d(&context.trimetric);
             converted_lines.push(line);
