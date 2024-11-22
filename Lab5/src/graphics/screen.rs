@@ -76,6 +76,8 @@ impl ScreenParams {
 
             self.offset.0 += delta.x * dragging_coefficient;
             self.offset.1 += delta.y * dragging_coefficient;
+
+            ui.ctx().request_repaint();
         }
     }
 }

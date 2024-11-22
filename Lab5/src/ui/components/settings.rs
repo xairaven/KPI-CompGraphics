@@ -33,6 +33,31 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
 
         ui.add_space(10.0);
 
+        ui.collapsing("Drag & Offset", |ui| {
+            Grid::new("DragAndOffsetSettings")
+                .num_columns(2)
+                .show(ui, |ui| {
+                    ui.checkbox(
+                        &mut canvas.screen_params.is_dragging_offset_enabled,
+                        "Enable",
+                    );
+                    if ui.button("Reset Settings").clicked() {
+                        canvas.screen_params.offset = Default::default();
+                        canvas.screen_params.is_dragging_offset_enabled = true;
+                    }
+                    ui.end_row();
+
+                    ui.label("X:");
+                    ui.label(format!("{:.2}", canvas.screen_params.offset.0));
+                    ui.end_row();
+                    ui.label("Y:");
+                    ui.label(format!("{:.2}", -canvas.screen_params.offset.1));
+                    ui.end_row();
+                });
+        });
+
+        ui.add_space(10.0);
+
         ui.collapsing("Axis Settings", |ui| {
             Grid::new("AxisSettings").num_columns(2).show(ui, |ui| {
                 ui.checkbox(&mut context.axes.are_enabled, "Enable Axes");

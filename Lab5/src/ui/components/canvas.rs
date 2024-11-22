@@ -48,6 +48,9 @@ impl Canvas {
             .collect();
         painter.extend(line_shapes);
 
+        // Check for dragging
+        self.screen_params.update_offset_on_drag(ui, &response);
+
         response
     }
 
