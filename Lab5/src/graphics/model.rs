@@ -4,11 +4,12 @@ use crate::graphics::screen::ScreenParams;
 use crate::ui::styles::strokes;
 use eframe::epaint::Stroke;
 
+// Star figure.
 pub struct Model {
-    pub stroke: Stroke,
-
-    pub depth: f32,
+    pub height: f32,
     pub radius: f32,
+
+    pub stroke: Stroke,
 }
 
 impl Default for Model {
@@ -16,7 +17,7 @@ impl Default for Model {
         Self {
             stroke: strokes::model_black(0.1),
 
-            depth: 5.0,
+            height: 5.0,
             radius: 10.0,
         }
     }
@@ -33,8 +34,8 @@ impl Model {
         for k in 0..=4 {
             points.push(Self::formula_outer(k, self.radius, 0.0));
             points.push(Self::formula_inner(k, self.radius / 2.0, 0.0));
-            upper_points.push(Self::formula_outer(k, self.radius, self.depth));
-            upper_points.push(Self::formula_inner(k, self.radius / 2.0, self.depth));
+            upper_points.push(Self::formula_outer(k, self.radius, self.height));
+            upper_points.push(Self::formula_inner(k, self.radius / 2.0, self.height));
         }
 
         let mut lines: Vec<Line3D> = vec![];
@@ -57,6 +58,7 @@ impl Model {
         lines
     }
 
+    // https://math.stackexchange.com/questions/3582342/coordinates-of-the-vertices-of-a-five-pointed-star
     fn formula_outer(k: u32, r: f32, z: f32) -> Point3D {
         let x =
             r * f32::cos(k as f32 * 2.0 * std::f32::consts::PI / 5.0 + std::f32::consts::PI / 2.0);

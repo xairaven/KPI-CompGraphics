@@ -1,6 +1,6 @@
 use crate::geometry::line2d::Line2D;
 use crate::geometry::point3d::Point3D;
-use crate::math::angle::Angle;
+use crate::projections::trimetric::TrimetricProjection;
 use eframe::epaint::Stroke;
 
 #[derive(Debug, Default, Clone, Copy)]
@@ -16,9 +16,9 @@ impl Line3D {
         Self { start, end, stroke }
     }
 
-    pub fn to_line2d(&self, angle_y: Angle, angle_z: Angle, p: f32) -> Line2D {
-        let start = self.start.to_point2d(angle_y, angle_z, p);
-        let end = self.end.to_point2d(angle_y, angle_z, p);
+    pub fn to_line2d(&self, trimetric: &TrimetricProjection) -> Line2D {
+        let start = self.start.to_point2d(trimetric);
+        let end = self.end.to_point2d(trimetric);
 
         Line2D::new(start, end, self.stroke)
     }

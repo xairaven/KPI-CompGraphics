@@ -45,6 +45,10 @@ pub mod logger;
 pub mod math {
     pub mod angle;
 }
+pub mod projections {
+    pub mod orthographic;
+    pub mod trimetric;
+}
 pub mod ui {
     pub mod app;
     pub mod core;

@@ -4,6 +4,7 @@ use crate::ui::components::canvas::Canvas;
 use egui::{DragValue, Grid};
 
 pub const SETTINGS_PANEL_WIDTH: f32 = 250.0;
+const GRID_COLUMN_MINIMAL_WIDTH: f32 = 50.0;
 
 pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui) {
     egui::ScrollArea::vertical().show(ui, |ui| {
@@ -32,48 +33,54 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
 
         ui.add_space(10.0);
 
-        ui.collapsing("System Settings", |ui| {
-            Grid::new("SystemSettings").num_columns(2).show(ui, |ui| {
-                ui.label("Angle Z:");
-                ui.add(
-                    DragValue::new(&mut context.grid.angle_z_degrees)
-                        .speed(1)
-                        .range(-360..=360),
-                );
-                context.grid.hide_bad_angles();
+        ui.collapsing("Axis Rotation Settings", |ui| {
+            Grid::new("AxisRotationSettings")
+                .num_columns(2)
+                .min_col_width(GRID_COLUMN_MINIMAL_WIDTH)
+                .show(ui, |ui| {
+                    ui.label("OX:");
+                    ui.add(
+                        DragValue::new(&mut context.trimetric.angle_deg_x)
+                            .speed(1)
+                            .range(-360..=360),
+                    );
 
-                ui.end_row();
+                    ui.end_row();
 
-                ui.label("P:");
-                ui.add(
-                    DragValue::new(&mut context.grid.p)
-                        .speed(0.1)
-                        .range(-100.0..=100.0),
-                );
-                ui.end_row();
-            });
+                    ui.label("OY:");
+                    ui.add(
+                        DragValue::new(&mut context.trimetric.angle_deg_y)
+                            .speed(1)
+                            .range(-360..=360),
+                    );
+
+                    ui.end_row();
+                });
         });
 
         ui.add_space(10.0);
 
         ui.collapsing("Model Settings", |ui| {
-            Grid::new("ModelSettings").num_columns(2).show(ui, |ui| {
-                ui.label("Radius:");
-                ui.add(
-                    DragValue::new(&mut context.model.radius)
-                        .speed(0.1)
-                        .range(0.1..=20.0),
-                );
+            Grid::new("ModelSettings")
+                .num_columns(2)
+                .min_col_width(GRID_COLUMN_MINIMAL_WIDTH)
+                .show(ui, |ui| {
+                    ui.label("Radius:");
+                    ui.add(
+                        DragValue::new(&mut context.model.radius)
+                            .speed(0.1)
+                            .range(0.1..=20.0),
+                    );
 
-                ui.end_row();
+                    ui.end_row();
 
-                ui.label("Depth:");
-                ui.add(
-                    DragValue::new(&mut context.model.depth)
-                        .speed(0.1)
-                        .range(0.1..=20.0),
-                );
-            });
+                    ui.label("Height:");
+                    ui.add(
+                        DragValue::new(&mut context.model.height)
+                            .speed(0.1)
+                            .range(0.1..=20.0),
+                    );
+                });
         });
     });
 }
@@ -82,4 +89,6 @@ fn reset_to_defaults(context: &mut Context, canvas: &mut Canvas) {
     canvas.screen_params = Default::default();
     context.grid = Default::default();
     context.model = Default::default();
+    context.trimetric = Default::default();
+    context.orthographic = Default::default();
 }

@@ -1,6 +1,6 @@
 use crate::geometry::point2d::Point2D;
-use crate::math::angle::Angle;
-use nalgebra::{Matrix4, SMatrix};
+use crate::projections::trimetric::TrimetricProjection;
+use nalgebra::SMatrix;
 
 #[derive(Debug, Default, Clone, Copy)]
 pub struct Point3D {
@@ -18,30 +18,9 @@ impl Point3D {
         SMatrix::<f32, 1, 4>::new(self.x, self.y, self.z, 1.0)
     }
 
-    pub fn to_point2d(&self, angle_y: Angle, angle_z: Angle, p: f32) -> Point2D {
-        let vector = self.to_vector() * self.matrix(angle_y, angle_z, p);
+    pub fn to_point2d(&self, trimetric: &TrimetricProjection) -> Point2D {
+        let vector = self.to_vector() * trimetric.matrix();
 
-        Point2D::new(vector.y, vector.z)
-    }
-
-    pub fn matrix(&self, angle_y: Angle, angle_z: Angle, p: f32) -> Matrix4<f32> {
-        Matrix4::new(
-            0.0,
-            f32::cos(angle_y.radian()) * f32::sin(angle_z.radian()),
-            -f32::sin(angle_y.radian()),
-            0.0,
-            0.0,
-            f32::cos(angle_z.radian()),
-            0.0,
-            0.0,
-            0.0,
-            f32::sin(angle_y.radian()) * f32::sin(angle_z.radian()),
-            f32::cos(angle_y.radian()),
-            0.0,
-            p,
-            0.0,
-            0.0,
-            1.0,
-        )
+        Point2D::new(vector.x, vector.y)
     }
 }
