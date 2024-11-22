@@ -19,7 +19,8 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
             ui.add(
                 DragValue::new(&mut canvas.screen_params.px_per_cm)
                     .speed(1)
-                    .range(MIN_PX_PER_CM..=MAX_PX_PER_CM),
+                    .range(MIN_PX_PER_CM..=MAX_PX_PER_CM)
+                    .suffix(" px"),
             );
         });
 
@@ -67,7 +68,8 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                 ui.add(
                     DragValue::new(&mut canvas.screen_params.unit_length)
                         .speed(1)
-                        .range(1.0..=10.0),
+                        .range(1.0..=10.0)
+                        .suffix(" cm"),
                 );
                 ui.end_row();
 
@@ -75,7 +77,8 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                 ui.add(
                     DragValue::new(&mut context.axes.axis_length)
                         .speed(1)
-                        .range(1..=30),
+                        .range(1..=u32::MAX)
+                        .suffix(" cm"),
                 );
                 ui.end_row();
             });
@@ -89,7 +92,8 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                 ui.add(
                     DragValue::new(&mut context.trimetric.angle_deg_x)
                         .speed(1)
-                        .range(-360..=360),
+                        .range(-360..=360)
+                        .suffix("°"),
                 );
                 ui.end_row();
 
@@ -97,7 +101,8 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                 ui.add(
                     DragValue::new(&mut context.trimetric.angle_deg_y)
                         .speed(1)
-                        .range(-360..=360),
+                        .range(-360..=360)
+                        .suffix("°"),
                 );
                 ui.end_row();
             });
@@ -140,6 +145,11 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                     canvas.screen_params.unit_length = 1.0;
                 }
             });
+            ui.vertical_centered(|ui| {
+                if ui.button("Reset Rotation").clicked() {
+                    context.trimetric = Default::default();
+                }
+            });
         });
 
         ui.add_space(10.0);
@@ -150,7 +160,8 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                 ui.add(
                     DragValue::new(&mut context.model.radius)
                         .speed(0.1)
-                        .range(0.1..=20.0),
+                        .range(0.1..=f32::MAX)
+                        .suffix(" cm"),
                 );
                 ui.end_row();
 
@@ -158,7 +169,8 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                 ui.add(
                     DragValue::new(&mut context.model.thickness)
                         .speed(0.1)
-                        .range(0.1..=20.0),
+                        .range(0.1..=f32::MAX)
+                        .suffix(" cm"),
                 );
                 ui.end_row();
             });
@@ -171,15 +183,146 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                 }
             });
         });
+
+        ui.add_space(10.0);
+
+        ui.collapsing("Animation", |ui| {
+            ui.horizontal_wrapped(|ui| {
+                ui.label("Status: ");
+                if context.animation.is_running {
+                    ui.label(RichText::new("Running!").color(colors::LIME));
+                } else {
+                    ui.label(RichText::new("Stopped.").color(colors::RED));
+                }
+
+                ui.vertical_centered(|ui| {
+                    if ui.button("Start / Stop").clicked() {
+                        // context.animation_settings.checkout_status(&mut context.model);
+                    }
+                });
+            });
+        });
+
+        ui.add_space(10.0);
+
+        ui.collapsing("Euclidean Offset", |ui| {
+            Grid::new("OffsetSettings").num_columns(2).show(ui, |ui| {
+                ui.label("Offset X: ");
+                ui.add(
+                    DragValue::new(&mut context.offset.x)
+                        .speed(0.1)
+                        .suffix(" cm"),
+                );
+                ui.end_row();
+
+                ui.label("Offset Y: ");
+                ui.add(
+                    DragValue::new(&mut context.offset.y)
+                        .speed(0.1)
+                        .suffix(" cm"),
+                );
+                ui.end_row();
+
+                ui.label("Offset Z: ");
+                ui.add(
+                    DragValue::new(&mut context.offset.z)
+                        .speed(0.1)
+                        .suffix(" cm"),
+                );
+                ui.end_row();
+            });
+
+            ui.add_space(10.0);
+
+            ui.vertical_centered_justified(|ui| {
+                if ui.button("Apply").clicked() {
+                    context.offset.is_applied = true;
+                }
+            });
+
+            ui.vertical_centered_justified(|ui| {
+                if ui.button("Clear Fields").clicked() {
+                    context.offset.x = 0.0;
+                    context.offset.y = 0.0;
+                    context.offset.z = 0.0;
+                }
+            });
+
+            ui.vertical_centered_justified(|ui| {
+                if ui.button("Reset Position").clicked() {
+                    context.offset.reset_position();
+                }
+            });
+        });
+
+        ui.add_space(10.0);
+
+        ui.collapsing("Euclidean Rotation", |ui| {
+            Grid::new("RotationSettings").num_columns(2).show(ui, |ui| {
+                ui.label("OX Angle: ");
+                ui.add(
+                    DragValue::new(&mut context.rotation.angle_deg_x)
+                        .speed(1)
+                        .range(-360..=360)
+                        .suffix("°"),
+                );
+                ui.end_row();
+
+                ui.label("OY Angle: ");
+                ui.add(
+                    DragValue::new(&mut context.rotation.angle_deg_y)
+                        .speed(1)
+                        .range(-360..=360)
+                        .suffix("°"),
+                );
+                ui.end_row();
+
+                ui.label("OZ Angle: ");
+                ui.add(
+                    DragValue::new(&mut context.rotation.angle_deg_z)
+                        .speed(1)
+                        .range(-360..=360)
+                        .suffix("°"),
+                );
+                ui.end_row();
+            });
+
+            ui.add_space(10.0);
+
+            ui.vertical_centered_justified(|ui| {
+                if ui.button("Apply").clicked() {
+                    context.rotation.is_applied = true;
+                }
+            });
+
+            ui.vertical_centered_justified(|ui| {
+                if ui.button("Clear Fields").clicked() {
+                    context.rotation.angle_deg_x = 0.0;
+                    context.rotation.angle_deg_y = 0.0;
+                    context.rotation.angle_deg_z = 0.0;
+                }
+            });
+
+            ui.vertical_centered_justified(|ui| {
+                if ui.button("Reset Position").clicked() {
+                    context.rotation.reset_position();
+                }
+            });
+        });
     });
 }
 
 fn reset_to_defaults(context: &mut Context, canvas: &mut Canvas) {
+    canvas.screen_params = Default::default();
+
     context.axes = Default::default();
     context.model = Default::default();
 
-    canvas.screen_params = Default::default();
-
-    context.orthographic = Default::default();
     context.trimetric = Default::default();
+    context.orthographic = Default::default();
+
+    context.animation = Default::default();
+
+    context.offset = Default::default();
+    context.rotation = Default::default();
 }

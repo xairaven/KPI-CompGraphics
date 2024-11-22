@@ -45,9 +45,16 @@ pub mod logger;
 pub mod math {
     pub mod angle;
 }
+pub mod operations {
+    pub mod animation;
+}
 pub mod projections {
     pub mod orthographic;
     pub mod trimetric;
+}
+pub mod transformations {
+    pub mod offset;
+    pub mod rotation;
 }
 pub mod ui {
     pub mod app;

@@ -26,7 +26,8 @@ impl Canvas {
             });
         }
 
-        let model = context.model.lines(self.screen_params);
+        let mut model = context.model.lines(self.screen_params);
+        context.offset.apply(&mut model);
         model.iter().for_each(|line3d| {
             let line = line3d.to_line2d(&context.trimetric);
             converted_lines.push(line);
