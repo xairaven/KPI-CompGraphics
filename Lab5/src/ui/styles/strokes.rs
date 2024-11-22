@@ -6,7 +6,7 @@ const AXIS_WIDTH_PX: f32 = 2.0;
 pub fn axis_blue() -> Stroke {
     Stroke::new(AXIS_WIDTH_PX, colors::BLUE)
 }
-pub fn axis_green() -> Stroke {
+pub fn axis_lime() -> Stroke {
     Stroke::new(AXIS_WIDTH_PX, colors::LIME)
 }
 

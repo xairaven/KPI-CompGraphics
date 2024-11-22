@@ -14,30 +14,29 @@ pub struct Canvas {
 }
 
 impl Canvas {
-    pub fn process(&mut self, ui: &mut egui::Ui, context: &mut Context) {
-        let axes = context.axes.lines(self.screen_params);
+    pub fn process(&mut self, context: &mut Context) {
+        let mut converted_lines: Vec<Line2D> = vec![];
+
+        if context.axes.are_enabled {
+            let axes = context.axes.lines();
+
+            axes.iter().for_each(|line3d| {
+                let axis2d = line3d.to_line2d(&context.trimetric);
+                converted_lines.push(axis2d);
+            });
+        }
+
         let model = context.model.lines(self.screen_params);
-
-        // Converting lines to 2D (with z=0)
-        let mut lines2d: Vec<Line2D> = vec![];
-
-        axes.iter().for_each(|line3d| {
-            let axis2d = line3d.to_line2d(&context.trimetric);
-            lines2d.push(axis2d);
-        });
         model.iter().for_each(|line3d| {
             let line = line3d.to_line2d(&context.trimetric);
-            lines2d.push(line);
+            converted_lines.push(line);
         });
 
-        // Projection to z=0.
-        // TODO
-
-        // Passing all lines to draw method
-        self.lines = lines2d;
+        // Passing all lines to draw() method
+        self.lines = converted_lines;
     }
 
-    pub fn draw(&mut self, ui: &mut egui::Ui, context: &mut Context) -> Response {
+    pub fn draw(&mut self, ui: &mut egui::Ui) -> Response {
         let painter_size = ui.available_size_before_wrap();
         let (response, painter) = ui.allocate_painter(painter_size, Sense::click_and_drag());
         self.screen_params.canvas_center = Point2D::from_pos2(response.rect.center());
@@ -60,8 +59,8 @@ impl Canvas {
                     let delta = i.smooth_scroll_delta.y;
                     self.screen_params.px_per_cm += delta * 0.1;
                 });
-                self.process(ui, context);
-                self.draw(ui, context);
+                self.process(context);
+                self.draw(ui);
             });
     }
 }
