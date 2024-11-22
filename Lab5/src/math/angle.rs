@@ -10,6 +10,9 @@ impl Angle {
         if degree < 0.0 {
             local_degree = 360.0 + degree;
         }
+        if degree > 360.0 {
+            local_degree -= 360.0;
+        }
 
         Self {
             degree: local_degree,

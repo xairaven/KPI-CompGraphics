@@ -197,10 +197,88 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
 
                 ui.vertical_centered(|ui| {
                     if ui.button("Start / Stop").clicked() {
-                        // context.animation_settings.checkout_status(&mut context.model);
+                        context.animation.checkout_status();
                     }
                 });
             });
+
+            ui.add_space(10.0);
+
+            ui.vertical_centered(|ui| {
+                ui.label(RichText::new("Animation Parameters").color(colors::WHITE));
+            });
+
+            ui.add_space(5.0);
+
+            ui.checkbox(&mut context.animation.use_radius, "Use Radius");
+            if context.animation.use_radius {
+                Grid::new("AnimationRadiusParameters")
+                    .num_columns(2)
+                    .show(ui, |ui| {
+                        ui.label("Minimum: ");
+                        ui.add(
+                            DragValue::new(&mut context.animation.min_radius)
+                                .speed(0.1)
+                                .range(0.1..=f32::MAX)
+                                .suffix(" cm"),
+                        );
+                        ui.end_row();
+
+                        ui.label("Maximum: ");
+                        ui.add(
+                            DragValue::new(&mut context.animation.max_radius)
+                                .speed(0.1)
+                                .range(0.1..=f32::MAX)
+                                .suffix(" cm"),
+                        );
+                        ui.end_row();
+
+                        ui.label("Step: ");
+                        ui.add(
+                            DragValue::new(&mut context.animation.step_radius)
+                                .speed(0.01)
+                                .range(0.01..=f32::MAX)
+                                .suffix(" cm"),
+                        );
+                        ui.end_row();
+                    });
+            }
+
+            ui.add_space(5.0);
+
+            ui.checkbox(&mut context.animation.use_rotation, "Use Rotation");
+            if context.animation.use_rotation {
+                Grid::new("AnimationRotationParameters")
+                    .num_columns(2)
+                    .show(ui, |ui| {
+                        ui.label("Step, OX: ");
+                        ui.add(
+                            DragValue::new(&mut context.animation.step_x)
+                                .speed(1)
+                                .range(-360..=360)
+                                .suffix("°"),
+                        );
+                        ui.end_row();
+
+                        ui.label("Step, OY: ");
+                        ui.add(
+                            DragValue::new(&mut context.animation.step_y)
+                                .speed(1)
+                                .range(-360..=360)
+                                .suffix("°"),
+                        );
+                        ui.end_row();
+
+                        ui.label("Step, OZ: ");
+                        ui.add(
+                            DragValue::new(&mut context.animation.step_z)
+                                .speed(1)
+                                .range(-360..=360)
+                                .suffix("°"),
+                        );
+                        ui.end_row();
+                    });
+            }
         });
 
         ui.add_space(10.0);

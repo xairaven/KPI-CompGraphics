@@ -14,7 +14,7 @@ pub struct Canvas {
 }
 
 impl Canvas {
-    pub fn process(&mut self, context: &mut Context) {
+    pub fn process(&mut self, context: &mut Context, ui: &mut egui::Ui) {
         let mut converted_lines: Vec<Line2D> = vec![];
 
         // Axes processing
@@ -26,6 +26,11 @@ impl Canvas {
                 converted_lines.push(axis2d);
             });
         }
+
+        // Animation Step
+        context
+            .animation
+            .process(ui, &mut context.model, &mut context.rotation);
 
         // Model processing
         let mut model = context.model.lines(self.screen_params);
@@ -73,7 +78,7 @@ impl Canvas {
                     let delta = i.smooth_scroll_delta.y;
                     self.screen_params.px_per_cm += delta * 0.1;
                 });
-                self.process(context);
+                self.process(context, ui);
                 self.draw(ui);
             });
     }
