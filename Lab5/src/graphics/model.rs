@@ -6,8 +6,8 @@ use eframe::epaint::Stroke;
 
 // Star figure.
 pub struct Model {
-    pub height: f32,
     pub radius: f32,
+    pub thickness: f32,
 
     pub stroke: Stroke,
 }
@@ -17,8 +17,8 @@ impl Default for Model {
         Self {
             stroke: strokes::model_black(0.1),
 
-            height: 5.0,
             radius: 10.0,
+            thickness: 5.0,
         }
     }
 }
@@ -34,8 +34,8 @@ impl Model {
         for k in 0..=4 {
             points.push(Self::formula_outer(k, self.radius, 0.0));
             points.push(Self::formula_inner(k, self.radius / 2.0, 0.0));
-            upper_points.push(Self::formula_outer(k, self.radius, self.height));
-            upper_points.push(Self::formula_inner(k, self.radius / 2.0, self.height));
+            upper_points.push(Self::formula_outer(k, self.radius, self.thickness));
+            upper_points.push(Self::formula_inner(k, self.radius / 2.0, self.thickness));
         }
 
         let mut lines: Vec<Line3D> = vec![];

@@ -74,9 +74,9 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
 
                     ui.end_row();
 
-                    ui.label("Height:");
+                    ui.label("Thickness:");
                     ui.add(
-                        DragValue::new(&mut context.model.height)
+                        DragValue::new(&mut context.model.thickness)
                             .speed(0.1)
                             .range(0.1..=20.0),
                     );
