@@ -82,7 +82,7 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
             ui.label(RichText::new("Stroke").color(colors::WHITE));
             ui.add_space(5.0);
             Grid::new("AxisStrokes").num_columns(2).show(ui, |ui| {
-                ui.label("X:");
+                ui.label("Axis X:");
                 egui::color_picker::color_edit_button_srgba(
                     ui,
                     &mut context.axes.color_x,
@@ -90,7 +90,7 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                 );
                 ui.end_row();
 
-                ui.label("Y:");
+                ui.label("Axis Y:");
                 egui::color_picker::color_edit_button_srgba(
                     ui,
                     &mut context.axes.color_y,
@@ -98,7 +98,7 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                 );
                 ui.end_row();
 
-                ui.label("Z:");
+                ui.label("Axis Z:");
                 egui::color_picker::color_edit_button_srgba(
                     ui,
                     &mut context.axes.color_z,
@@ -136,6 +136,14 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                         .range(0.1..=20.0),
                 );
                 ui.end_row();
+            });
+
+            ui.add_space(10.0);
+
+            ui.vertical_centered(|ui| {
+                if ui.button("Reset Settings").clicked() {
+                    context.model = Default::default();
+                }
             });
         });
     });
