@@ -37,7 +37,7 @@ pub mod geometry {
     pub mod point3d;
 }
 pub mod graphics {
-    pub mod grid;
+    pub mod axes;
     pub mod model;
     pub mod screen;
 }

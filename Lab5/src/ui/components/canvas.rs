@@ -1,7 +1,7 @@
 use crate::context::Context;
 use crate::geometry::line2d::Line2D;
 use crate::geometry::point2d::Point2D;
-use crate::graphics::screen::{Resolution, ScreenParams};
+use crate::graphics::screen::ScreenParams;
 use crate::ui::styles::colors;
 use eframe::epaint::Shape;
 use egui::{Frame, Response, Sense};
@@ -15,7 +15,7 @@ pub struct Canvas {
 
 impl Canvas {
     pub fn process(&mut self, ui: &mut egui::Ui, context: &mut Context) {
-        let axes = context.grid.axes_lines(self.screen_params);
+        let axes = context.axes.lines(self.screen_params);
         let model = context.model.lines(self.screen_params);
 
         // Converting lines to 2D (with z=0)
@@ -41,7 +41,6 @@ impl Canvas {
         let painter_size = ui.available_size_before_wrap();
         let (response, painter) = ui.allocate_painter(painter_size, Sense::click_and_drag());
         self.screen_params.canvas_center = Point2D::from_pos2(response.rect.center());
-        self.screen_params.resolution = Resolution::from(response.rect.max.x, response.rect.max.y);
 
         let line_shapes: Vec<Shape> = self
             .lines
