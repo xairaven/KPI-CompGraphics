@@ -1,5 +1,6 @@
 use crate::context::Context;
 use crate::graphics::screen::{MAX_PX_PER_CM, MIN_PX_PER_CM};
+use crate::projections::orthographic::OrthographicMode;
 use crate::ui::components::canvas::Canvas;
 use crate::ui::styles::colors;
 use egui::{DragValue, Grid, RichText};
@@ -386,6 +387,70 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
                     context.rotation.reset_position();
                 }
             });
+        });
+
+        ui.add_space(10.0);
+
+        ui.collapsing("Orthographic Projections", |ui| {
+            ui.checkbox(&mut context.orthographic.is_enabled, "Enable");
+
+            ui.add_space(5.0);
+
+            Grid::new("SelectOrthographicProjection")
+                .num_columns(2)
+                .show(ui, |ui| {
+                    ui.radio_value(
+                        &mut context.orthographic.mode,
+                        OrthographicMode::XOnZero,
+                        "X = 0",
+                    );
+                    ui.radio_value(
+                        &mut context.orthographic.mode,
+                        OrthographicMode::XOnP,
+                        "X = P",
+                    );
+                    ui.end_row();
+
+                    ui.radio_value(
+                        &mut context.orthographic.mode,
+                        OrthographicMode::YOnZero,
+                        "Y = 0",
+                    );
+                    ui.radio_value(
+                        &mut context.orthographic.mode,
+                        OrthographicMode::YOnP,
+                        "Y = P",
+                    );
+                    ui.end_row();
+
+                    ui.radio_value(
+                        &mut context.orthographic.mode,
+                        OrthographicMode::ZOnZero,
+                        "Z = 0",
+                    );
+                    ui.radio_value(
+                        &mut context.orthographic.mode,
+                        OrthographicMode::ZOnP,
+                        "Z = P",
+                    );
+                    ui.end_row();
+                });
+
+            match &context.orthographic.mode {
+                OrthographicMode::XOnP | OrthographicMode::YOnP | OrthographicMode::ZOnP => {
+                    ui.add_space(5.0);
+
+                    ui.horizontal_wrapped(|ui| {
+                        ui.label("P: ");
+                        ui.add(
+                            DragValue::new(&mut context.orthographic.p)
+                                .speed(0.1)
+                                .suffix(" cm"),
+                        );
+                    });
+                },
+                _ => {},
+            }
         });
     });
 }

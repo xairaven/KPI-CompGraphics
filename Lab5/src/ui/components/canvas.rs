@@ -42,6 +42,9 @@ impl Canvas {
         let pivot_point = context.model.pivot_point(context.offset.statics());
         context.rotation.apply(&mut model, pivot_point);
 
+        // Model on Orthographic
+        context.orthographic.apply_if_set(&mut model);
+
         // Model -> 2D
         model.iter().for_each(|line3d| {
             let line = line3d.to_line2d(&context.trimetric);
