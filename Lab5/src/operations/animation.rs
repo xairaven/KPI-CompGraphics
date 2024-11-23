@@ -11,15 +11,9 @@ pub struct Animation {
     direction_radius: f32,
 
     pub use_rotation: bool,
-
     pub step_x: f32,
-    direction_x: f32,
-
     pub step_y: f32,
-    direction_y: f32,
-
     pub step_z: f32,
-    direction_z: f32,
 }
 
 impl Default for Animation {
@@ -35,11 +29,8 @@ impl Default for Animation {
 
             use_rotation: false,
             step_x: 0.0,
-            direction_x: 1.0,
             step_y: 0.0,
-            direction_y: 1.0,
             step_z: 0.0,
-            direction_z: 1.0,
         }
     }
 }
@@ -75,7 +66,12 @@ impl Animation {
         model.radius += self.step_radius * self.direction_radius;
     }
 
-    pub fn step_rotation(&mut self, rotation: &mut Rotation) {}
+    pub fn step_rotation(&mut self, rotation: &mut Rotation) {
+        rotation.angle_deg_x = self.step_x % 360.0;
+        rotation.angle_deg_y = self.step_y % 360.0;
+        rotation.angle_deg_z = self.step_z % 360.0;
+        rotation.is_applied = true;
+    }
 
     pub fn checkout_status(&mut self) {
         self.is_running = !self.is_running;
