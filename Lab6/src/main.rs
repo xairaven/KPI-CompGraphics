@@ -38,12 +38,15 @@ pub mod geometry {
 }
 pub mod graphics {
     pub mod axes;
-    pub mod model;
     pub mod screen;
 }
 pub mod logger;
 pub mod math {
     pub mod angle;
+}
+pub mod model {
+    pub mod surface;
+    pub mod texture;
 }
 pub mod operations {
     pub mod animation;

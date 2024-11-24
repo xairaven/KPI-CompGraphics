@@ -7,29 +7,29 @@ use nalgebra::Matrix4;
 pub struct Rotation {
     pub is_applied: bool,
 
-    pub angle_deg_x: f32,
-    pub angle_deg_y: f32,
-    pub angle_deg_z: f32,
+    pub display_angle_x: f32,
+    pub display_angle_y: f32,
+    pub display_angle_z: f32,
 
-    static_angle_deg_x: f32,
-    static_angle_deg_y: f32,
-    static_angle_deg_z: f32,
+    angle_x: f32,
+    angle_y: f32,
+    angle_z: f32,
 }
 
 impl Rotation {
-    pub fn apply(&mut self, model: &mut [Line3D], pivot: Point3D) {
+    pub fn apply(&mut self, lines: &mut [Line3D], pivot: Point3D) {
         if self.is_applied {
-            self.static_angle_deg_x += self.angle_deg_x;
-            self.static_angle_deg_y += self.angle_deg_y;
-            self.static_angle_deg_z += self.angle_deg_z;
+            self.angle_x += self.display_angle_x;
+            self.angle_y += self.display_angle_y;
+            self.angle_z += self.display_angle_z;
             self.is_applied = false;
         }
-        if self.are_statics_not_default() {
-            self.process(model, pivot);
+        if self.are_internals_not_default() {
+            self.process(lines, pivot);
         }
     }
 
-    pub fn process(&self, model: &mut [Line3D], pivot: Point3D) {
+    pub fn process(&self, lines: &mut [Line3D], pivot: Point3D) {
         let matrix_to_origin = self.matrix_offset_to_origin(&pivot);
         let matrix_from_origin = self.matrix_offset_to_point(&pivot);
         let matrix_ox = self.matrix_around_ox();
@@ -39,7 +39,7 @@ impl Rotation {
         let result_matrix =
             matrix_to_origin * matrix_ox * matrix_oy * matrix_oz * matrix_from_origin;
 
-        model.iter_mut().for_each(|line| {
+        lines.iter_mut().for_each(|line| {
             self.update_point(&mut line.start, &result_matrix);
             self.update_point(&mut line.end, &result_matrix);
         });
@@ -56,7 +56,7 @@ impl Rotation {
     }
 
     fn matrix_around_ox(&self) -> Matrix4<f32> {
-        let angle = Angle::from_degree(self.static_angle_deg_x).radian();
+        let angle = Angle::from_degree(self.angle_x).radian();
 
         Matrix4::new(
             1.0,
@@ -79,7 +79,7 @@ impl Rotation {
     }
 
     fn matrix_around_oy(&self) -> Matrix4<f32> {
-        let angle = Angle::from_degree(self.static_angle_deg_y).radian();
+        let angle = Angle::from_degree(self.angle_y).radian();
 
         Matrix4::new(
             f32::cos(angle),
@@ -102,7 +102,7 @@ impl Rotation {
     }
 
     fn matrix_around_oz(&self) -> Matrix4<f32> {
-        let angle = Angle::from_degree(self.static_angle_deg_z).radian();
+        let angle = Angle::from_degree(self.angle_z).radian();
 
         Matrix4::new(
             f32::cos(angle),
@@ -138,15 +138,13 @@ impl Rotation {
         )
     }
 
-    fn are_statics_not_default(&self) -> bool {
-        self.static_angle_deg_x != 0.0
-            || self.static_angle_deg_y != 0.0
-            || self.static_angle_deg_z != 0.0
+    fn are_internals_not_default(&self) -> bool {
+        self.angle_x != 0.0 || self.angle_y != 0.0 || self.angle_z != 0.0
     }
 
     pub fn reset_position(&mut self) {
-        self.static_angle_deg_x = 0.0;
-        self.static_angle_deg_y = 0.0;
-        self.static_angle_deg_z = 0.0;
+        self.angle_x = 0.0;
+        self.angle_y = 0.0;
+        self.angle_z = 0.0;
     }
 }

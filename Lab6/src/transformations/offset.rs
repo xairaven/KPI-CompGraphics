@@ -5,52 +5,52 @@ use crate::geometry::point3d::Point3D;
 pub struct Offset {
     pub is_applied: bool,
 
-    pub x: f32,
-    pub y: f32,
-    pub z: f32,
+    pub display_x: f32,
+    pub display_y: f32,
+    pub display_z: f32,
 
-    static_x: f32,
-    static_y: f32,
-    static_z: f32,
+    x: f32,
+    y: f32,
+    z: f32,
 }
 
 impl Offset {
-    pub fn apply(&mut self, model: &mut [Line3D]) {
+    pub fn apply(&mut self, lines: &mut [Line3D]) {
         if self.is_applied {
-            self.static_x += self.x;
-            self.static_y += self.y;
-            self.static_z += self.z;
+            self.x += self.display_x;
+            self.y += self.display_y;
+            self.z += self.display_z;
             self.is_applied = false;
         }
-        if self.are_statics_not_default() {
-            self.process(model);
+        if self.are_internals_not_default() {
+            self.process(lines);
         }
     }
 
-    pub fn process(&self, model: &mut [Line3D]) {
-        model.iter_mut().for_each(|line| {
+    pub fn process(&self, lines: &mut [Line3D]) {
+        lines.iter_mut().for_each(|line| {
             self.update_point(&mut line.start);
             self.update_point(&mut line.end);
         });
     }
 
     fn update_point(&self, point: &mut Point3D) {
-        point.x += self.static_x;
-        point.y += self.static_y;
-        point.z += self.static_z;
+        point.x += self.x;
+        point.y += self.y;
+        point.z += self.z;
     }
 
-    fn are_statics_not_default(&self) -> bool {
-        self.static_x != 0.0 || self.static_y != 0.0 || self.static_z != 0.0
+    fn are_internals_not_default(&self) -> bool {
+        self.x != 0.0 || self.y != 0.0 || self.z != 0.0
     }
 
-    pub fn statics(&self) -> Point3D {
-        Point3D::new(self.static_x, self.static_y, self.static_z)
+    pub fn internals(&self) -> Point3D {
+        Point3D::new(self.x, self.y, self.z)
     }
 
     pub fn reset_position(&mut self) {
-        self.static_x = 0.0;
-        self.static_y = 0.0;
-        self.static_z = 0.0;
+        self.x = 0.0;
+        self.y = 0.0;
+        self.z = 0.0;
     }
 }

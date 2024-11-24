@@ -14,7 +14,7 @@ pub struct Canvas {
 }
 
 impl Canvas {
-    pub fn process(&mut self, context: &mut Context, ui: &mut egui::Ui) {
+    pub fn process(&mut self, context: &mut Context, _ui: &mut egui::Ui) {
         let mut converted_lines: Vec<Line2D> = vec![];
 
         // Axes processing
@@ -26,30 +26,6 @@ impl Canvas {
                 converted_lines.push(axis2d);
             });
         }
-
-        // Animation Step
-        context
-            .animation
-            .process(ui, &mut context.model, &mut context.rotation);
-
-        // Model processing
-        let mut model = context.model.lines(self.screen_params);
-
-        // Model Offset
-        context.offset.apply(&mut model);
-
-        // Model Rotation
-        let pivot_point = context.model.pivot_point(context.offset.statics());
-        context.rotation.apply(&mut model, pivot_point);
-
-        // Model on Orthographic
-        context.orthographic.apply_if_set(&mut model);
-
-        // Model -> 2D
-        model.iter().for_each(|line3d| {
-            let line = line3d.to_line2d(&context.trimetric);
-            converted_lines.push(line);
-        });
 
         // Passing all lines to draw() method
         self.lines = converted_lines;

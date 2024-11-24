@@ -1,5 +1,6 @@
 use crate::graphics::axes::Axes;
-use crate::graphics::model::Model;
+use crate::model::surface::Surface;
+use crate::model::texture::Texture;
 use crate::operations::animation::Animation;
 use crate::projections::orthographic::OrthographicProjection;
 use crate::projections::trimetric::TrimetricProjection;
@@ -10,7 +11,8 @@ use crate::transformations::rotation::Rotation;
 pub struct Context {
     pub axes: Axes,
 
-    pub model: Model,
+    pub surface: Surface,
+    pub texture: Texture,
 
     pub trimetric: TrimetricProjection,
     pub orthographic: OrthographicProjection,
