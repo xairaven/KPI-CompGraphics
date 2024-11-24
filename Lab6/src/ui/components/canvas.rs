@@ -27,6 +27,15 @@ impl Canvas {
             });
         }
 
+        // Surface
+        let surface = context.surface.lines(self.screen_params);
+
+        // Surface to 2D
+        surface.iter().for_each(|line3d| {
+            let line = line3d.to_line2d(&context.trimetric);
+            converted_lines.push(line);
+        });
+
         // Passing all lines to draw() method
         self.lines = converted_lines;
     }

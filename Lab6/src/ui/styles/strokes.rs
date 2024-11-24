@@ -14,6 +14,6 @@ pub fn axis_red() -> Stroke {
     Stroke::new(AXIS_WIDTH_PX, colors::DARK_RED)
 }
 
-pub fn model_black(width: f32) -> Stroke {
+pub fn surface_black(width: f32) -> Stroke {
     Stroke::new(width, colors::BLACK)
 }
