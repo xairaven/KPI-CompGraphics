@@ -16,4 +16,6 @@ eframe = { version = "0.29.1", default-features = false, features = [
 fern = "0.7.0"                # Logger.
 log = "0.4.22"                # Logging facade.
 nalgebra = "0.33.2"           # Matrices, linear algebra.
-thiserror = "2.0.3"          # Custom enum errors.
+regex = "1.11.1"              # Regular Expressions.
+rfd = "0.15.1"                # File Dialogs.
+thiserror = "2.0.3"           # Custom enum errors.
