@@ -29,6 +29,7 @@ pub mod context;
 pub mod errors {
     pub mod env;
     pub mod log;
+    pub mod texture;
 }
 pub mod geometry {
     pub mod line2d;
@@ -64,6 +65,7 @@ pub mod ui {
     pub mod core;
     pub mod components {
         pub mod canvas;
+        pub mod message_box;
         pub mod settings;
     }
     pub mod styles {

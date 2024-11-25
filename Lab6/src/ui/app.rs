@@ -1,5 +1,6 @@
 use crate::context::Context;
 use crate::ui::components::canvas::Canvas;
+use crate::ui::components::settings::Settings;
 use crate::ui::windows;
 use egui::ThemePreference;
 
@@ -7,6 +8,7 @@ use egui::ThemePreference;
 pub struct App {
     pub canvas: Canvas,
     pub context: Context,
+    pub settings: Settings,
 }
 
 impl App {
