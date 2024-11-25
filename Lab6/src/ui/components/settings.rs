@@ -274,6 +274,14 @@ impl Settings {
                     );
                     ui.end_row();
                 });
+
+                ui.add_space(5.0);
+
+                ui.vertical_centered_justified(|ui| {
+                    if ui.button("Reset Settings").clicked() {
+                        context.surface.apply_default_settings();
+                    }
+                });
             });
 
             ui.add_space(10.0);
@@ -350,7 +358,7 @@ impl Settings {
                     ui.add(
                         DragValue::new(&mut context.texture.display_delta_u)
                             .speed(0.1)
-                            .range(0.0..=f32::MAX)
+                            .range(-f32::MAX..=f32::MAX)
                             .suffix(" cm"),
                     );
                     ui.end_row();
@@ -359,7 +367,7 @@ impl Settings {
                     ui.add(
                         DragValue::new(&mut context.texture.display_delta_v)
                             .speed(0.1)
-                            .range(0.0..=f32::MAX)
+                            .range(-f32::MAX..=f32::MAX)
                             .suffix(" cm"),
                     );
                     ui.end_row();
@@ -372,6 +380,26 @@ impl Settings {
                             .suffix("°"),
                     );
                     ui.end_row();
+                });
+
+                ui.add_space(5.0);
+
+                ui.vertical_centered_justified(|ui| {
+                    if ui.button("Apply").clicked() {
+                        context.texture.apply_parameters();
+                    }
+                });
+                ui.vertical_centered_justified(|ui| {
+                    if ui.button("Clear Fields").clicked() {
+                        context.texture.display_delta_u = 0.0;
+                        context.texture.display_delta_v = 0.0;
+                        context.texture.display_angle = 0.0;
+                    }
+                });
+                ui.vertical_centered_justified(|ui| {
+                    if ui.button("Reset Position").clicked() {
+                        context.texture.default_parameters();
+                    }
                 });
             });
         });

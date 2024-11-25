@@ -111,4 +111,10 @@ impl Surface {
 
         Point3D::new(x, y, z)
     }
+
+    pub fn apply_default_settings(&mut self) {
+        self.display_radius = 10.0;
+        self.display_height = 35.0;
+        self.display_mesh = 5.0;
+    }
 }

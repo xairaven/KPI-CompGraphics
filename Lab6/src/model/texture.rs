@@ -3,6 +3,7 @@ use crate::geometry::line3d::Line3D;
 use crate::geometry::point2d::Point2D;
 use crate::geometry::point3d::Point3D;
 use crate::graphics::screen::ScreenParams;
+use crate::math::pivot;
 use crate::model::surface::Surface;
 use crate::ui::styles::strokes;
 use egui::Stroke;
@@ -43,7 +44,7 @@ impl Default for Texture {
             display_delta_v: 0.0,
             display_angle: 0.0,
 
-            scale_factor: 5.0,
+            scale_factor: 50.0,
 
             delta_u: 0.0,
             delta_v: 0.0,
@@ -71,10 +72,25 @@ impl Texture {
 
         let mut points: Vec<Point3D> = Vec::new();
 
+        let mut uv_points: Vec<Point2D> = Vec::new();
         for point2d in &self.points {
-            let (u, v) = point2d.to_uv();
-            let (u, v) = (u * self.scale_factor, v * self.scale_factor);
-            let point3d = Surface::point(radius, u, v);
+            let mut uv = point2d.to_uv();
+            uv.scale(self.scale_factor);
+            uv.offset(self.delta_u, self.delta_v);
+            uv_points.push(uv);
+        }
+
+        let pivot = if self.angle != 0.0 {
+            pivot::calculate(&uv_points)
+        } else {
+            Point2D::new(0.0, 0.0)
+        };
+        for uv in &mut uv_points {
+            if self.angle != 0.0 {
+                uv.rotate(self.angle, pivot);
+            }
+
+            let point3d = Surface::point(radius, uv.x, uv.y);
             points.push(point3d);
         }
 
@@ -85,6 +101,23 @@ impl Texture {
         });
 
         lines
+    }
+
+    pub fn apply_parameters(&mut self) {
+        self.delta_u += self.display_delta_u;
+        self.delta_v += self.display_delta_v;
+        self.angle += self.display_angle;
+    }
+
+    pub fn default_parameters(&mut self) {
+        self.angle = 0.0;
+        self.delta_u = 0.0;
+        self.delta_v = 0.0;
+
+        self.display_angle = 0.0;
+        self.display_delta_u = 0.0;
+        self.display_delta_v = 0.0;
+        self.scale_factor = 50.0;
     }
 
     pub fn load_texture(&mut self, path: PathBuf) -> Result<(), TextureError> {

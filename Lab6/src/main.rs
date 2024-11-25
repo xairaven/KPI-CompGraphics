@@ -44,6 +44,7 @@ pub mod graphics {
 pub mod logger;
 pub mod math {
     pub mod angle;
+    pub mod pivot;
 }
 pub mod model {
     pub mod surface;

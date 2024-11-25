@@ -1,7 +1,8 @@
 use crate::graphics::screen::ScreenParams;
+use crate::math::angle::Angle;
 use eframe::emath::Pos2;
 use eframe::epaint::{CircleShape, Color32, Shape, Stroke};
-use nalgebra::SMatrix;
+use nalgebra::{Matrix3, SMatrix};
 use std::f32::consts::PI;
 
 #[derive(Debug, Default, Clone, Copy)]
@@ -30,11 +31,42 @@ impl Point2D {
         Pos2::from([self.x, self.y])
     }
 
-    pub fn to_uv(&self) -> (f32, f32) {
+    pub fn to_uv(&self) -> Self {
         let u = self.x * (PI / 6.0) / 10.0;
         let v = self.y * (PI / 6.0) / 10.0;
 
-        (u, v)
+        Self::new(u, v)
+    }
+
+    pub fn scale(&mut self, scale_factor: f32) {
+        self.x *= scale_factor;
+        self.y *= scale_factor;
+    }
+
+    pub fn offset(&mut self, delta_x: f32, delta_y: f32) {
+        self.x += delta_x;
+        self.y += delta_y;
+    }
+
+    pub fn rotate(&mut self, angle: f32, pivot_point: Point2D) {
+        let angle = Angle::from_degree(angle).radian();
+
+        let vector = self.to_vector();
+        let matrix = Matrix3::new(
+            f32::cos(angle),
+            f32::sin(angle),
+            0.0,
+            -f32::sin(angle),
+            f32::cos(angle),
+            0.0,
+            -pivot_point.x * (f32::cos(angle) - 1.0) + pivot_point.y * f32::sin(angle),
+            -pivot_point.y * (f32::cos(angle) - 1.0) - pivot_point.x * f32::sin(angle),
+            1.0,
+        );
+
+        let result = vector * matrix;
+        self.x = result.x;
+        self.y = result.y;
     }
 
     pub fn from_pos2(pos: Pos2) -> Self {
