@@ -54,7 +54,6 @@ pub mod operations {
     pub mod animation;
 }
 pub mod projections {
-    pub mod orthographic;
     pub mod trimetric;
 }
 pub mod transformations {
