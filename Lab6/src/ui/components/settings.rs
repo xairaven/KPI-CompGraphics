@@ -56,6 +56,45 @@ impl Settings {
                         }
                     });
                 });
+
+                ui.add_space(10.0);
+
+                ui.vertical_centered(|ui| {
+                    ui.label(RichText::new("Radius Parameters").color(colors::WHITE));
+                });
+
+                ui.add_space(5.0);
+
+                Grid::new("AnimationRadiusParameters")
+                    .num_columns(2)
+                    .show(ui, |ui| {
+                        ui.label("Minimum: ");
+                        ui.add(
+                            DragValue::new(&mut context.animation.min_radius)
+                                .speed(0.1)
+                                .range(0.1..=f32::MAX)
+                                .suffix(" cm"),
+                        );
+                        ui.end_row();
+
+                        ui.label("Maximum: ");
+                        ui.add(
+                            DragValue::new(&mut context.animation.max_radius)
+                                .speed(0.1)
+                                .range(0.1..=f32::MAX)
+                                .suffix(" cm"),
+                        );
+                        ui.end_row();
+
+                        ui.label("Step: ");
+                        ui.add(
+                            DragValue::new(&mut context.animation.step_radius)
+                                .speed(0.1)
+                                .range(0.1..=f32::MAX)
+                                .suffix(" cm"),
+                        );
+                        ui.end_row();
+                    });
             });
 
             ui.add_space(10.0);
@@ -371,7 +410,7 @@ impl Settings {
 
                             if let Err(e) = loading_result {
                                 let mut error_message =
-                                    format!("Error occured while loading texture:\n{}\n", e);
+                                    format!("Error occurred while loading texture:\n{}\n", e);
                                 if let Some(additional_info) = e.get_additional_info() {
                                     error_message.push_str(
                                         format!("\nAdditional Info:\n{}", additional_info).as_str(),

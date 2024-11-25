@@ -15,7 +15,7 @@ pub struct Canvas {
 }
 
 impl Canvas {
-    pub fn process(&mut self, context: &mut Context, _ui: &mut egui::Ui) {
+    pub fn process(&mut self, context: &mut Context, ui: &mut egui::Ui) {
         let mut converted_lines: Vec<Line2D> = vec![];
 
         // Axes processing
@@ -27,6 +27,9 @@ impl Canvas {
                 converted_lines.push(axis2d);
             });
         }
+
+        // Animation
+        context.animation.process(&mut context.surface, ui);
 
         // Surface & Texture
         let surface = context.surface.generate(self.screen_params);
