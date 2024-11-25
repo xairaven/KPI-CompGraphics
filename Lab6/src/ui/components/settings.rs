@@ -178,7 +178,7 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
             Grid::new("SurfaceSettings").num_columns(2).show(ui, |ui| {
                 ui.label("Radius: ");
                 ui.add(
-                    DragValue::new(&mut context.surface.radius)
+                    DragValue::new(&mut context.surface.display_radius)
                         .speed(1)
                         .range(1.0..=f32::MAX)
                         .suffix(" cm"),
@@ -187,7 +187,16 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
 
                 ui.label("Height: ");
                 ui.add(
-                    DragValue::new(&mut context.surface.height)
+                    DragValue::new(&mut context.surface.display_height)
+                        .speed(1)
+                        .range(1.0..=f32::MAX)
+                        .suffix(" cm"),
+                );
+                ui.end_row();
+
+                ui.label("Mesh Density: ");
+                ui.add(
+                    DragValue::new(&mut context.surface.display_mesh)
                         .speed(1)
                         .range(1.0..=f32::MAX)
                         .suffix(" cm"),

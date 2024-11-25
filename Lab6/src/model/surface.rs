@@ -7,8 +7,14 @@ use egui::Stroke;
 use std::f32::consts::PI;
 
 pub struct Surface {
-    pub radius: f32,
-    pub height: f32,
+    pub display_radius: f32,
+    pub display_height: f32,
+    pub display_mesh: f32,
+
+    lines: Vec<Line3D>,
+    height: f32,
+    radius: f32,
+    mesh: f32,
 
     pub stroke: Stroke,
 }
@@ -16,8 +22,14 @@ pub struct Surface {
 impl Default for Surface {
     fn default() -> Self {
         Self {
-            radius: 10.0,
-            height: 35.0,
+            display_radius: 10.0,
+            display_height: 35.0,
+            display_mesh: 5.0,
+
+            lines: Vec::new(),
+            height: 0.0,
+            radius: 0.0,
+            mesh: 0.0,
 
             stroke: strokes::surface_black(0.05),
         }
@@ -25,7 +37,21 @@ impl Default for Surface {
 }
 
 impl Surface {
-    pub fn lines(&self, screen: ScreenParams) -> Vec<Line3D> {
+    pub fn generate(&mut self, screen: ScreenParams) -> Vec<Line3D> {
+        if self.radius != self.display_radius
+            || self.height != self.display_height
+            || self.mesh != self.display_mesh
+        {
+            self.radius = self.display_radius;
+            self.height = self.display_height;
+            self.mesh = self.display_mesh;
+            self.lines = self.lines(screen);
+        }
+
+        self.lines.clone()
+    }
+
+    fn lines(&self, screen: ScreenParams) -> Vec<Line3D> {
         let mut stroke = self.stroke;
         stroke.width = screen.value_cm_to_px(self.stroke.width);
 
@@ -56,23 +82,20 @@ impl Surface {
     fn surface_area(&self) -> Vec<Vec<Point3D>> {
         let mut container: Vec<Vec<Point3D>> = Vec::new();
 
-        let mesh = 2.0;
-
         let mut u = -self.height;
-        while u < self.height {
+        while u <= self.height {
             let mut vector: Vec<Point3D> = Vec::new();
 
             let mut v = 0.0;
-            while v < 360.0 {
+            while v <= 360.0 {
                 let point = self.point(self.radius, u, Angle::from_degree(v).radian());
                 vector.push(point);
 
-                v += mesh;
+                v += self.mesh;
             }
-            vector.push(vector[0]);
             container.push(vector);
 
-            u += mesh;
+            u += self.mesh;
         }
 
         container

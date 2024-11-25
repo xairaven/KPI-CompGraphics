@@ -19,7 +19,7 @@ impl Default for ScreenParams {
     fn default() -> Self {
         Self {
             canvas_center: Point2D::new(500.0, 500.0),
-            unit_length: 1.0,
+            unit_length: 5.0,
             px_per_cm: 20.0,
 
             is_dragging_offset_enabled: true,

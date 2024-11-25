@@ -28,7 +28,7 @@ impl Canvas {
         }
 
         // Surface
-        let surface = context.surface.lines(self.screen_params);
+        let surface = context.surface.generate(self.screen_params);
 
         // Surface to 2D
         surface.iter().for_each(|line3d| {
