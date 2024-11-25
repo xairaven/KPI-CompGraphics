@@ -174,6 +174,30 @@ pub fn show_panel(context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui)
 
         ui.add_space(10.0);
 
+        ui.collapsing("Surface Settings", |ui| {
+            Grid::new("SurfaceSettings").num_columns(2).show(ui, |ui| {
+                ui.label("Radius: ");
+                ui.add(
+                    DragValue::new(&mut context.surface.radius)
+                        .speed(1)
+                        .range(1.0..=f32::MAX)
+                        .suffix(" cm"),
+                );
+                ui.end_row();
+
+                ui.label("Height: ");
+                ui.add(
+                    DragValue::new(&mut context.surface.height)
+                        .speed(1)
+                        .range(1.0..=f32::MAX)
+                        .suffix(" cm"),
+                );
+                ui.end_row();
+            });
+        });
+
+        ui.add_space(10.0);
+
         ui.collapsing("Orthographic Projections", |ui| {
             ui.checkbox(&mut context.orthographic.is_enabled, "Enable");
 

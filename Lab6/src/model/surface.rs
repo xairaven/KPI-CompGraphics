@@ -7,8 +7,8 @@ use egui::Stroke;
 use std::f32::consts::PI;
 
 pub struct Surface {
-    pub radius_min: f32,
-    pub radius_max: f32,
+    pub radius: f32,
+    pub height: f32,
 
     pub stroke: Stroke,
 }
@@ -16,8 +16,8 @@ pub struct Surface {
 impl Default for Surface {
     fn default() -> Self {
         Self {
-            radius_min: 2.0,
-            radius_max: 10.0,
+            radius: 10.0,
+            height: 35.0,
 
             stroke: strokes::surface_black(0.05),
         }
@@ -56,18 +56,15 @@ impl Surface {
     fn surface_area(&self) -> Vec<Vec<Point3D>> {
         let mut container: Vec<Vec<Point3D>> = Vec::new();
 
-        let mesh = 10.0;
-        let height: f32 = 30.0;
+        let mesh = 2.0;
 
-        let radius = self.radius_max;
-
-        let mut u = 0.0;
-        while u < height {
+        let mut u = -self.height;
+        while u < self.height {
             let mut vector: Vec<Point3D> = Vec::new();
 
             let mut v = 0.0;
             while v < 360.0 {
-                let point = self.point(radius, u, Angle::from_degree(v).radian());
+                let point = self.point(self.radius, u, Angle::from_degree(v).radian());
                 vector.push(point);
 
                 v += mesh;
@@ -82,9 +79,11 @@ impl Surface {
     }
 
     fn point(&self, radius: f32, u: f32, v: f32) -> Point3D {
-        let x = radius * (1.0 + f32::abs(f32::sin(2.0 * u * PI))) * f32::cos(v);
+        let angle = Angle::from_degree(2.0 * u * PI).radian();
+
+        let x = radius * (1.0 + f32::abs(f32::sin(angle))) * f32::cos(v);
         let y = u;
-        let z = radius * (1.0 + f32::abs(f32::sin(2.0 * u * PI))) * f32::sin(v);
+        let z = radius * (1.0 + f32::abs(f32::sin(angle))) * f32::sin(v);
 
         Point3D::new(x, y, z)
     }
