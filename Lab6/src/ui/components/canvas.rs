@@ -1,5 +1,6 @@
 use crate::context::Context;
 use crate::geometry::line2d::Line2D;
+use crate::geometry::line3d::Line3D;
 use crate::geometry::point2d::Point2D;
 use crate::graphics::screen::ScreenParams;
 use crate::ui::styles::colors;
@@ -33,12 +34,15 @@ impl Canvas {
             .texture
             .generate(context.surface.display_radius, self.screen_params);
 
+        // Euclidean Transformations
+        let mut lines: Vec<Line3D> = surface.iter().chain(texture.iter()).copied().collect();
+        context.offset.apply(&mut lines);
+
+        let pivot_point = context.offset.internals();
+        context.rotation.apply(&mut lines, pivot_point);
+
         // Converting to 2D
-        surface.iter().for_each(|line3d| {
-            let line = line3d.to_line2d(&context.trimetric);
-            converted_lines.push(line);
-        });
-        texture.iter().for_each(|line3d| {
+        lines.iter().for_each(|line3d| {
             let line = line3d.to_line2d(&context.trimetric);
             converted_lines.push(line);
         });

@@ -180,6 +180,113 @@ impl Settings {
 
             ui.add_space(10.0);
 
+            ui.collapsing("Euclidean Offset", |ui| {
+                Grid::new("OffsetSettings").num_columns(2).show(ui, |ui| {
+                    ui.label("Offset X: ");
+                    ui.add(
+                        DragValue::new(&mut context.offset.display_x)
+                            .speed(0.1)
+                            .suffix(" cm"),
+                    );
+                    ui.end_row();
+
+                    ui.label("Offset Y: ");
+                    ui.add(
+                        DragValue::new(&mut context.offset.display_y)
+                            .speed(0.1)
+                            .suffix(" cm"),
+                    );
+                    ui.end_row();
+
+                    ui.label("Offset Z: ");
+                    ui.add(
+                        DragValue::new(&mut context.offset.display_z)
+                            .speed(0.1)
+                            .suffix(" cm"),
+                    );
+                    ui.end_row();
+                });
+
+                ui.add_space(10.0);
+
+                ui.vertical_centered_justified(|ui| {
+                    if ui.button("Apply").clicked() {
+                        context.offset.is_applied = true;
+                    }
+                });
+
+                ui.vertical_centered_justified(|ui| {
+                    if ui.button("Clear Fields").clicked() {
+                        context.offset.display_x = 0.0;
+                        context.offset.display_y = 0.0;
+                        context.offset.display_z = 0.0;
+                    }
+                });
+
+                ui.vertical_centered_justified(|ui| {
+                    if ui.button("Reset Position").clicked() {
+                        context.offset.reset_position();
+                    }
+                });
+            });
+
+            ui.add_space(10.0);
+
+            ui.collapsing("Euclidean Rotation", |ui| {
+                Grid::new("RotationSettings").num_columns(2).show(ui, |ui| {
+                    ui.label("OX Angle: ");
+                    ui.add(
+                        DragValue::new(&mut context.rotation.display_angle_x)
+                            .speed(1)
+                            .range(-360..=360)
+                            .suffix("°"),
+                    );
+                    ui.end_row();
+
+                    ui.label("OY Angle: ");
+                    ui.add(
+                        DragValue::new(&mut context.rotation.display_angle_y)
+                            .speed(1)
+                            .range(-360..=360)
+                            .suffix("°"),
+                    );
+                    ui.end_row();
+
+                    ui.label("OZ Angle: ");
+                    ui.add(
+                        DragValue::new(&mut context.rotation.display_angle_z)
+                            .speed(1)
+                            .range(-360..=360)
+                            .suffix("°"),
+                    );
+                    ui.end_row();
+                });
+
+                ui.add_space(10.0);
+
+                ui.vertical_centered_justified(|ui| {
+                    if ui.button("Apply").clicked() {
+                        context.rotation.is_applied = true;
+                    }
+                });
+
+                ui.vertical_centered_justified(|ui| {
+                    if ui.button("Clear Fields").clicked() {
+                        context.rotation.display_angle_x = 0.0;
+                        context.rotation.display_angle_y = 0.0;
+                        context.rotation.display_angle_z = 0.0;
+                    }
+                });
+
+                ui.vertical_centered_justified(|ui| {
+                    if ui.button("Reset Position").clicked() {
+                        context.rotation.reset_position();
+                    }
+                });
+            });
+
+            ui.add_space(10.0);
+
             ui.collapsing("Surface Settings", |ui| {
                 Grid::new("SurfaceSettings").num_columns(2).show(ui, |ui| {
                     ui.label("Radius: ");
