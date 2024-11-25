@@ -359,6 +359,11 @@ impl Settings {
                             !context.texture.is_loaded(),
                             egui::Button::new("Load Texture"),
                         )
+                        .on_hover_text(
+                            "Format: `X: ..., Y: ...`\n\n\
+                        For example:\n\
+                        [2024-11-25 14:45 INFO] X: -5.691, Y: -0.95",
+                        )
                         .clicked()
                     {
                         if let Some(path) = rfd::FileDialog::new().pick_file() {
