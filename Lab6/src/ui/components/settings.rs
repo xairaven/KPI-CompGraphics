@@ -208,6 +208,14 @@ impl Settings {
                             .suffix(" cm"),
                     );
                     ui.end_row();
+
+                    ui.label("Color: ");
+                    egui::color_picker::color_edit_button_srgba(
+                        ui,
+                        &mut context.surface.color,
+                        egui::color_picker::Alpha::Opaque,
+                    );
+                    ui.end_row();
                 });
 
                 ui.add_space(5.0);
@@ -287,8 +295,27 @@ impl Settings {
                             .range(0.1..=f32::MAX),
                     );
                     ui.end_row();
-                    ui.end_row();
 
+                    ui.label("Contour Color: ");
+                    egui::color_picker::color_edit_button_srgba(
+                        ui,
+                        &mut context.texture.color_contour,
+                        egui::color_picker::Alpha::Opaque,
+                    );
+                    ui.end_row();
+                });
+
+                ui.add_space(5.0);
+
+                ui.vertical_centered_justified(|ui| {
+                    if ui.button("Reset Settings").clicked() {
+                        context.texture.default_parameters();
+                    }
+                });
+
+                ui.add_space(10.0);
+
+                Grid::new("TexturePosition").num_columns(2).show(ui, |ui| {
                     ui.label("ΔU: ");
                     ui.add(
                         DragValue::new(&mut context.texture.display_delta_u)
@@ -333,7 +360,7 @@ impl Settings {
                 });
                 ui.vertical_centered_justified(|ui| {
                     if ui.button("Reset Position").clicked() {
-                        context.texture.default_parameters();
+                        context.texture.default_position();
                     }
                 });
             });

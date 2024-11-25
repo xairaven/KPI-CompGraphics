@@ -3,7 +3,7 @@ use crate::geometry::point3d::Point3D;
 use crate::graphics::screen::ScreenParams;
 use crate::math::angle::Angle;
 use crate::ui::styles::strokes;
-use egui::Stroke;
+use egui::{Color32, Stroke};
 use std::f32::consts::PI;
 
 pub struct Surface {
@@ -16,7 +16,8 @@ pub struct Surface {
     radius: f32,
     mesh: f32,
 
-    pub stroke: Stroke,
+    pub color: Color32,
+    stroke: Stroke,
 }
 
 impl Default for Surface {
@@ -31,6 +32,7 @@ impl Default for Surface {
             radius: 0.0,
             mesh: 0.0,
 
+            color: Color32::BLACK,
             stroke: strokes::surface_black(0.05),
         }
     }
@@ -48,6 +50,7 @@ impl Surface {
             self.lines = self.lines(screen);
         }
 
+        self.sync_stroke_color();
         self.lines.clone()
     }
 
@@ -116,5 +119,10 @@ impl Surface {
         self.display_radius = 10.0;
         self.display_height = 35.0;
         self.display_mesh = 5.0;
+        self.color = Color32::BLACK;
+    }
+
+    fn sync_stroke_color(&mut self) {
+        self.stroke.color = self.color;
     }
 }

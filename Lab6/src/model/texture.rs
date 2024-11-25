@@ -5,8 +5,8 @@ use crate::geometry::point3d::Point3D;
 use crate::graphics::screen::ScreenParams;
 use crate::math::pivot;
 use crate::model::surface::Surface;
-use crate::ui::styles::strokes;
-use egui::Stroke;
+use crate::ui::styles::{colors, strokes};
+use egui::{Color32, Stroke};
 use regex::Regex;
 use std::fs::File;
 use std::io;
@@ -22,6 +22,8 @@ pub struct Texture {
     pub display_angle: f32,
 
     pub scale_factor: f32,
+
+    pub color_contour: Color32,
 
     is_loaded: bool,
 
@@ -52,6 +54,7 @@ impl Default for Texture {
 
             points: vec![],
 
+            color_contour: colors::PINK,
             stroke: strokes::texture_pink(0.1),
         }
     }
@@ -60,6 +63,7 @@ impl Default for Texture {
 impl Texture {
     pub fn generate(&mut self, radius: f32, screen: ScreenParams) -> Vec<Line3D> {
         if self.is_enabled {
+            self.sync_stroke_color();
             self.lines(radius, screen)
         } else {
             Vec::new()
@@ -109,7 +113,7 @@ impl Texture {
         self.angle += self.display_angle;
     }
 
-    pub fn default_parameters(&mut self) {
+    pub fn default_position(&mut self) {
         self.angle = 0.0;
         self.delta_u = 0.0;
         self.delta_v = 0.0;
@@ -118,6 +122,11 @@ impl Texture {
         self.display_delta_u = 0.0;
         self.display_delta_v = 0.0;
         self.scale_factor = 50.0;
+    }
+
+    pub fn default_parameters(&mut self) {
+        self.scale_factor = 50.0;
+        self.color_contour = colors::PINK;
     }
 
     pub fn load_texture(&mut self, path: PathBuf) -> Result<(), TextureError> {
@@ -172,5 +181,9 @@ impl Texture {
 
     pub fn is_loaded(&self) -> bool {
         self.is_loaded
+    }
+
+    fn sync_stroke_color(&mut self) {
+        self.stroke.color = self.color_contour;
     }
 }
