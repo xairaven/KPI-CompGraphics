@@ -2,6 +2,7 @@ use crate::graphics::screen::ScreenParams;
 use eframe::emath::Pos2;
 use eframe::epaint::{CircleShape, Color32, Shape, Stroke};
 use nalgebra::SMatrix;
+use std::f32::consts::PI;
 
 #[derive(Debug, Default, Clone, Copy)]
 pub struct Point2D {
@@ -27,6 +28,13 @@ impl Point2D {
 
     pub fn to_pos2(&self) -> Pos2 {
         Pos2::from([self.x, self.y])
+    }
+
+    pub fn to_uv(&self) -> (f32, f32) {
+        let u = self.x * (PI / 6.0) / 10.0;
+        let v = self.y * (PI / 6.0) / 10.0;
+
+        (u, v)
     }
 
     pub fn from_pos2(pos: Pos2) -> Self {

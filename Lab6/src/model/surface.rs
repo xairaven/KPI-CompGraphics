@@ -88,7 +88,7 @@ impl Surface {
 
             let mut v = 0.0;
             while v <= 360.0 {
-                let point = self.point(self.radius, u, Angle::from_degree(v).radian());
+                let point = Self::point(self.radius, u, v);
                 vector.push(point);
 
                 v += self.mesh;
@@ -101,8 +101,9 @@ impl Surface {
         container
     }
 
-    fn point(&self, radius: f32, u: f32, v: f32) -> Point3D {
+    pub fn point(radius: f32, u: f32, v: f32) -> Point3D {
         let angle = Angle::from_degree(2.0 * u * PI).radian();
+        let v = Angle::from_degree(v).radian();
 
         let x = radius * (1.0 + f32::abs(f32::sin(angle))) * f32::cos(v);
         let y = u;

@@ -336,9 +336,43 @@ impl Settings {
 
                 ui.add_space(5.0);
 
-                // Grid::new("TextureSettings")
-                //     .num_columns(2)
-                //     .show(ui, |ui| {});
+                Grid::new("TextureSettings").num_columns(2).show(ui, |ui| {
+                    ui.label("Scale Factor: ");
+                    ui.add(
+                        DragValue::new(&mut context.texture.scale_factor)
+                            .speed(0.1)
+                            .range(0.1..=f32::MAX),
+                    );
+                    ui.end_row();
+                    ui.end_row();
+
+                    ui.label("ΔU: ");
+                    ui.add(
+                        DragValue::new(&mut context.texture.display_delta_u)
+                            .speed(0.1)
+                            .range(0.0..=f32::MAX)
+                            .suffix(" cm"),
+                    );
+                    ui.end_row();
+
+                    ui.label("ΔV: ");
+                    ui.add(
+                        DragValue::new(&mut context.texture.display_delta_v)
+                            .speed(0.1)
+                            .range(0.0..=f32::MAX)
+                            .suffix(" cm"),
+                    );
+                    ui.end_row();
+
+                    ui.label("Angle: ");
+                    ui.add(
+                        DragValue::new(&mut context.texture.display_angle)
+                            .speed(1)
+                            .range(-360..=360)
+                            .suffix("°"),
+                    );
+                    ui.end_row();
+                });
             });
         });
 

@@ -27,11 +27,18 @@ impl Canvas {
             });
         }
 
-        // Surface
+        // Surface & Texture
         let surface = context.surface.generate(self.screen_params);
+        let texture = context
+            .texture
+            .generate(context.surface.display_radius, self.screen_params);
 
-        // Surface to 2D
+        // Converting to 2D
         surface.iter().for_each(|line3d| {
+            let line = line3d.to_line2d(&context.trimetric);
+            converted_lines.push(line);
+        });
+        texture.iter().for_each(|line3d| {
             let line = line3d.to_line2d(&context.trimetric);
             converted_lines.push(line);
         });

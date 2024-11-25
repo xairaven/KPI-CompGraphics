@@ -17,3 +17,6 @@ pub fn axis_red() -> Stroke {
 pub fn surface_black(width: f32) -> Stroke {
     Stroke::new(width, colors::BLACK)
 }
+pub fn texture_pink(width: f32) -> Stroke {
+    Stroke::new(width, colors::PINK)
+}
