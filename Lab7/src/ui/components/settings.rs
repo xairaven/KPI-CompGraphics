@@ -1,14 +1,21 @@
 use crate::context::Context;
 use crate::ui::components::canvas::Canvas;
+use crate::ui::windows::message::MessageWindow;
 use egui::{vec2, DragValue, Grid, RichText};
+use indoc::indoc;
 
 pub struct Settings {
     pub panel_width: f32,
+
+    help_loading_from_file: Option<MessageWindow>,
 }
 
 impl Default for Settings {
     fn default() -> Self {
-        Self { panel_width: 250.0 }
+        Self {
+            panel_width: 250.0,
+            help_loading_from_file: None,
+        }
     }
 }
 
@@ -111,6 +118,45 @@ impl Settings {
             });
 
             ui.add_space(10.0);
+
+            ui.collapsing("Load from Example", |ui| {});
+
+            ui.add_space(10.0);
+
+            ui.collapsing("Load from File", |ui| {
+                ui.vertical_centered_justified(|ui| {
+                    if ui.button("Open File...").clicked() {}
+                    if ui.button("Help").clicked() {
+                        let message = indoc! {"
+                            File format:
+
+                            Axiom = ...
+                            Angle = ...
+                            SymbolForRule1 -> ...
+                            SymbolForRule2 -> ...
+                        
+                            ---
+                        
+                            Example:
+                        
+                            Axiom = FX
+                            Angle = 90
+                            X -> X+YF+
+                            Y -> -FX-Y
+                        "};
+                        self.help_loading_from_file = Some(
+                            MessageWindow::default()
+                                .with_message(message)
+                                .with_name("Help ❓")
+                                .with_height(500.0)
+                                .with_width(300.0)
+                                .with_collapsible(false),
+                        )
+                    }
+                });
+            });
+
+            ui.add_space(10.0);
             ui.separator();
             ui.add_space(10.0);
 
@@ -175,6 +221,22 @@ impl Settings {
                 });
             });
         });
+
+        self.show_windows_if_opened(ui);
+    }
+
+    fn show_windows_if_opened(&mut self, ui: &mut egui::Ui) {
+        let windows = vec![&mut self.help_loading_from_file];
+
+        for window_option in windows {
+            if let Some(window) = window_option {
+                window.show(ui);
+
+                if window.is_closed() {
+                    *window_option = None;
+                }
+            }
+        }
     }
 
     fn reset_to_defaults(&self, context: &mut Context, canvas: &mut Canvas) {

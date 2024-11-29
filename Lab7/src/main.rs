@@ -58,5 +58,6 @@ pub mod ui {
     }
     pub mod windows {
         pub mod main;
+        pub mod message;
     }
 }
