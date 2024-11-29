@@ -17,4 +17,5 @@ fern = "0.7.0"                # Logger.
 indoc = "2.0.5"               # Indented document literals
 log = "0.4.22"                # Logging facade.
 nalgebra = "0.33.2"           # Matrices, linear algebra.
+rfd = "0.15.1"                # File Dialogs.
 thiserror = "2.0.3"           # Custom enum errors.
