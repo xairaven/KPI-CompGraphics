@@ -28,6 +28,7 @@ pub mod config;
 pub mod context;
 pub mod errors {
     pub mod env;
+    pub mod loader;
     pub mod log;
 }
 pub mod geometry {
@@ -44,6 +45,9 @@ pub mod math {
 }
 pub mod model {
     pub mod fractal;
+    pub mod loader;
+    pub mod validator;
+    pub mod view;
 }
 pub mod ui {
     pub mod app;

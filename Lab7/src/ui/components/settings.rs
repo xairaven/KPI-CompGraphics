@@ -7,14 +7,16 @@ use indoc::indoc;
 pub struct Settings {
     pub panel_width: f32,
 
-    help_loading_from_file: Option<MessageWindow>,
+    error_window: Option<MessageWindow>,
+    loading_help_window: Option<MessageWindow>,
 }
 
 impl Default for Settings {
     fn default() -> Self {
         Self {
             panel_width: 250.0,
-            help_loading_from_file: None,
+            error_window: None,
+            loading_help_window: None,
         }
     }
 }
@@ -56,12 +58,12 @@ impl Settings {
             ui.add_space(10.0);
             Grid::new("Fractal Settings").num_columns(2).show(ui, |ui| {
                 ui.label("Axiom:");
-                ui.text_edit_singleline(&mut context.fractal.axiom);
+                ui.text_edit_singleline(&mut context.fractal_view_model.axiom);
                 ui.end_row();
 
                 ui.label("Angle:");
                 ui.add(
-                    DragValue::new(&mut context.fractal.angle)
+                    DragValue::new(&mut context.fractal_view_model.angle)
                         .speed(1)
                         .range(-360..=360)
                         .suffix("°"),
@@ -71,7 +73,7 @@ impl Settings {
 
                 ui.label("Iterations:");
                 ui.add(
-                    DragValue::new(&mut context.fractal.iterations)
+                    DragValue::new(&mut context.fractal_view_model.iterations)
                         .speed(1)
                         .range(1..=usize::MAX),
                 );
@@ -79,7 +81,7 @@ impl Settings {
 
                 ui.label("Length:");
                 ui.add(
-                    DragValue::new(&mut context.fractal.length)
+                    DragValue::new(&mut context.fractal_view_model.length)
                         .speed(1)
                         .range(1..=usize::MAX)
                         .suffix(" cm."),
@@ -91,10 +93,10 @@ impl Settings {
             ui.label("Rules:");
             ui.add_space(5.0);
             let mut rule_removed: (bool, usize) = (false, 0);
-            for (rule_index, rule_line) in context.fractal.rules.iter_mut().enumerate() {
+            for (rule_index, rule_line) in context.fractal_view_model.rules.iter_mut().enumerate() {
                 ui.horizontal(|ui| {
                     ui.add_sized(vec2(200.0, 12.5), egui::TextEdit::singleline(rule_line))
-                        .on_hover_text("Format:\nSymbol=Rule\n\nFor Example:\nX=X+YF+");
+                        .on_hover_text("Format:\nSymbol -> Rule\n\nFor Example:\nX -> X+YF+");
                     if ui.button("Remove").clicked() {
                         rule_removed = (true, rule_index);
                     }
@@ -102,18 +104,18 @@ impl Settings {
             }
             let (is_rule_removed, removed_rule_index) = rule_removed;
             if is_rule_removed {
-                context.fractal.rules.remove(removed_rule_index);
+                context.fractal_view_model.rules.remove(removed_rule_index);
             }
             ui.vertical_centered_justified(|ui| {
                 if ui.button("Add Rule").clicked() {
-                    context.fractal.rules.push(String::new());
+                    context.fractal_view_model.rules.push(String::new());
                 }
             });
 
             ui.add_space(10.0);
             ui.vertical_centered_justified(|ui| {
                 if ui.button("Draw").clicked() {
-                    context.fractal.is_drawing_requested = true;
+                    context.fractal_view_model.request_draw();
                 }
             });
 
@@ -125,13 +127,32 @@ impl Settings {
 
             ui.collapsing("Load from File", |ui| {
                 ui.vertical_centered_justified(|ui| {
-                    if ui.button("Open File...").clicked() {}
+                    if ui.button("Open File...").clicked() {
+                        let loading_result = context.loader.load(&mut context.fractal_view_model);
+
+                        if let Err(err) = loading_result {
+                            context.fractal_view_model = Default::default();
+                            let mut message = format!("Error: {}", err);
+                            if let Some(additional_info) = err.additional_info() {
+                                message += &format!("\n\nAdditional Info:\n{}", additional_info);
+                            }
+                            self.error_window = Some(
+                                MessageWindow::default()
+                                    .with_message(message)
+                                    .with_name("Error ❎")
+                                    .with_height(500.0)
+                                    .with_width(300.0)
+                                    .with_collapsible(false),
+                            )
+                        }
+                    }
                     if ui.button("Help").clicked() {
                         let message = indoc! {"
                             File format:
 
                             Axiom = ...
                             Angle = ...
+                            Iterations = ...
                             SymbolForRule1 -> ...
                             SymbolForRule2 -> ...
                         
@@ -141,10 +162,11 @@ impl Settings {
                         
                             Axiom = FX
                             Angle = 90
+                            Iterations = 5
                             X -> X+YF+
                             Y -> -FX-Y
                         "};
-                        self.help_loading_from_file = Some(
+                        self.loading_help_window = Some(
                             MessageWindow::default()
                                 .with_message(message)
                                 .with_name("Help ❓")
@@ -226,7 +248,7 @@ impl Settings {
     }
 
     fn show_windows_if_opened(&mut self, ui: &mut egui::Ui) {
-        let windows = vec![&mut self.help_loading_from_file];
+        let windows = vec![&mut self.loading_help_window, &mut self.error_window];
 
         for window_option in windows {
             if let Some(window) = window_option {
@@ -241,7 +263,8 @@ impl Settings {
 
     fn reset_to_defaults(&self, context: &mut Context, canvas: &mut Canvas) {
         context.grid = Default::default();
-        context.fractal = Default::default();
+        context.fractal_view_model = Default::default();
+        context.loader = Default::default();
 
         canvas.screen_params = Default::default();
     }
