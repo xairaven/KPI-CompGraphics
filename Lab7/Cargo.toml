@@ -18,4 +18,6 @@ indoc = "2.0.5"               # Indented document literals
 log = "0.4.22"                # Logging facade.
 nalgebra = "0.33.2"           # Matrices, linear algebra.
 rfd = "0.15.1"                # File Dialogs.
+strum = "0.26.3"              # Helpful macros for working with enums and strings
+strum_macros = "0.26.4"       # Helpful macros for working with enums and strings
 thiserror = "2.0.3"           # Custom enum errors.
