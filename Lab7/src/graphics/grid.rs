@@ -41,9 +41,16 @@ impl Default for Grid {
 }
 
 impl Grid {
-    pub fn lines(&mut self, screen: ScreenParams) -> Vec<Line2D> {
+    pub fn process(&mut self, screen: ScreenParams) -> Vec<Line2D> {
         self.sync_stroke_colors();
+        if self.is_enabled {
+            self.lines(screen)
+        } else {
+            Vec::with_capacity(0)
+        }
+    }
 
+    fn lines(&mut self, screen: ScreenParams) -> Vec<Line2D> {
         self.unit_x = Point2D::new(screen.unit_length, 0.0);
         self.unit_y = Point2D::new(0.0, screen.unit_length);
 

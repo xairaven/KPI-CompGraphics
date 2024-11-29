@@ -42,6 +42,9 @@ pub mod logger;
 pub mod math {
     pub mod angle;
 }
+pub mod model {
+    pub mod fractal;
+}
 pub mod ui {
     pub mod app;
     pub mod core;

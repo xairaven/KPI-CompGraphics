@@ -17,13 +17,15 @@ impl Canvas {
     pub fn process(&mut self, context: &mut Context) {
         let mut lines: Vec<Line2D> = Vec::new();
 
-        // Grid Processing
-        if context.grid.is_enabled {
-            let grid = context.grid.lines(self.screen_params);
-            grid.iter().for_each(|line| {
-                lines.push(*line);
-            });
-        }
+        let grid = context.grid.process(self.screen_params);
+        grid.iter().for_each(|line| {
+            lines.push(*line);
+        });
+
+        let fractal = context.fractal.process();
+        fractal.iter().for_each(|line| {
+            lines.push(*line);
+        });
 
         self.lines = lines;
     }
