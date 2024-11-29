@@ -1,0 +1,5 @@
+Axiom = FXF--FF—FF
+Angle = 60
+Iterations = 12
+F -> FF
+X -> --FXF++FXF++FXF--

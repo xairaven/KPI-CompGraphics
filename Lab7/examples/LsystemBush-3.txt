@@ -1,0 +1,4 @@
+Axiom = F
+Angle = 22.5
+Iterations = 12
+F -> FF+[+F-F-F]-[-F+F+F]

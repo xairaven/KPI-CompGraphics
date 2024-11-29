@@ -1,0 +1,5 @@
+Axiom = X
+Angle = 90
+Iterations = 12
+X -> XFYFX+F+YFXFY-F-XFYFX
+Y -> YFXFY-F-XFYFX+F+YFXFY
