@@ -1,12 +1,16 @@
 use crate::context::Context;
-use crate::graphics::screen::{MAX_PX_PER_CM, MIN_PX_PER_CM};
 use crate::ui::components::canvas::Canvas;
 use egui::{DragValue, Grid, RichText};
 
-pub const SETTINGS_PANEL_WIDTH: f32 = 250.0;
+pub struct Settings {
+    pub panel_width: f32,
+}
 
-#[derive(Default)]
-pub struct Settings {}
+impl Default for Settings {
+    fn default() -> Self {
+        Self { panel_width: 250.0 }
+    }
+}
 
 impl Settings {
     pub fn show_panel(&mut self, context: &mut Context, canvas: &mut Canvas, ui: &mut egui::Ui) {
@@ -22,7 +26,8 @@ impl Settings {
                 ui.add(
                     DragValue::new(&mut canvas.screen_params.px_per_cm)
                         .speed(1)
-                        .range(MIN_PX_PER_CM..=MAX_PX_PER_CM),
+                        .range(10.0..=100.0)
+                        .suffix(" cm."),
                 );
             });
 
@@ -50,26 +55,39 @@ impl Settings {
                     ui.add(
                         DragValue::new(&mut canvas.screen_params.unit_length)
                             .speed(1)
-                            .range(1.0..=10.0),
+                            .range(1.0..=f32::MAX)
+                            .suffix(" cm."),
                     );
                 });
 
                 ui.add_space(10.0);
 
-                ui.label(RichText::new("Strokes:").strong());
-                Grid::new("GridStrokes").num_columns(2).show(ui, |ui| {
+                ui.label(RichText::new("Colors:").strong());
+                Grid::new("GridColors").num_columns(2).show(ui, |ui| {
                     ui.label("Axis X:");
-                    ui.add(&mut context.grid.axis_x_stroke);
+                    egui::color_picker::color_edit_button_srgba(
+                        ui,
+                        &mut context.grid.axis_x_color,
+                        egui::color_picker::Alpha::Opaque,
+                    );
 
                     ui.end_row();
 
                     ui.label("Axis Y:");
-                    ui.add(&mut context.grid.axis_y_stroke);
+                    egui::color_picker::color_edit_button_srgba(
+                        ui,
+                        &mut context.grid.axis_y_color,
+                        egui::color_picker::Alpha::Opaque,
+                    );
 
                     ui.end_row();
 
                     ui.label("Grid:");
-                    ui.add(&mut context.grid.grid_stroke);
+                    egui::color_picker::color_edit_button_srgba(
+                        ui,
+                        &mut context.grid.grid_color,
+                        egui::color_picker::Alpha::Opaque,
+                    );
                 });
 
                 ui.add_space(10.0);

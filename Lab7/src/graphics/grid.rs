@@ -1,8 +1,8 @@
 use crate::geometry::line2d::Line2D;
 use crate::geometry::point2d::Point2D;
 use crate::graphics::screen::ScreenParams;
-use crate::ui::styles::strokes;
-use egui::Stroke;
+use crate::ui::styles::{colors, strokes};
+use egui::{Color32, Stroke};
 
 pub const DEFAULT_UNIT_LENGTH: f32 = 1.0;
 
@@ -13,9 +13,12 @@ pub struct Grid {
 
     pub is_enabled: bool,
 
-    pub axis_x_stroke: Stroke,
-    pub axis_y_stroke: Stroke,
-    pub grid_stroke: Stroke,
+    pub axis_x_color: Color32,
+    pub axis_y_color: Color32,
+    pub grid_color: Color32,
+    axis_x_stroke: Stroke,
+    axis_y_stroke: Stroke,
+    grid_stroke: Stroke,
 }
 
 impl Default for Grid {
@@ -27,6 +30,9 @@ impl Default for Grid {
 
             is_enabled: false,
 
+            axis_x_color: colors::RED,
+            axis_y_color: colors::LIME,
+            grid_color: colors::GRAY,
             axis_x_stroke: strokes::axis_red(),
             axis_y_stroke: strokes::axis_lime(),
             grid_stroke: strokes::grid_gray(),
@@ -36,6 +42,8 @@ impl Default for Grid {
 
 impl Grid {
     pub fn lines(&mut self, screen: ScreenParams) -> Vec<Line2D> {
+        self.sync_stroke_colors();
+
         self.unit_x = Point2D::new(screen.unit_length, 0.0);
         self.unit_y = Point2D::new(0.0, screen.unit_length);
 
@@ -109,5 +117,11 @@ impl Grid {
         lines.push(axis_y);
 
         lines
+    }
+
+    fn sync_stroke_colors(&mut self) {
+        self.axis_x_stroke.color = self.axis_x_color;
+        self.axis_y_stroke.color = self.axis_y_color;
+        self.grid_stroke.color = self.grid_color;
     }
 }

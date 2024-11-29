@@ -1,9 +1,6 @@
 use crate::geometry::point2d::Point2D;
 use egui::{Response, Vec2};
 
-pub const MIN_PX_PER_CM: f32 = 10.0;
-pub const MAX_PX_PER_CM: f32 = 100.0;
-
 #[derive(Debug, Clone, Copy)]
 pub struct ScreenParams {
     pub canvas_center: Point2D,
