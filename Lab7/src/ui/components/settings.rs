@@ -1,4 +1,5 @@
 use crate::context::Context;
+use crate::model::examples::FractalExamples;
 use crate::ui::components::canvas::Canvas;
 use crate::ui::windows::message::MessageWindow;
 use egui::{vec2, DragValue, Grid, RichText};
@@ -121,28 +122,38 @@ impl Settings {
 
             ui.add_space(10.0);
 
-            ui.collapsing("Load from Example", |ui| {});
+            ui.collapsing("Load from Example", |ui| {
+                ui.vertical_centered_justified(|ui| {
+                    for example in FractalExamples::iter() {
+                        if ui.button(example.to_string()).clicked() {
+                            if let Err(err) = context
+                                .loader
+                                .load(&mut context.fractal_view_model, example.path())
+                            {
+                                self.error_window = Some(
+                                    context
+                                        .loader
+                                        .form_error_window(err, &mut context.fractal_view_model),
+                                )
+                            }
+                        }
+                    }
+                });
+            });
 
             ui.add_space(10.0);
 
             ui.collapsing("Load from File", |ui| {
                 ui.vertical_centered_justified(|ui| {
                     if ui.button("Open File...").clicked() {
-                        let loading_result = context.loader.load(&mut context.fractal_view_model);
-
-                        if let Err(err) = loading_result {
-                            context.fractal_view_model = Default::default();
-                            let mut message = format!("Error: {}", err);
-                            if let Some(additional_info) = err.additional_info() {
-                                message += &format!("\n\nAdditional Info:\n{}", additional_info);
-                            }
+                        if let Err(err) = context
+                            .loader
+                            .load_with_file_pick(&mut context.fractal_view_model)
+                        {
                             self.error_window = Some(
-                                MessageWindow::default()
-                                    .with_message(message)
-                                    .with_name("Error ❎")
-                                    .with_height(500.0)
-                                    .with_width(300.0)
-                                    .with_collapsible(false),
+                                context
+                                    .loader
+                                    .form_error_window(err, &mut context.fractal_view_model),
                             )
                         }
                     }
