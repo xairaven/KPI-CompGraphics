@@ -36,7 +36,7 @@ impl Settings {
                 ui.add(
                     DragValue::new(&mut canvas.screen_params.px_per_cm)
                         .speed(1)
-                        .range(10.0..=100.0)
+                        .range(5.0..=100.0)
                         .suffix(" cm."),
                 );
             });
