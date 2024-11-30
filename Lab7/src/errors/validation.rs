@@ -26,7 +26,10 @@ pub enum FractalValidationError {
     RuleConditionIsEmpty(String),
 
     #[error("There's symbol in a rule that is not from an alphabet.")]
-    SymbolNotFromAlphabet(String),
+    SymbolNotFromAlphabetInRule(String),
+
+    #[error("There's symbol in the axiom that is not from an alphabet.")]
+    SymbolNotFromAlphabetInAxiom(String),
 }
 
 impl FractalValidationError {
@@ -37,7 +40,8 @@ impl FractalValidationError {
             | Self::RuleConstantIsEmpty(value)
             | Self::RuleConstantIsNotValidChar(value)
             | Self::RuleConditionIsEmpty(value)
-            | Self::SymbolNotFromAlphabet(value) => Some(value.clone()),
+            | Self::SymbolNotFromAlphabetInRule(value)
+            | Self::SymbolNotFromAlphabetInAxiom(value) => Some(value.clone()),
             _ => None,
         }
     }

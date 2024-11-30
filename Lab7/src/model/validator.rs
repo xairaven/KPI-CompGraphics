@@ -21,7 +21,8 @@ impl FractalValidator {
         self.axiom_is_not_empty(&view_model.axiom)?;
         self.angle(view_model.angle)?;
         self.iterations(view_model.iterations)?;
-        self.rules(&view_model.rules)?;
+        let rules = self.rules(&view_model.rules)?;
+        self.axiom_alphabet_only(&view_model.axiom, rules.into_keys().collect())?;
 
         Ok(())
     }
@@ -141,12 +142,24 @@ impl FractalValidator {
         for (index, condition) in conditions.iter().enumerate() {
             for symbol in condition.chars() {
                 if !alphabet.contains(&symbol) && !self.reserved_terminals.contains(&symbol) {
-                    return Err(FractalValidationError::SymbolNotFromAlphabet(format!(
-                        "Rule: {}\nSymbol: {}",
-                        index + 1,
-                        symbol
-                    )));
+                    return Err(FractalValidationError::SymbolNotFromAlphabetInRule(
+                        format!("Rule: {}\nSymbol: {}", index + 1, symbol),
+                    ));
                 }
+            }
+        }
+
+        Ok(())
+    }
+
+    fn axiom_alphabet_only(
+        &self, axiom: &str, alphabet: Vec<char>,
+    ) -> Result<(), FractalValidationError> {
+        for symbol in axiom.chars() {
+            if !alphabet.contains(&symbol) && !self.reserved_terminals.contains(&symbol) {
+                return Err(FractalValidationError::SymbolNotFromAlphabetInAxiom(
+                    format!("Symbol: {}", symbol),
+                ));
             }
         }
 
