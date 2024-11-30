@@ -10,7 +10,7 @@ pub struct FractalValidator {
 impl Default for FractalValidator {
     fn default() -> Self {
         Self {
-            reserved_terminals: vec!['F', '+', '-'],
+            reserved_terminals: vec!['F', '+', '-', '[', ']'],
             rule_delimiter: String::from(" -> "),
         }
     }
