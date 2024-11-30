@@ -66,7 +66,7 @@ impl Settings {
                 ui.add(
                     DragValue::new(&mut context.fractal_view_model.angle)
                         .speed(1)
-                        .range(-360..=360)
+                        .range(0..=360)
                         .suffix("°"),
                 );
                 ui.end_row();
