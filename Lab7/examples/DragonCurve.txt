@@ -1,5 +1,5 @@
 Axiom = FX
 Angle = 90
-Iterations = 12
+Iterations = 5
 X -> X+YF+
 Y -> -FX-Y

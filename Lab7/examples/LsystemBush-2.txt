@@ -1,5 +1,5 @@
 Axiom = Y
 Angle = 25.7
-Iterations = 12
+Iterations = 5
 X -> X[-FFF][+FFF]FX
 Y -> YFX[+Y][-Y]

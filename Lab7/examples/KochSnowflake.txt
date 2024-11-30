@@ -1,4 +1,4 @@
 Axiom = F++F++F
 Angle = 60
-Iterations = 12
+Iterations = 5
 F -> F-F++F-F

@@ -1,5 +1,5 @@
 Axiom = X
 Angle = 22.5
-Iterations = 12
+Iterations = 5
 F -> FF
 X -> F-[[X]+X]+F[+FX]-X

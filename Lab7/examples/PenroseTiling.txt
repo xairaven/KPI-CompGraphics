@@ -1,7 +1,7 @@
 Axiom = +WF--XF---YF--ZF
 Angle = 10
-Iterations = 12
+Iterations = 5
 W -> YF++ZF----XF[-YF----WF]++
 X -> +YF--ZF[---WF--XF]+
 Y -> -WF++XF[+++YF++ZF]-
-Z -> --YF++++WF[+ZF++++XF]—XF
+Z -> --YF++++WF[+ZF++++XF]-XF
