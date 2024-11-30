@@ -1,3 +1,4 @@
+use crate::errors::validation::FractalValidationError;
 use crate::geometry::line2d::Line2D;
 use crate::graphics::screen::ScreenParams;
 use crate::model::fractal::Fractal;
@@ -18,6 +19,8 @@ pub struct FractalViewModel {
     pub color: Color32,
     stroke: Stroke,
 
+    lines: Vec<Line2D>,
+
     validator: FractalValidator,
 }
 
@@ -35,6 +38,8 @@ impl Default for FractalViewModel {
             color: colors::BLACK,
             stroke: strokes::model_black(0.1),
 
+            lines: Vec::new(),
+
             validator: FractalValidator::default(),
         }
     }
@@ -42,27 +47,29 @@ impl Default for FractalViewModel {
 
 impl FractalViewModel {
     pub fn process(&mut self, screen: ScreenParams) -> Vec<Line2D> {
+        self.sync_stroke(screen);
+
         if self.is_drawing_requested {
             self.is_drawing_requested = false;
-            self.sync_stroke(screen);
-
-            Fractal::default()
+            self.lines = Fractal::default()
                 .with_angle(self.angle)
                 .with_axiom(self.axiom.clone())
                 .with_rules(self.rules.clone())
                 .with_iterations(self.iterations)
                 .with_length(self.length)
                 .with_stroke(self.stroke)
-                .lines()
-        } else {
-            Vec::with_capacity(0)
+                .lines();
         }
+
+        self.lines.clone()
     }
 
-    pub fn request_draw(&mut self) {
-        self.is_drawing_requested = true;
+    pub fn request_draw(&mut self) -> Result<(), FractalValidationError> {
+        let validation_result = self.validator.check(self);
 
-        todo!("VALIDATE")
+        self.is_drawing_requested = validation_result.is_ok();
+
+        validation_result
     }
 
     pub fn reset_fractal_settings(&mut self) {

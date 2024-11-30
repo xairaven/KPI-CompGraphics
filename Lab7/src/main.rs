@@ -30,6 +30,7 @@ pub mod errors {
     pub mod env;
     pub mod loader;
     pub mod log;
+    pub mod validation;
 }
 pub mod geometry {
     pub mod line2d;

@@ -124,7 +124,10 @@ impl Settings {
 
             ui.vertical_centered_justified(|ui| {
                 if ui.button("Draw").clicked() {
-                    context.fractal_view_model.request_draw();
+                    if let Err(err) = context.fractal_view_model.request_draw() {
+                        context.fractal_view_model.reset_fractal_settings();
+                        self.error_window = Some(err.window())
+                    }
                 }
             });
 

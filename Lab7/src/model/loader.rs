@@ -51,10 +51,6 @@ impl FractalLoader {
                 FractalLoaderError::FailedToParseAngle(err.to_string())
             })?;
 
-            if !(0.0..=360.0).contains(&angle_degrees) {
-                return Err(FractalLoaderError::WrongAngleValue);
-            }
-
             view_model.angle = angle_degrees;
         } else {
             return Err(FractalLoaderError::AngleNotFound);
@@ -65,23 +61,12 @@ impl FractalLoader {
                 .parse::<usize>()
                 .map_err(|err| FractalLoaderError::FailedToParseIterations(err.to_string()))?;
 
-            if iterations < 1 {
-                return Err(FractalLoaderError::WrongIterationsValue);
-            }
-
             view_model.iterations = iterations;
         } else {
             return Err(FractalLoaderError::IterationsNotFound);
         }
 
-        for (index, line) in lines[3..].iter().enumerate() {
-            if line.len() < 5 || !line[1..=4].eq(" -> ") {
-                return Err(FractalLoaderError::WrongRuleSyntax(format!(
-                    "Rule: {}",
-                    index + 1
-                )));
-            }
-
+        for line in lines[3..].iter() {
             view_model.rules.push(line.clone())
         }
 
