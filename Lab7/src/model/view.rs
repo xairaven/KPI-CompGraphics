@@ -57,4 +57,9 @@ impl FractalViewModel {
     pub fn reset_to_defaults(&mut self) {
         *self = Default::default();
     }
+
+    pub fn reset_with_empty_rules(&mut self) {
+        self.reset_to_defaults();
+        self.rules = Vec::with_capacity(3);
+    }
 }

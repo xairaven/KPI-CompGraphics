@@ -26,7 +26,7 @@ impl FractalLoader {
         let file = File::open(path)
             .map_err(|err| FractalLoaderError::FailedToOpenFile(err.to_string()))?;
 
-        view_model.reset_to_defaults();
+        view_model.reset_with_empty_rules();
 
         let reader = io::BufReader::new(file);
         let mut lines = Vec::<String>::new();
