@@ -58,7 +58,13 @@ impl Settings {
             ui.add_space(10.0);
 
             ui.vertical_centered_justified(|ui| {
-                if ui.button("Take a Screenshot").clicked() {
+                if ui
+                    .button("Take a Screenshot")
+                    .on_hover_text(
+                        "Takes a screenshot of the canvas.\nCurrently only .png files are supported.",
+                    )
+                    .clicked()
+                {
                     ui.ctx()
                         .send_viewport_cmd(egui::ViewportCommand::Screenshot);
                 }
