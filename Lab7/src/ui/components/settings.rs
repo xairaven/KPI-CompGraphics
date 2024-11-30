@@ -43,7 +43,13 @@ impl Settings {
 
             ui.add_space(10.0);
 
-            ui.vertical_centered(|ui| {
+            ui.vertical_centered_justified(|ui| {
+                if ui.button("Reset Offset").clicked() {
+                    canvas.screen_params.offset = Default::default();
+                }
+            });
+
+            ui.vertical_centered_justified(|ui| {
                 if ui.button("Reset to Default Settings").clicked() {
                     self.reset_to_defaults(context, canvas);
                 }
