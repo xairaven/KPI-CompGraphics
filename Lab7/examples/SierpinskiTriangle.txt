@@ -1,4 +1,4 @@
-Axiom = FXF--FF-FF
+Axiom = FXF--FF--FF
 Angle = 60
 Iterations = 5
 F -> FF
