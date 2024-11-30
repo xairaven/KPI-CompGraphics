@@ -14,3 +14,7 @@ pub fn axis_red() -> Stroke {
 pub fn grid_gray() -> Stroke {
     Stroke::new(GRID_WIDTH_PX, colors::GRAY)
 }
+
+pub fn model_black(width: f32) -> Stroke {
+    Stroke::new(width, colors::BLACK)
+}

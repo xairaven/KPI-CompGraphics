@@ -1,4 +1,6 @@
 use crate::geometry::line2d::Line2D;
+use crate::ui::styles::strokes;
+use egui::Stroke;
 
 pub struct Fractal {
     pub angle: f32,
@@ -7,6 +9,8 @@ pub struct Fractal {
 
     pub iterations: usize,
     pub length: usize,
+
+    pub stroke: Stroke,
 }
 
 impl Default for Fractal {
@@ -17,6 +21,8 @@ impl Default for Fractal {
             rules: vec![String::new()],
             iterations: 1,
             length: 1,
+
+            stroke: strokes::model_black(0.1),
         }
     }
 }
@@ -50,6 +56,11 @@ impl Fractal {
 
     pub fn with_length(mut self, length: usize) -> Self {
         self.length = length;
+        self
+    }
+
+    pub fn with_stroke(mut self, stroke: Stroke) -> Self {
+        self.stroke = stroke;
         self
     }
 }

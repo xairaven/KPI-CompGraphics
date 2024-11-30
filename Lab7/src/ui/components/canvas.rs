@@ -22,7 +22,7 @@ impl Canvas {
             lines.push(*line);
         });
 
-        let fractal = context.fractal_view_model.generate();
+        let fractal = context.fractal_view_model.process(self.screen_params);
         fractal.iter().for_each(|line| {
             lines.push(*line);
         });

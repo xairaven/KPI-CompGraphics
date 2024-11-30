@@ -70,7 +70,6 @@ impl Settings {
                         .suffix("°"),
                 );
                 ui.end_row();
-                ui.end_row();
 
                 ui.label("Iterations:");
                 ui.add(
@@ -86,6 +85,14 @@ impl Settings {
                         .speed(1)
                         .range(1..=usize::MAX)
                         .suffix(" cm."),
+                );
+                ui.end_row();
+
+                ui.label("Color:");
+                egui::color_picker::color_edit_button_srgba(
+                    ui,
+                    &mut context.fractal_view_model.color,
+                    egui::color_picker::Alpha::Opaque,
                 );
                 ui.end_row();
             });
@@ -114,9 +121,16 @@ impl Settings {
             });
 
             ui.add_space(10.0);
+
             ui.vertical_centered_justified(|ui| {
                 if ui.button("Draw").clicked() {
                     context.fractal_view_model.request_draw();
+                }
+            });
+
+            ui.vertical_centered_justified(|ui| {
+                if ui.button("Reset Settings").clicked() {
+                    context.fractal_view_model = Default::default();
                 }
             });
 
@@ -130,7 +144,7 @@ impl Settings {
                                 .loader
                                 .load_from_path(&mut context.fractal_view_model, example.path())
                             {
-                                context.fractal_view_model.reset_to_defaults();
+                                context.fractal_view_model.reset_fractal_settings();
                                 self.error_window = Some(err.window())
                             }
                         }
@@ -147,7 +161,7 @@ impl Settings {
                             .loader
                             .load_with_file_pick(&mut context.fractal_view_model)
                         {
-                            context.fractal_view_model.reset_to_defaults();
+                            context.fractal_view_model.reset_fractal_settings();
                             self.error_window = Some(err.window())
                         }
                     }

@@ -1,6 +1,9 @@
 use crate::geometry::line2d::Line2D;
+use crate::graphics::screen::ScreenParams;
 use crate::model::fractal::Fractal;
 use crate::model::validator::FractalValidator;
+use crate::ui::styles::{colors, strokes};
+use egui::{Color32, Stroke};
 
 pub struct FractalViewModel {
     pub is_drawing_requested: bool,
@@ -11,6 +14,9 @@ pub struct FractalViewModel {
 
     pub iterations: usize,
     pub length: usize,
+
+    pub color: Color32,
+    stroke: Stroke,
 
     validator: FractalValidator,
 }
@@ -26,15 +32,19 @@ impl Default for FractalViewModel {
             iterations: 1,
             length: 1,
 
+            color: colors::BLACK,
+            stroke: strokes::model_black(0.1),
+
             validator: FractalValidator::default(),
         }
     }
 }
 
 impl FractalViewModel {
-    pub fn generate(&mut self) -> Vec<Line2D> {
+    pub fn process(&mut self, screen: ScreenParams) -> Vec<Line2D> {
         if self.is_drawing_requested {
             self.is_drawing_requested = false;
+            self.sync_stroke(screen);
 
             Fractal::default()
                 .with_angle(self.angle)
@@ -42,6 +52,7 @@ impl FractalViewModel {
                 .with_rules(self.rules.clone())
                 .with_iterations(self.iterations)
                 .with_length(self.length)
+                .with_stroke(self.stroke)
                 .lines()
         } else {
             Vec::with_capacity(0)
@@ -54,12 +65,23 @@ impl FractalViewModel {
         todo!("VALIDATE")
     }
 
-    pub fn reset_to_defaults(&mut self) {
-        *self = Default::default();
+    pub fn reset_fractal_settings(&mut self) {
+        self.is_drawing_requested = false;
+
+        self.angle = 0.0;
+        self.axiom = String::new();
+        self.rules = vec![String::new()];
+        self.iterations = 1;
+        self.length = 1;
     }
 
     pub fn reset_with_empty_rules(&mut self) {
-        self.reset_to_defaults();
+        self.reset_fractal_settings();
         self.rules = Vec::with_capacity(3);
+    }
+
+    fn sync_stroke(&mut self, screen: ScreenParams) {
+        self.stroke.color = self.color;
+        self.stroke.width = screen.value_cm_to_px(self.stroke.width);
     }
 }
