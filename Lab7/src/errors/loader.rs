@@ -1,3 +1,4 @@
+use crate::ui::windows::message::MessageWindow;
 use thiserror::Error;
 
 #[derive(Error, Debug)]
@@ -46,5 +47,19 @@ impl FractalLoaderError {
             | FractalLoaderError::WrongRuleSyntax(value) => Some(value.clone()),
             _ => None,
         }
+    }
+
+    pub fn window(&self) -> MessageWindow {
+        let mut message = format!("Error: {}", self);
+        if let Some(additional_info) = self.additional_info() {
+            message += &format!("\n\nAdditional Info:\n{}", additional_info);
+        }
+
+        MessageWindow::default()
+            .with_message(message)
+            .with_name("Error ❎")
+            .with_height(500.0)
+            .with_width(300.0)
+            .with_collapsible(false)
     }
 }

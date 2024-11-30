@@ -1,6 +1,5 @@
 use crate::errors::loader::FractalLoaderError;
 use crate::model::view::FractalViewModel;
-use crate::ui::windows::message::MessageWindow;
 use std::fs::File;
 use std::io;
 use std::io::BufRead;
@@ -87,22 +86,5 @@ impl FractalLoader {
         }
 
         Ok(())
-    }
-
-    pub fn form_error_window(
-        &self, error: FractalLoaderError, view_model: &mut FractalViewModel,
-    ) -> MessageWindow {
-        *view_model = Default::default();
-        let mut message = format!("Error: {}", error);
-        if let Some(additional_info) = error.additional_info() {
-            message += &format!("\n\nAdditional Info:\n{}", additional_info);
-        }
-
-        MessageWindow::default()
-            .with_message(message)
-            .with_name("Error ❎")
-            .with_height(500.0)
-            .with_width(300.0)
-            .with_collapsible(false)
     }
 }

@@ -130,11 +130,8 @@ impl Settings {
                                 .loader
                                 .load_from_path(&mut context.fractal_view_model, example.path())
                             {
-                                self.error_window = Some(
-                                    context
-                                        .loader
-                                        .form_error_window(err, &mut context.fractal_view_model),
-                                )
+                                context.fractal_view_model.reset_to_defaults();
+                                self.error_window = Some(err.window())
                             }
                         }
                     }
@@ -150,11 +147,8 @@ impl Settings {
                             .loader
                             .load_with_file_pick(&mut context.fractal_view_model)
                         {
-                            self.error_window = Some(
-                                context
-                                    .loader
-                                    .form_error_window(err, &mut context.fractal_view_model),
-                            )
+                            context.fractal_view_model.reset_to_defaults();
+                            self.error_window = Some(err.window())
                         }
                     }
                     if ui.button("Help").clicked() {
