@@ -1,5 +1,5 @@
 Axiom = F
 Angle = 35
 Initial Angle = 90
-Iterations = 5
+Iterations = 3
 F -> F[+FF][-FF]F[-F][+F]F
