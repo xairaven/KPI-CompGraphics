@@ -18,11 +18,17 @@ pub enum FractalLoaderError {
     #[error("Angle not found.")]
     AngleNotFound,
 
+    #[error("Initial angle not found.")]
+    InitialAngleNotFound,
+
     #[error("Iterations not found.")]
     IterationsNotFound,
 
     #[error("Failed to parse angle.")]
     FailedToParseAngle(String),
+
+    #[error("Failed to parse initial angle.")]
+    FailedToParseInitialAngle(String),
 
     #[error("Failed to parse iterations.")]
     FailedToParseIterations(String),
@@ -34,6 +40,7 @@ impl FractalLoaderError {
             Self::FailedToOpenFile(value)
             | Self::FailedToParseLine(value)
             | Self::FailedToParseAngle(value)
+            | Self::FailedToParseInitialAngle(value)
             | Self::FailedToParseIterations(value) => Some(value.clone()),
             _ => None,
         }
