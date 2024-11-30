@@ -10,6 +10,7 @@ pub struct FractalViewModel {
     pub is_drawing_requested: bool,
 
     pub angle: f32,
+    pub initial_angle: f32,
     pub axiom: String,
     pub rules: Vec<String>,
 
@@ -31,6 +32,7 @@ impl Default for FractalViewModel {
             is_drawing_requested: false,
 
             angle: 0.0,
+            initial_angle: 0.0,
             axiom: String::new(),
             rules: vec![String::new()],
             iterations: 1,
@@ -55,6 +57,7 @@ impl FractalViewModel {
             self.is_drawing_requested = false;
             self.lines = Fractal::default()
                 .with_angle(self.angle)
+                .with_initial_angle(self.initial_angle)
                 .with_axiom(self.axiom.clone())
                 .with_rules(self.rules_set.clone())
                 .with_iterations(self.iterations)
@@ -80,6 +83,7 @@ impl FractalViewModel {
         self.is_drawing_requested = false;
 
         self.angle = 0.0;
+        self.initial_angle = 0.0;
         self.axiom = String::new();
         self.rules = vec![String::new()];
         self.iterations = 1;

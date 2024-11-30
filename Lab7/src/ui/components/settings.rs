@@ -77,6 +77,15 @@ impl Settings {
                 );
                 ui.end_row();
 
+                ui.label("Initial Angle:");
+                ui.add(
+                    DragValue::new(&mut context.fractal_view_model.initial_angle)
+                        .speed(1)
+                        .range(0..=360)
+                        .suffix("°"),
+                );
+                ui.end_row();
+
                 ui.label("Iterations:");
                 ui.add(
                     DragValue::new(&mut context.fractal_view_model.iterations)

@@ -9,6 +9,7 @@ pub const TERMINAL_SYMBOLS: [char; 5] = ['F', '+', '-', '[', ']'];
 
 pub struct Fractal {
     pub angle: f32,
+    pub initial_angle: f32,
     pub axiom: String,
     pub rules: HashMap<char, String>,
 
@@ -22,6 +23,8 @@ impl Default for Fractal {
     fn default() -> Self {
         Self {
             angle: 0.0,
+            initial_angle: 0.0,
+
             axiom: String::new(),
             rules: HashMap::new(),
             iterations: 1,
@@ -40,7 +43,7 @@ impl Fractal {
 
         let mut current_x = 0.0;
         let mut current_y = 0.0;
-        let mut current_angle = 0.0;
+        let mut current_angle = self.initial_angle;
 
         let mut stack: Vec<(f32, f32, f32)> = Vec::new();
 
@@ -112,6 +115,11 @@ impl Fractal {
 
     pub fn with_angle(mut self, angle: f32) -> Self {
         self.angle = angle;
+        self
+    }
+
+    pub fn with_initial_angle(mut self, initial_angle: f32) -> Self {
+        self.initial_angle = initial_angle;
         self
     }
 
