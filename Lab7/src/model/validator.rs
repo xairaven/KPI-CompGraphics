@@ -1,4 +1,5 @@
 use crate::errors::validation::FractalValidationError;
+use crate::model::fractal;
 use crate::model::view::FractalViewModel;
 use std::collections::HashMap;
 
@@ -10,7 +11,7 @@ pub struct FractalValidator {
 impl Default for FractalValidator {
     fn default() -> Self {
         Self {
-            reserved_terminals: vec!['F', '+', '-', '[', ']'],
+            reserved_terminals: Vec::from(fractal::TERMINAL_SYMBOLS),
             rule_delimiter: String::from(" -> "),
         }
     }
