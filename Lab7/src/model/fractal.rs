@@ -1,11 +1,12 @@
 use crate::geometry::line2d::Line2D;
 use crate::ui::styles::strokes;
 use egui::Stroke;
+use std::collections::HashMap;
 
 pub struct Fractal {
     pub angle: f32,
     pub axiom: String,
-    pub rules: Vec<String>,
+    pub rules: HashMap<char, String>,
 
     pub iterations: usize,
     pub length: usize,
@@ -18,7 +19,7 @@ impl Default for Fractal {
         Self {
             angle: 0.0,
             axiom: String::new(),
-            rules: vec![String::new()],
+            rules: HashMap::new(),
             iterations: 1,
             length: 1,
 
@@ -44,7 +45,7 @@ impl Fractal {
         self
     }
 
-    pub fn with_rules(mut self, rules: Vec<String>) -> Self {
+    pub fn with_rules(mut self, rules: HashMap<char, String>) -> Self {
         self.rules = rules;
         self
     }

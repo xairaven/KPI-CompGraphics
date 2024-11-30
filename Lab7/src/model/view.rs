@@ -5,6 +5,7 @@ use crate::model::fractal::Fractal;
 use crate::model::validator::FractalValidator;
 use crate::ui::styles::{colors, strokes};
 use egui::{Color32, Stroke};
+use std::collections::HashMap;
 
 pub struct FractalViewModel {
     pub is_drawing_requested: bool,
@@ -22,6 +23,7 @@ pub struct FractalViewModel {
     lines: Vec<Line2D>,
 
     validator: FractalValidator,
+    rules_set: HashMap<char, String>,
 }
 
 impl Default for FractalViewModel {
@@ -41,6 +43,7 @@ impl Default for FractalViewModel {
             lines: Vec::new(),
 
             validator: FractalValidator::default(),
+            rules_set: HashMap::new(),
         }
     }
 }
@@ -54,7 +57,7 @@ impl FractalViewModel {
             self.lines = Fractal::default()
                 .with_angle(self.angle)
                 .with_axiom(self.axiom.clone())
-                .with_rules(self.rules.clone())
+                .with_rules(self.rules_set.clone())
                 .with_iterations(self.iterations)
                 .with_length(self.length)
                 .with_stroke(self.stroke)
@@ -69,6 +72,8 @@ impl FractalViewModel {
 
         self.is_drawing_requested = validation_result.is_ok();
 
+        self.rules_set = self.validator.rules(&self.rules)?;
+
         validation_result
     }
 
@@ -80,6 +85,8 @@ impl FractalViewModel {
         self.rules = vec![String::new()];
         self.iterations = 1;
         self.length = 1;
+
+        self.rules_set = HashMap::new();
     }
 
     pub fn reset_with_empty_rules(&mut self) {

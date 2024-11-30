@@ -1,5 +1,6 @@
 use crate::errors::validation::FractalValidationError;
 use crate::model::view::FractalViewModel;
+use std::collections::HashMap;
 
 pub struct FractalValidator {
     reserved_terminals: Vec<char>,
@@ -49,7 +50,7 @@ impl FractalValidator {
         Ok(())
     }
 
-    fn rules(&self, rules: &[String]) -> Result<(), FractalValidationError> {
+    pub fn rules(&self, rules: &[String]) -> Result<HashMap<char, String>, FractalValidationError> {
         let mut alphabet: Vec<char> = Vec::new();
         let mut conditions: Vec<String> = Vec::new();
 
@@ -70,7 +71,12 @@ impl FractalValidator {
 
         self.all_symbols_in_alphabet(&alphabet, &conditions)?;
 
-        Ok(())
+        let mut rules: HashMap<char, String> = HashMap::new();
+        for i in 0..alphabet.len() {
+            rules.insert(alphabet[i], conditions[i].to_string());
+        }
+
+        Ok(rules)
     }
 
     fn right_rule_syntax(&self, rule: &str, index: usize) -> Result<(), FractalValidationError> {
