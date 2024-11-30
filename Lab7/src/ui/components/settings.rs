@@ -56,6 +56,15 @@ impl Settings {
             });
 
             ui.add_space(10.0);
+
+            ui.vertical_centered_justified(|ui| {
+                if ui.button("Take a Screenshot").clicked() {
+                    ui.ctx()
+                        .send_viewport_cmd(egui::ViewportCommand::Screenshot);
+                }
+            });
+
+            ui.add_space(10.0);
             ui.separator();
             ui.add_space(10.0);
 
