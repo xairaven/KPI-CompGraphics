@@ -82,8 +82,8 @@ impl Settings {
                 ui.label("Length:");
                 ui.add(
                     DragValue::new(&mut context.fractal_view_model.length)
-                        .speed(1)
-                        .range(1..=usize::MAX)
+                        .speed(0.01)
+                        .range(0.01..=f32::MAX)
                         .suffix(" cm."),
                 );
                 ui.end_row();

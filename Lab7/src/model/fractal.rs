@@ -13,7 +13,7 @@ pub struct Fractal {
     pub rules: HashMap<char, String>,
 
     pub iterations: usize,
-    pub length: usize,
+    pub length: f32,
 
     pub stroke: Stroke,
 }
@@ -25,7 +25,7 @@ impl Default for Fractal {
             axiom: String::new(),
             rules: HashMap::new(),
             iterations: 1,
-            length: 1,
+            length: 0.5,
 
             stroke: strokes::model_black(0.1),
         }
@@ -62,8 +62,8 @@ impl Fractal {
                 'F' => {
                     let radians = Angle::from_degree(current_angle).radian();
 
-                    current_x += self.length as f32 * f32::cos(radians);
-                    current_y += self.length as f32 * f32::sin(radians);
+                    current_x += self.length * f32::cos(radians);
+                    current_y += self.length * f32::sin(radians);
                     points.push(Point2D::new(current_x, current_y));
                 },
                 '+' => {
@@ -129,7 +129,7 @@ impl Fractal {
         self
     }
 
-    pub fn with_length(mut self, length: usize) -> Self {
+    pub fn with_length(mut self, length: f32) -> Self {
         self.length = length;
         self
     }

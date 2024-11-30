@@ -14,7 +14,7 @@ pub struct FractalViewModel {
     pub rules: Vec<String>,
 
     pub iterations: usize,
-    pub length: usize,
+    pub length: f32,
 
     pub color: Color32,
     stroke: Stroke,
@@ -34,7 +34,7 @@ impl Default for FractalViewModel {
             axiom: String::new(),
             rules: vec![String::new()],
             iterations: 1,
-            length: 1,
+            length: 0.5,
 
             color: colors::BLACK,
             stroke: strokes::model_black(1.0),
@@ -83,7 +83,7 @@ impl FractalViewModel {
         self.axiom = String::new();
         self.rules = vec![String::new()];
         self.iterations = 1;
-        self.length = 1;
+        self.length = 0.5;
 
         self.rules_set = HashMap::new();
     }
