@@ -34,22 +34,13 @@ impl Default for Fractal {
 
 impl Fractal {
     pub fn lines(&self) -> Vec<Line2D> {
-        self.points()
-            .windows(2)
-            .map(|pair| Line2D::new(pair[0], pair[1], self.stroke))
-            .collect()
-    }
-
-    fn points(&self) -> Vec<Point2D> {
-        let mut points: Vec<Point2D> = Vec::new();
+        let mut lines: Vec<Line2D> = Vec::new();
 
         let path = self.create_path();
 
         let mut current_x = 0.0;
         let mut current_y = 0.0;
         let mut current_angle = 0.0;
-
-        points.push(Point2D::new(current_x, current_y));
 
         let mut stack: Vec<(f32, f32, f32)> = Vec::new();
 
@@ -62,9 +53,14 @@ impl Fractal {
                 'F' => {
                     let radians = Angle::from_degree(current_angle).radian();
 
+                    let start = Point2D::new(current_x, current_y);
+
                     current_x += self.length * f32::cos(radians);
                     current_y += self.length * f32::sin(radians);
-                    points.push(Point2D::new(current_x, current_y));
+
+                    let end = Point2D::new(current_x, current_y);
+
+                    lines.push(Line2D::new(start, end, self.stroke));
                 },
                 '+' => {
                     current_angle -= self.angle;
@@ -86,7 +82,7 @@ impl Fractal {
             }
         }
 
-        points
+        lines
     }
 
     fn create_path(&self) -> String {
