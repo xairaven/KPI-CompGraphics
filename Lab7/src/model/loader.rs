@@ -15,20 +15,19 @@ impl FractalLoader {
         &self, view_model: &mut FractalViewModel,
     ) -> Result<(), FractalLoaderError> {
         if let Some(path) = rfd::FileDialog::new().pick_file() {
-            self.load(view_model, path)?
+            self.load_from_path(view_model, path)?
         }
 
         Ok(())
     }
 
-    pub fn load(
+    pub fn load_from_path(
         &self, view_model: &mut FractalViewModel, path: PathBuf,
     ) -> Result<(), FractalLoaderError> {
         let file = File::open(path)
             .map_err(|err| FractalLoaderError::FailedToOpenFile(err.to_string()))?;
 
-        *view_model = Default::default();
-        view_model.rules = Vec::with_capacity(3);
+        view_model.reset_to_defaults();
 
         let reader = io::BufReader::new(file);
         let mut lines = Vec::<String>::new();

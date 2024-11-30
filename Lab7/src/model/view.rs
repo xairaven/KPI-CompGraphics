@@ -53,4 +53,8 @@ impl FractalViewModel {
 
         todo!("VALIDATE")
     }
+
+    pub fn reset_to_defaults(&mut self) {
+        *self = Default::default();
+    }
 }

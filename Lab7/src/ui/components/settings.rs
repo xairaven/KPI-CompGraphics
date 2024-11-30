@@ -128,7 +128,7 @@ impl Settings {
                         if ui.button(example.to_string()).clicked() {
                             if let Err(err) = context
                                 .loader
-                                .load(&mut context.fractal_view_model, example.path())
+                                .load_from_path(&mut context.fractal_view_model, example.path())
                             {
                                 self.error_window = Some(
                                     context
