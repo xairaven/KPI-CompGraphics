@@ -31,9 +31,9 @@ impl Point2D {
         Pos2::from([self.x, self.y])
     }
 
-    pub fn to_uv(&self) -> Self {
-        let u = self.x * (PI / 6.0) / 10.0;
-        let v = self.y * (PI / 6.0) / 10.0;
+    pub fn to_uv(&self, screen_params: &ScreenParams) -> Self {
+        let u = self.x * (PI / 6.0) / screen_params.unit_length;
+        let v = self.y * (PI / 6.0) / screen_params.unit_length;
 
         Self::new(u, v)
     }

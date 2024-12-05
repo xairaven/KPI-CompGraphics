@@ -46,7 +46,7 @@ impl Default for Texture {
             display_delta_v: 0.0,
             display_angle: 0.0,
 
-            scale_factor: 50.0,
+            scale_factor: 25.0,
 
             delta_u: 0.0,
             delta_v: 0.0,
@@ -78,7 +78,7 @@ impl Texture {
 
         let mut uv_points: Vec<Point2D> = Vec::new();
         for point2d in &self.points {
-            let mut uv = point2d.to_uv();
+            let mut uv = point2d.to_uv(&screen);
             uv.scale(self.scale_factor);
             uv.offset(self.delta_u, self.delta_v);
             uv_points.push(uv);
