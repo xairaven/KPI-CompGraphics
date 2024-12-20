@@ -1,5 +1,5 @@
 [package]
-name = "Lab7"
+name = "Lab7-L-System"
 version = "1.0.0"
 authors = ["Alex Kovalov <alexkovalevkpi@gmail.com>"]
 edition = "2021"
