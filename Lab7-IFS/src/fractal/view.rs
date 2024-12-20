@@ -8,6 +8,8 @@ const DEFAULT_SYSTEM: [f32; 7] = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0];
 pub struct FractalView {
     initialized: bool,
 
+    pub is_coloring_enabled: bool,
+
     pub systems: Vec<[f32; 7]>,
     pub colors: Vec<Color32>,
 }
@@ -16,6 +18,7 @@ impl Default for FractalView {
     fn default() -> Self {
         Self {
             initialized: false,
+            is_coloring_enabled: false,
 
             systems: vec![DEFAULT_SYSTEM],
             colors: vec![colors::BLACK],

@@ -13,8 +13,6 @@ pub struct IfsSettingsWindow {
     width: f32,
     height: f32,
 
-    is_coloring_enabled: bool,
-
     error_window: Option<MessageWindow>,
 }
 
@@ -29,8 +27,6 @@ impl Default for IfsSettingsWindow {
             width: 450.0,
             height: 250.0,
 
-            is_coloring_enabled: false,
-
             error_window: None,
         }
     }
@@ -39,6 +35,7 @@ impl Default for IfsSettingsWindow {
 impl WindowOps for IfsSettingsWindow {
     fn show(&mut self, ui: &egui::Ui, context: &mut Context) {
         let mut to_close = false;
+        let mut reset_initialization = false;
 
         egui::Window::new(&self.name)
             .open(&mut self.is_open)
@@ -47,7 +44,7 @@ impl WindowOps for IfsSettingsWindow {
             .collapsible(self.collapsible)
             .resizable(self.resizable)
             .show(ui.ctx(), |ui| {
-                ui.checkbox(&mut self.is_coloring_enabled, "With colors");
+                ui.checkbox(&mut context.fractal_view.is_coloring_enabled, "With colors");
 
                 ui.add_space(10.0);
 
@@ -55,33 +52,53 @@ impl WindowOps for IfsSettingsWindow {
                     .max_height(self.height - 30.0)
                     .show(ui, |ui| {
                         let mut rule_removed: (bool, usize) = (false, 0);
+
+                        let grid_columns = 8 + if context.fractal_view.is_coloring_enabled {
+                            1
+                        } else {
+                            0
+                        };
                         Grid::new("SystemGrid")
-                            .num_columns(8 + if self.is_coloring_enabled { 1 } else { 0 })
+                            .num_columns(grid_columns)
                             .striped(true)
                             .show(ui, |ui| {
                                 for (index_system, system) in
                                     context.fractal_view.systems.iter_mut().enumerate()
                                 {
                                     for element in &mut system[0..=5] {
-                                        ui.add(
-                                            DragValue::new(element)
-                                                .speed(0.01)
-                                                .range(0.00..=f32::MAX),
-                                        );
+                                        if ui
+                                            .add(
+                                                DragValue::new(element)
+                                                    .speed(0.01)
+                                                    .range(0.00..=f32::MAX),
+                                            )
+                                            .changed()
+                                        {
+                                            reset_initialization = true;
+                                        };
                                     }
 
-                                    ui.add(
-                                        DragValue::new(&mut system[6])
-                                            .speed(0.01)
-                                            .range(0.01..=1.0),
-                                    );
+                                    if ui
+                                        .add(
+                                            DragValue::new(&mut system[6])
+                                                .speed(0.01)
+                                                .range(0.01..=1.0),
+                                        )
+                                        .changed()
+                                    {
+                                        reset_initialization = true;
+                                    };
 
-                                    if self.is_coloring_enabled {
-                                        egui::color_picker::color_edit_button_srgba(
+                                    if context.fractal_view.is_coloring_enabled {
+                                        if egui::color_picker::color_edit_button_srgba(
                                             ui,
                                             &mut context.fractal_view.colors[index_system],
                                             egui::color_picker::Alpha::Opaque,
-                                        );
+                                        )
+                                        .changed()
+                                        {
+                                            reset_initialization = true;
+                                        };
                                     } else {
                                         for color in &mut context.fractal_view.colors {
                                             *color = colors::BLACK;
@@ -141,6 +158,10 @@ impl WindowOps for IfsSettingsWindow {
             });
 
         self.show_existing_errors(ui, context);
+
+        if reset_initialization {
+            context.fractal_view.reset_initialization();
+        }
 
         if to_close {
             self.close();
