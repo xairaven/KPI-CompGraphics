@@ -1,4 +1,5 @@
 use crate::context::Context;
+use crate::ui::windows::message::MessageWindow;
 use crate::ui::windows::traits::window_ops::WindowOps;
 use egui::{Button, DragValue, Grid};
 
@@ -10,6 +11,8 @@ pub struct IfsSettingsWindow {
 
     width: f32,
     height: f32,
+
+    error_window: Option<MessageWindow>,
 }
 
 impl Default for IfsSettingsWindow {
@@ -22,6 +25,8 @@ impl Default for IfsSettingsWindow {
 
             width: 450.0,
             height: 250.0,
+
+            error_window: None,
         }
     }
 }
@@ -91,7 +96,16 @@ impl WindowOps for IfsSettingsWindow {
                             .add_sized([self.width / 2.0 - 15.0, 20.0], Button::new("Save"))
                             .clicked()
                         {
-                            to_close = true;
+                            let initialization_result = context.fractal_view.initialize();
+
+                            match initialization_result {
+                                Ok(_) => {
+                                    to_close = true;
+                                },
+                                Err(error) => {
+                                    self.error_window = Some(error.window());
+                                },
+                            }
                         }
                     });
                     columns[1].vertical_centered(|ui| {
@@ -105,6 +119,8 @@ impl WindowOps for IfsSettingsWindow {
                 });
             });
 
+        self.show_existing_errors(ui, context);
+
         if to_close {
             self.close();
         }
@@ -116,6 +132,20 @@ impl WindowOps for IfsSettingsWindow {
 }
 
 impl IfsSettingsWindow {
+    fn show_existing_errors(&mut self, ui: &egui::Ui, context: &mut Context) {
+        let windows = vec![&mut self.error_window];
+
+        for window_option in windows {
+            if let Some(window) = window_option {
+                window.show(ui, context);
+
+                if window.is_closed() {
+                    *window_option = None;
+                }
+            }
+        }
+    }
+
     fn close(&mut self) {
         self.is_open = false;
     }

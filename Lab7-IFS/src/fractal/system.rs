@@ -1,5 +1,3 @@
-use crate::errors::validation::ValidationError;
-use crate::fractal::validator;
 use crate::geometry::point2d::Point2D;
 use egui::Color32;
 
@@ -16,10 +14,8 @@ pub struct EquationSystem {
 }
 
 impl EquationSystem {
-    pub fn new(coefficients: [f32; 7]) -> Result<Self, ValidationError> {
-        validator::probability(coefficients[6])?;
-
-        Ok(Self {
+    pub fn new(coefficients: [f32; 7]) -> Self {
+        Self {
             a: coefficients[0],
             b: coefficients[1],
             d: coefficients[2],
@@ -29,14 +25,14 @@ impl EquationSystem {
             p: coefficients[6],
 
             color: None,
-        })
+        }
     }
 
-    pub fn new_colored(coefficients: [f32; 7], color: Color32) -> Result<Self, ValidationError> {
-        let mut system = Self::new(coefficients)?;
+    pub fn new_colored(coefficients: [f32; 7], color: Color32) -> Self {
+        let mut system = Self::new(coefficients);
         system.color = Some(color);
 
-        Ok(system)
+        system
     }
 
     pub fn probability(&self) -> f32 {

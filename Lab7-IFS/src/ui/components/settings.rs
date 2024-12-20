@@ -63,7 +63,7 @@ impl Settings {
             ui.add_space(10.0);
             Grid::new("Fractal Settings").num_columns(2).show(ui, |ui| {
                 ui.label("Status: ");
-                if context.fractal_view.initialized {
+                if context.fractal_view.is_initialized() {
                     ui.label(RichText::new("Initialized!").color(colors::LIME));
                 } else {
                     ui.label(RichText::new("Not initialized.").color(colors::RED));
@@ -81,7 +81,7 @@ impl Settings {
 
             ui.vertical_centered_justified(|ui| {
                 if ui
-                    .add_enabled(context.fractal_view.initialized, Button::new("Draw"))
+                    .add_enabled(context.fractal_view.is_initialized(), Button::new("Draw"))
                     .clicked()
                 {
                     todo!()
