@@ -1,14 +1,22 @@
 use crate::context::Context;
 use crate::ui::components::canvas::Canvas;
-use egui::{DragValue, Grid, RichText};
+use crate::ui::styles::colors;
+use crate::ui::windows::ifs_settings::IfsSettingsWindow;
+use crate::ui::windows::traits::window_ops::WindowOps;
+use egui::{Button, DragValue, Grid, RichText};
 
 pub struct Settings {
     pub panel_width: f32,
+
+    ifs_settings: Option<Box<dyn WindowOps>>,
 }
 
 impl Default for Settings {
     fn default() -> Self {
-        Self { panel_width: 250.0 }
+        Self {
+            panel_width: 250.0,
+            ifs_settings: None,
+        }
     }
 }
 
@@ -54,10 +62,39 @@ impl Settings {
             });
             ui.add_space(10.0);
             Grid::new("Fractal Settings").num_columns(2).show(ui, |ui| {
-                ui.label("Smth");
+                ui.label("Status: ");
+                if context.fractal_view.initialized {
+                    ui.label(RichText::new("Initialized!").color(colors::LIME));
+                } else {
+                    ui.label(RichText::new("Not initialized.").color(colors::RED));
+                }
                 ui.end_row();
             });
 
+            ui.vertical_centered_justified(|ui| {
+                if ui.button("Enter Parameters").clicked() {
+                    self.ifs_settings = Some(Box::new(IfsSettingsWindow::default()));
+                }
+            });
+
+            ui.add_space(10.0);
+
+            ui.vertical_centered_justified(|ui| {
+                if ui
+                    .add_enabled(context.fractal_view.initialized, Button::new("Draw"))
+                    .clicked()
+                {
+                    todo!()
+                }
+            });
+            ui.vertical_centered_justified(|ui| {
+                if ui.button("Reset Settings").clicked() {
+                    context.fractal_view = Default::default();
+                }
+            });
+
+            ui.add_space(10.0);
+            ui.separator();
             ui.add_space(10.0);
 
             ui.collapsing("Grid Settings", |ui| {
@@ -121,11 +158,27 @@ impl Settings {
                 });
             });
         });
+
+        self.show_windows_if_opened(ui, context);
     }
 
-    fn reset_to_defaults(&self, context: &mut Context, canvas: &mut Canvas) {
-        context.grid = Default::default();
+    fn show_windows_if_opened(&mut self, ui: &mut egui::Ui, context: &mut Context) {
+        let windows: Vec<&mut Option<Box<dyn WindowOps>>> = vec![&mut self.ifs_settings];
 
+        for window_option in windows {
+            if let Some(window) = window_option {
+                window.show(ui, context);
+
+                if window.is_closed() {
+                    *window_option = None;
+                }
+            }
+        }
+    }
+
+    fn reset_to_defaults(&mut self, context: &mut Context, canvas: &mut Canvas) {
+        context.grid = Default::default();
+        context.fractal_view = Default::default();
         canvas.screen_params = Default::default();
     }
 }

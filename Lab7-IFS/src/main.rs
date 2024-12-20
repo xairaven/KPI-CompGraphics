@@ -29,6 +29,7 @@ pub mod context;
 pub mod errors {
     pub mod env;
     pub mod log;
+    pub mod validation;
 }
 pub mod geometry {
     pub mod line2d;
@@ -42,7 +43,12 @@ pub mod logger;
 pub mod math {
     pub mod angle;
 }
-pub mod model {}
+pub mod fractal {
+    pub mod model;
+    pub mod system;
+    pub mod validator;
+    pub mod view;
+}
 pub mod ui {
     pub mod app;
     pub mod core;
@@ -55,7 +61,12 @@ pub mod ui {
         pub mod strokes;
     }
     pub mod windows {
+        pub mod ifs_settings;
         pub mod main;
         pub mod message;
+
+        pub mod traits {
+            pub mod window_ops;
+        }
     }
 }

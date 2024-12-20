@@ -1,3 +1,5 @@
+use crate::context::Context;
+use crate::ui::windows::traits::window_ops::WindowOps;
 use egui::WidgetText;
 
 pub struct MessageWindow {
@@ -28,6 +30,23 @@ impl Default for MessageWindow {
     }
 }
 
+impl WindowOps for MessageWindow {
+    fn show(&mut self, ui: &egui::Ui, _ctx: &mut Context) {
+        egui::Window::new(&self.name)
+            .open(&mut self.is_open)
+            .min_width(self.width)
+            .min_height(self.height)
+            .collapsible(self.collapsible)
+            .show(ui.ctx(), |ui| {
+                ui.label(self.message.clone());
+            });
+    }
+
+    fn is_closed(&self) -> bool {
+        !self.is_open
+    }
+}
+
 impl MessageWindow {
     pub fn with_name(mut self, name: &str) -> Self {
         self.name = name.to_string();
@@ -52,20 +71,5 @@ impl MessageWindow {
     pub fn with_collapsible(mut self, collapsible: bool) -> Self {
         self.collapsible = collapsible;
         self
-    }
-
-    pub fn show(&mut self, ui: &egui::Ui) {
-        egui::Window::new(&self.name)
-            .open(&mut self.is_open)
-            .min_width(self.width)
-            .min_height(self.height)
-            .collapsible(self.collapsible)
-            .show(ui.ctx(), |ui| {
-                ui.label(self.message.clone());
-            });
-    }
-
-    pub fn is_closed(&self) -> bool {
-        !self.is_open
     }
 }
