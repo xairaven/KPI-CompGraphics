@@ -1,4 +1,5 @@
 use crate::context::Context;
+use crate::ui::styles::colors;
 use crate::ui::windows::message::MessageWindow;
 use crate::ui::windows::traits::window_ops::WindowOps;
 use egui::{Button, DragValue, Grid};
@@ -11,6 +12,8 @@ pub struct IfsSettingsWindow {
 
     width: f32,
     height: f32,
+
+    is_coloring_enabled: bool,
 
     error_window: Option<MessageWindow>,
 }
@@ -25,6 +28,8 @@ impl Default for IfsSettingsWindow {
 
             width: 450.0,
             height: 250.0,
+
+            is_coloring_enabled: false,
 
             error_window: None,
         }
@@ -42,12 +47,16 @@ impl WindowOps for IfsSettingsWindow {
             .collapsible(self.collapsible)
             .resizable(self.resizable)
             .show(ui.ctx(), |ui| {
+                ui.checkbox(&mut self.is_coloring_enabled, "With colors");
+
+                ui.add_space(10.0);
+
                 egui::ScrollArea::vertical()
                     .max_height(self.height - 30.0)
                     .show(ui, |ui| {
                         let mut rule_removed: (bool, usize) = (false, 0);
                         Grid::new("SystemGrid")
-                            .num_columns(8)
+                            .num_columns(8 + if self.is_coloring_enabled { 1 } else { 0 })
                             .striped(true)
                             .show(ui, |ui| {
                                 for (index_system, system) in
@@ -67,6 +76,18 @@ impl WindowOps for IfsSettingsWindow {
                                             .range(0.01..=1.0),
                                     );
 
+                                    if self.is_coloring_enabled {
+                                        egui::color_picker::color_edit_button_srgba(
+                                            ui,
+                                            &mut context.fractal_view.colors[index_system],
+                                            egui::color_picker::Alpha::Opaque,
+                                        );
+                                    } else {
+                                        for color in &mut context.fractal_view.colors {
+                                            *color = colors::BLACK;
+                                        }
+                                    }
+
                                     if ui.button("Remove").clicked() {
                                         rule_removed = (true, index_system);
                                     }
@@ -76,7 +97,7 @@ impl WindowOps for IfsSettingsWindow {
                             });
                         let (is_rule_removed, removed_rule_index) = rule_removed;
                         if is_rule_removed {
-                            context.fractal_view.systems.remove(removed_rule_index);
+                            context.fractal_view.remove_system(removed_rule_index);
                         }
                     });
 
