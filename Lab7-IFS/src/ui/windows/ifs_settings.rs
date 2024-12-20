@@ -70,7 +70,7 @@ impl WindowOps for IfsSettingsWindow {
                                             .add(
                                                 DragValue::new(element)
                                                     .speed(0.01)
-                                                    .range(0.00..=f32::MAX),
+                                                    .range(-f32::MAX..=f32::MAX),
                                             )
                                             .changed()
                                         {

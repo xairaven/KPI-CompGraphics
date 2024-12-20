@@ -44,6 +44,7 @@ pub mod math {
     pub mod angle;
 }
 pub mod fractal {
+    pub mod dot;
     pub mod model;
     pub mod system;
     pub mod validator;

@@ -71,6 +71,19 @@ impl Settings {
                 ui.end_row();
             });
 
+            ui.add_space(10.0);
+
+            Grid::new("Iterations").num_columns(2).show(ui, |ui| {
+                ui.label("Iterations: ");
+                ui.add(
+                    DragValue::new(&mut context.fractal_view.iterations)
+                        .speed(1)
+                        .range(0..=u32::MAX),
+                );
+            });
+
+            ui.add_space(10.0);
+
             ui.vertical_centered_justified(|ui| {
                 if ui.button("Enter Parameters").clicked() {
                     self.ifs_settings = Some(Box::new(IfsSettingsWindow::default()));
@@ -84,7 +97,7 @@ impl Settings {
                     .add_enabled(context.fractal_view.is_initialized(), Button::new("Draw"))
                     .clicked()
                 {
-                    todo!()
+                    context.fractal_view.request_draw();
                 }
             });
             ui.vertical_centered_justified(|ui| {

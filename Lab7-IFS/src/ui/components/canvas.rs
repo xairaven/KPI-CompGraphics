@@ -1,4 +1,5 @@
 use crate::context::Context;
+use crate::fractal::dot::Dot;
 use crate::geometry::line2d::Line2D;
 use crate::geometry::point2d::Point2D;
 use crate::graphics::screen::{Resolution, ScreenParams};
@@ -10,7 +11,7 @@ pub struct Canvas {
     pub screen_params: ScreenParams,
 
     grid: Vec<Line2D>,
-    fractal: Vec<Point2D>,
+    fractal: Vec<Dot>,
 }
 
 impl Default for Canvas {
@@ -27,6 +28,8 @@ impl Default for Canvas {
 impl Canvas {
     pub fn process(&mut self, context: &mut Context) {
         self.grid = context.grid.process(self.screen_params);
+
+        self.fractal = context.fractal_view.process();
     }
 
     pub fn draw(&mut self, ui: &mut egui::Ui) -> Response {
@@ -41,6 +44,14 @@ impl Canvas {
             .map(|line| line.to_screen(self.screen_params).to_shape())
             .collect();
         painter.extend(grid_shapes);
+
+        // TODO: Dots radius according to px_per_cm.
+        let fractal_shapes: Vec<Shape> = self
+            .fractal
+            .iter()
+            .map(|dot| dot.to_screen(self.screen_params).to_shape())
+            .collect();
+        painter.extend(fractal_shapes);
 
         // Check for dragging
         self.screen_params.update_offset_on_drag(ui, &response);

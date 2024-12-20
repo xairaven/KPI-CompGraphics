@@ -1,4 +1,6 @@
+use crate::fractal::dot::Dot;
 use crate::geometry::point2d::Point2D;
+use crate::ui::styles::colors;
 use egui::Color32;
 
 pub struct EquationSystem {
@@ -10,7 +12,7 @@ pub struct EquationSystem {
     f: f32,
     p: f32,
 
-    color: Option<Color32>,
+    color: Color32,
 }
 
 impl EquationSystem {
@@ -24,13 +26,13 @@ impl EquationSystem {
             f: coefficients[5],
             p: coefficients[6],
 
-            color: None,
+            color: colors::BLACK,
         }
     }
 
     pub fn new_colored(coefficients: [f32; 7], color: Color32) -> Self {
         let mut system = Self::new(coefficients);
-        system.color = Some(color);
+        system.color = color;
 
         system
     }
@@ -39,10 +41,12 @@ impl EquationSystem {
         self.p
     }
 
-    pub fn next_point(&self, start: &Point2D) -> Point2D {
-        let x = self.a * start.x + self.b * start.y + self.c;
-        let y = self.d * start.x + self.e * start.y + self.f;
+    pub fn next_dot(&self, dot: &Dot) -> Dot {
+        let point = &dot.point;
 
-        Point2D::new(x, y)
+        let x = self.a * point.x + self.b * point.y + self.c;
+        let y = self.d * point.x + self.e * point.y + self.f;
+
+        Dot::new(Point2D::new(x, y), self.color)
     }
 }
