@@ -1,7 +1,5 @@
 use crate::fractal::dot::Dot;
 use crate::fractal::system::EquationSystem;
-use crate::geometry::point2d::Point2D;
-use crate::ui::styles::colors;
 use eframe::epaint::Color32;
 use rand::distributions::{Distribution, WeightedIndex};
 use rand::thread_rng;
@@ -9,7 +7,9 @@ use rand::thread_rng;
 pub struct Model {
     systems: Vec<[f32; 7]>,
     colors: Vec<Color32>,
+
     iterations: u32,
+    radius: f32,
 }
 
 impl Default for Model {
@@ -17,7 +17,9 @@ impl Default for Model {
         Self {
             systems: vec![],
             colors: vec![],
+
             iterations: 10000,
+            radius: 0.01,
         }
     }
 }
@@ -28,13 +30,14 @@ impl Model {
 
         let mut equations: Vec<EquationSystem> = Vec::new();
         for (index, parameters) in self.systems.iter().enumerate() {
-            let equation = EquationSystem::new_colored(*parameters, self.colors[index]);
+            let equation =
+                EquationSystem::new_colored(*parameters, self.colors[index], self.radius);
             equations.push(equation);
         }
 
         let mut dots: Vec<Dot> = Vec::new();
 
-        let start_dot = Dot::new(Point2D::new(0.0, 0.0), colors::BLACK);
+        let start_dot = Dot::default();
         dots.push(start_dot);
 
         let probabilities: Vec<f32> = equations
@@ -67,6 +70,11 @@ impl Model {
 
     pub fn with_iterations(mut self, iterations: u32) -> Self {
         self.iterations = iterations;
+        self
+    }
+
+    pub fn with_radius(mut self, radius: f32) -> Self {
+        self.radius = radius;
         self
     }
 }

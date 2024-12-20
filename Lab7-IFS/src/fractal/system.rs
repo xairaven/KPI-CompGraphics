@@ -13,10 +13,11 @@ pub struct EquationSystem {
     p: f32,
 
     color: Color32,
+    radius: f32,
 }
 
 impl EquationSystem {
-    pub fn new(coefficients: [f32; 7]) -> Self {
+    pub fn new(coefficients: [f32; 7], radius: f32) -> Self {
         Self {
             a: coefficients[0],
             b: coefficients[1],
@@ -27,11 +28,12 @@ impl EquationSystem {
             p: coefficients[6],
 
             color: colors::BLACK,
+            radius,
         }
     }
 
-    pub fn new_colored(coefficients: [f32; 7], color: Color32) -> Self {
-        let mut system = Self::new(coefficients);
+    pub fn new_colored(coefficients: [f32; 7], color: Color32, radius: f32) -> Self {
+        let mut system = Self::new(coefficients, radius);
         system.color = color;
 
         system
@@ -47,6 +49,9 @@ impl EquationSystem {
         let x = self.a * point.x + self.b * point.y + self.c;
         let y = self.d * point.x + self.e * point.y + self.f;
 
-        Dot::new(Point2D::new(x, y), self.color)
+        Dot::default()
+            .with_center(Point2D::new(x, y))
+            .with_color(self.color)
+            .with_radius_centimeters(self.radius)
     }
 }

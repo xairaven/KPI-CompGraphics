@@ -61,7 +61,7 @@ impl Settings {
                 ui.label(RichText::new("Fractal Settings").strong());
             });
             ui.add_space(10.0);
-            Grid::new("Fractal Settings").num_columns(2).show(ui, |ui| {
+            Grid::new("Fractal Status").num_columns(2).show(ui, |ui| {
                 ui.label("Status: ");
                 if context.fractal_view.is_initialized() {
                     ui.label(RichText::new("Initialized!").color(colors::LIME));
@@ -73,13 +73,23 @@ impl Settings {
 
             ui.add_space(10.0);
 
-            Grid::new("Iterations").num_columns(2).show(ui, |ui| {
+            Grid::new("Fractal Settings").num_columns(2).show(ui, |ui| {
                 ui.label("Iterations: ");
                 ui.add(
                     DragValue::new(&mut context.fractal_view.iterations)
                         .speed(1)
                         .range(0..=u32::MAX),
                 );
+                ui.end_row();
+
+                ui.label("Dot Radius: ");
+                ui.add(
+                    DragValue::new(&mut context.fractal_view.radius_centimeters)
+                        .speed(0.01)
+                        .range(0.01..=5.0)
+                        .suffix(" cm."),
+                );
+                ui.end_row();
             });
 
             ui.add_space(10.0);

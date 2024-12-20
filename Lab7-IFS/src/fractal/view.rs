@@ -17,6 +17,7 @@ pub struct FractalView {
     pub colors: Vec<Color32>,
 
     pub iterations: u32,
+    pub radius_centimeters: f32,
 
     dots: Vec<Dot>,
 }
@@ -32,6 +33,7 @@ impl Default for FractalView {
             colors: vec![colors::BLACK],
 
             iterations: 10000,
+            radius_centimeters: 0.01,
             dots: vec![],
         }
     }
@@ -45,6 +47,7 @@ impl FractalView {
                 .with_systems(self.systems.clone())
                 .with_colors(self.colors.clone())
                 .with_iterations(self.iterations)
+                .with_radius(self.radius_centimeters)
                 .dots();
         }
 

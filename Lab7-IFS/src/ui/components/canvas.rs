@@ -45,7 +45,6 @@ impl Canvas {
             .collect();
         painter.extend(grid_shapes);
 
-        // TODO: Dots radius according to px_per_cm.
         let fractal_shapes: Vec<Shape> = self
             .fractal
             .iter()
