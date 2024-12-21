@@ -59,12 +59,16 @@ impl FractalState {
     }
 
     pub fn add_system(&mut self) {
+        self.reset_initialization();
+
         self.systems.push(DEFAULT_SYSTEM);
         self.colors.push(colors::BLACK);
     }
 
     pub fn remove_system(&mut self, index: usize) {
         debug_assert!(self.systems.len() == self.colors.len());
+
+        self.reset_initialization();
 
         self.systems.remove(index);
         self.colors.remove(index);
