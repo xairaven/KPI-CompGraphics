@@ -67,9 +67,9 @@ impl WindowOps for IfsSettingsWindow {
                             .show(ui, |ui| {
                                 ui.label(RichText::new("A").strong());
                                 ui.label(RichText::new("B").strong());
-                                ui.label(RichText::new("C").strong());
                                 ui.label(RichText::new("D").strong());
                                 ui.label(RichText::new("E").strong());
+                                ui.label(RichText::new("C").strong());
                                 ui.label(RichText::new("F").strong());
                                 ui.label(RichText::new("P").strong());
                                 ui.end_row();
