@@ -2,7 +2,7 @@ use crate::context::Context;
 use crate::ui::styles::colors;
 use crate::ui::windows::message::MessageWindow;
 use crate::ui::windows::traits::window_ops::WindowOps;
-use egui::{Button, DragValue, Grid};
+use egui::{Button, DragValue, Grid, RichText};
 
 pub struct IfsSettingsWindow {
     name: String,
@@ -62,6 +62,15 @@ impl WindowOps for IfsSettingsWindow {
                             .num_columns(grid_columns)
                             .striped(true)
                             .show(ui, |ui| {
+                                ui.label(RichText::new("A").strong());
+                                ui.label(RichText::new("B").strong());
+                                ui.label(RichText::new("C").strong());
+                                ui.label(RichText::new("D").strong());
+                                ui.label(RichText::new("E").strong());
+                                ui.label(RichText::new("F").strong());
+                                ui.label(RichText::new("P").strong());
+                                ui.end_row();
+
                                 for (index_system, system) in
                                     context.fractal_view.systems.iter_mut().enumerate()
                                 {
