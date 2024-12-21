@@ -7,6 +7,7 @@ rust-version = "1.82"
 
 [dependencies]
 chrono = "0.4.39"             # Logging purposes.
+csv = "1.3.1"                 # Fast CSV parsing with support for serde.
 dotenvy = "0.15.7"            # .env file processing.
 egui = "0.30.0"               # GUI Library.
 eframe = { version = "0.30.0", default-features = false, features = [
@@ -14,6 +15,7 @@ eframe = { version = "0.30.0", default-features = false, features = [
     "glow",                   # Use the glow rendering backend. Alternative: "wgpu".
 ] }
 fern = "0.7.1"                # Logger.
+image = "0.25.5"              # Imaging library.
 indoc = "2.0.5"               # Indented document literals
 log = "0.4.22"                # Logging facade.
 nalgebra = "0.33.2"           # Matrices, linear algebra.
