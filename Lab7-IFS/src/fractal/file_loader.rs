@@ -51,6 +51,10 @@ impl FileLoader {
             state.push_system(system);
         }
 
+        if state.systems.is_empty() {
+            return Err(FractalLoaderError::EmptyFile);
+        }
+
         state
             .initialize()
             .map_err(FractalLoaderError::ValidationError)?;

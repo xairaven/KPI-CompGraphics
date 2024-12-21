@@ -4,6 +4,9 @@ use thiserror::Error;
 
 #[derive(Error, Debug)]
 pub enum FractalLoaderError {
+    #[error("File is empty.")]
+    EmptyFile,
+
     #[error("Failed to open file.")]
     FailedToOpenFile(String),
 
@@ -34,6 +37,7 @@ impl FractalLoaderError {
                 }
                 Some(message)
             },
+            Self::EmptyFile => None,
         }
     }
 
