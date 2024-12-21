@@ -5,7 +5,7 @@ use crate::ui::styles::colors;
 use crate::ui::windows::ifs_settings::IfsSettingsWindow;
 use crate::ui::windows::message::MessageWindow;
 use crate::ui::windows::traits::window_ops::WindowOps;
-use egui::{Button, DragValue, Grid, RichText};
+use egui::{Button, DragValue, Grid, RichText, UserData, ViewportCommand};
 use indoc::indoc;
 
 pub struct Settings {
@@ -57,6 +57,21 @@ impl Settings {
             ui.vertical_centered_justified(|ui| {
                 if ui.button("Reset to Default Settings").clicked() {
                     self.reset_to_defaults(context, canvas);
+                }
+            });
+
+            ui.add_space(10.0);
+
+            ui.vertical_centered_justified(|ui| {
+                if ui
+                    .button("Take a Screenshot")
+                    .on_hover_text(
+                        "Takes a screenshot of the canvas.\nCurrently only .png files are supported.",
+                    )
+                    .clicked()
+                {
+                    ui.ctx()
+                        .send_viewport_cmd(ViewportCommand::Screenshot(UserData::default()));
                 }
             });
 

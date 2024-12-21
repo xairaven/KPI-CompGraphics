@@ -56,6 +56,7 @@ pub mod fractal {
 pub mod ui {
     pub mod app;
     pub mod core;
+    pub mod screenshot;
     pub mod components {
         pub mod canvas;
         pub mod settings;
