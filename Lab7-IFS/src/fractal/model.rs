@@ -4,6 +4,9 @@ use eframe::epaint::Color32;
 use rand::distributions::{Distribution, WeightedIndex};
 use rand::thread_rng;
 
+pub const DEFAULT_ITERATIONS: u32 = 20000;
+pub const DEFAULT_RADIUS: f32 = 0.025;
+
 pub struct Model {
     systems: Vec<[f32; 7]>,
     colors: Vec<Color32>,
@@ -18,8 +21,8 @@ impl Default for Model {
             systems: vec![],
             colors: vec![],
 
-            iterations: 10000,
-            radius: 0.01,
+            iterations: DEFAULT_ITERATIONS,
+            radius: DEFAULT_RADIUS,
         }
     }
 }

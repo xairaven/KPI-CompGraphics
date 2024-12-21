@@ -1,7 +1,7 @@
 use crate::errors::validation::ValidationError;
 use crate::fractal::dot::Dot;
 use crate::fractal::model::Model;
-use crate::fractal::validator;
+use crate::fractal::{model, validator};
 use crate::ui::styles::colors;
 use egui::Color32;
 
@@ -32,8 +32,8 @@ impl Default for FractalState {
             systems: vec![DEFAULT_SYSTEM],
             colors: vec![colors::BLACK],
 
-            iterations: 10000,
-            radius_centimeters: 0.01,
+            iterations: model::DEFAULT_ITERATIONS,
+            radius_centimeters: model::DEFAULT_RADIUS,
             dots: vec![],
         }
     }
