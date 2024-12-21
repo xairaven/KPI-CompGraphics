@@ -90,15 +90,11 @@ impl WindowOps for IfsSettingsWindow {
                                     };
 
                                     if context.fractal_view.is_coloring_enabled {
-                                        if egui::color_picker::color_edit_button_srgba(
+                                        egui::color_picker::color_edit_button_srgba(
                                             ui,
                                             &mut context.fractal_view.colors[index_system],
                                             egui::color_picker::Alpha::Opaque,
-                                        )
-                                        .changed()
-                                        {
-                                            reset_initialization = true;
-                                        };
+                                        );
                                     } else {
                                         for color in &mut context.fractal_view.colors {
                                             *color = colors::BLACK;
