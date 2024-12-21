@@ -46,9 +46,9 @@ pub mod math {
 pub mod fractal {
     pub mod dot;
     pub mod model;
+    pub mod state;
     pub mod system;
     pub mod validator;
-    pub mod view;
 }
 pub mod ui {
     pub mod app;

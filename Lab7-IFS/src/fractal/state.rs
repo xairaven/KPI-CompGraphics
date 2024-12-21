@@ -7,7 +7,7 @@ use egui::Color32;
 
 const DEFAULT_SYSTEM: [f32; 7] = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0];
 
-pub struct FractalView {
+pub struct FractalState {
     initialized: bool,
     is_drawing_requested: bool,
 
@@ -22,7 +22,7 @@ pub struct FractalView {
     dots: Vec<Dot>,
 }
 
-impl Default for FractalView {
+impl Default for FractalState {
     fn default() -> Self {
         Self {
             initialized: false,
@@ -39,7 +39,7 @@ impl Default for FractalView {
     }
 }
 
-impl FractalView {
+impl FractalState {
     pub fn process(&mut self) -> Vec<Dot> {
         if self.is_drawing_requested {
             self.is_drawing_requested = false;
@@ -64,8 +64,7 @@ impl FractalView {
     }
 
     pub fn remove_system(&mut self, index: usize) {
-        debug_assert!(index < self.systems.len());
-        debug_assert!(index < self.colors.len());
+        debug_assert!(self.systems.len() == self.colors.len());
 
         self.systems.remove(index);
         self.colors.remove(index);
