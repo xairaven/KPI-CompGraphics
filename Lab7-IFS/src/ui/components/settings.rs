@@ -1,14 +1,19 @@
 use crate::context::Context;
+use crate::fractal::examples::FractalExamples;
 use crate::ui::components::canvas::Canvas;
 use crate::ui::styles::colors;
 use crate::ui::windows::ifs_settings::IfsSettingsWindow;
+use crate::ui::windows::message::MessageWindow;
 use crate::ui::windows::traits::window_ops::WindowOps;
 use egui::{Button, DragValue, Grid, RichText};
+use indoc::indoc;
 
 pub struct Settings {
     pub panel_width: f32,
 
+    error_window: Option<Box<dyn WindowOps>>,
     ifs_settings: Option<Box<dyn WindowOps>>,
+    help_window: Option<Box<dyn WindowOps>>,
 }
 
 impl Default for Settings {
@@ -16,6 +21,8 @@ impl Default for Settings {
         Self {
             panel_width: 250.0,
             ifs_settings: None,
+            error_window: None,
+            help_window: None,
         }
     }
 }
@@ -63,7 +70,7 @@ impl Settings {
             ui.add_space(10.0);
             Grid::new("Fractal Status").num_columns(2).show(ui, |ui| {
                 ui.label("Status: ");
-                if context.fractal_view.is_initialized() {
+                if context.fractal_state.is_initialized() {
                     ui.label(RichText::new("Initialized!").color(colors::LIME));
                 } else {
                     ui.label(RichText::new("Not initialized.").color(colors::RED));
@@ -76,7 +83,7 @@ impl Settings {
             Grid::new("Fractal Settings").num_columns(2).show(ui, |ui| {
                 ui.label("Iterations: ");
                 ui.add(
-                    DragValue::new(&mut context.fractal_view.iterations)
+                    DragValue::new(&mut context.fractal_state.iterations)
                         .speed(1)
                         .range(0..=u32::MAX),
                 );
@@ -84,7 +91,7 @@ impl Settings {
 
                 ui.label("Dot Radius: ");
                 ui.add(
-                    DragValue::new(&mut context.fractal_view.radius_centimeters)
+                    DragValue::new(&mut context.fractal_state.radius_centimeters)
                         .speed(0.01)
                         .range(0.01..=5.0)
                         .suffix(" cm."),
@@ -104,16 +111,65 @@ impl Settings {
 
             ui.vertical_centered_justified(|ui| {
                 if ui
-                    .add_enabled(context.fractal_view.is_initialized(), Button::new("Draw"))
+                    .add_enabled(context.fractal_state.is_initialized(), Button::new("Draw"))
                     .clicked()
                 {
-                    context.fractal_view.request_draw();
+                    context.fractal_state.request_draw();
                 }
             });
             ui.vertical_centered_justified(|ui| {
                 if ui.button("Reset Settings").clicked() {
-                    context.fractal_view = Default::default();
+                    context.fractal_state = Default::default();
                 }
+            });
+
+            ui.add_space(10.0);
+
+            ui.collapsing("Load from Example", |ui| {
+                ui.vertical_centered_justified(|ui| {
+                    for example in FractalExamples::iter() {
+                        if ui.button(example.to_string()).clicked() {
+                            if let Err(err) = context
+                                .file_loader
+                                .load_from_path(&mut context.fractal_state, example.path())
+                            {
+                                context.fractal_state = Default::default();
+                                self.error_window = Some(Box::new(err.window()))
+                            }
+                        }
+                    }
+                });
+            });
+
+            ui.add_space(10.0);
+
+            ui.collapsing("Load from File", |ui| {
+                ui.vertical_centered_justified(|ui| {
+                    if ui.button("Open File...").clicked() {
+                        if let Err(err) = context
+                            .file_loader
+                            .load_with_file_pick(&mut context.fractal_state)
+                        {
+                            context.fractal_state = Default::default();
+                            self.error_window = Some(Box::new(err.window()))
+                        }
+                    }
+                    if ui.button("Help").clicked() {
+                        let message = indoc! {"
+                            ...
+                        "};
+                        self.help_window = Some(Box::new(
+                            MessageWindow::default()
+                                .with_message(message)
+                                .with_name("Help ❓")
+                                .with_height(500.0)
+                                .with_width(300.0)
+                                .with_collapsible(false),
+                        ));
+
+                        todo!()
+                    }
+                });
             });
 
             ui.add_space(10.0);
@@ -186,7 +242,11 @@ impl Settings {
     }
 
     fn show_windows_if_opened(&mut self, ui: &mut egui::Ui, context: &mut Context) {
-        let windows: Vec<&mut Option<Box<dyn WindowOps>>> = vec![&mut self.ifs_settings];
+        let windows: Vec<&mut Option<Box<dyn WindowOps>>> = vec![
+            &mut self.error_window,
+            &mut self.help_window,
+            &mut self.ifs_settings,
+        ];
 
         for window_option in windows {
             if let Some(window) = window_option {
@@ -201,7 +261,8 @@ impl Settings {
 
     fn reset_to_defaults(&mut self, context: &mut Context, canvas: &mut Canvas) {
         context.grid = Default::default();
-        context.fractal_view = Default::default();
+        context.file_loader = Default::default();
+        context.fractal_state = Default::default();
         canvas.screen_params = Default::default();
     }
 }

@@ -65,6 +65,11 @@ impl FractalState {
         self.colors.push(colors::BLACK);
     }
 
+    pub fn push_system(&mut self, system: [f32; 7]) {
+        self.systems.push(system);
+        self.colors.push(colors::BLACK);
+    }
+
     pub fn remove_system(&mut self, index: usize) {
         debug_assert!(self.systems.len() == self.colors.len());
 
@@ -85,6 +90,11 @@ impl FractalState {
 
     pub fn reset_initialization(&mut self) {
         self.initialized = false;
+    }
+
+    pub fn empty_systems(&mut self) {
+        self.systems = vec![];
+        self.colors = vec![];
     }
 
     pub fn is_initialized(&self) -> bool {

@@ -44,7 +44,10 @@ impl WindowOps for IfsSettingsWindow {
             .collapsible(self.collapsible)
             .resizable(self.resizable)
             .show(ui.ctx(), |ui| {
-                ui.checkbox(&mut context.fractal_view.is_coloring_enabled, "With colors");
+                ui.checkbox(
+                    &mut context.fractal_state.is_coloring_enabled,
+                    "With colors",
+                );
 
                 ui.add_space(10.0);
 
@@ -53,7 +56,7 @@ impl WindowOps for IfsSettingsWindow {
                     .show(ui, |ui| {
                         let mut rule_removed: (bool, usize) = (false, 0);
 
-                        let grid_columns = 8 + if context.fractal_view.is_coloring_enabled {
+                        let grid_columns = 8 + if context.fractal_state.is_coloring_enabled {
                             1
                         } else {
                             0
@@ -72,7 +75,7 @@ impl WindowOps for IfsSettingsWindow {
                                 ui.end_row();
 
                                 for (index_system, system) in
-                                    context.fractal_view.systems.iter_mut().enumerate()
+                                    context.fractal_state.systems.iter_mut().enumerate()
                                 {
                                     for element in &mut system[0..=5] {
                                         if ui
@@ -98,14 +101,14 @@ impl WindowOps for IfsSettingsWindow {
                                         reset_initialization = true;
                                     };
 
-                                    if context.fractal_view.is_coloring_enabled {
+                                    if context.fractal_state.is_coloring_enabled {
                                         egui::color_picker::color_edit_button_srgba(
                                             ui,
-                                            &mut context.fractal_view.colors[index_system],
+                                            &mut context.fractal_state.colors[index_system],
                                             egui::color_picker::Alpha::Opaque,
                                         );
                                     } else {
-                                        for color in &mut context.fractal_view.colors {
+                                        for color in &mut context.fractal_state.colors {
                                             *color = colors::BLACK;
                                         }
                                     }
@@ -119,7 +122,7 @@ impl WindowOps for IfsSettingsWindow {
                             });
                         let (is_rule_removed, removed_rule_index) = rule_removed;
                         if is_rule_removed {
-                            context.fractal_view.remove_system(removed_rule_index);
+                            context.fractal_state.remove_system(removed_rule_index);
                         }
                     });
 
@@ -127,7 +130,7 @@ impl WindowOps for IfsSettingsWindow {
 
                 ui.vertical_centered_justified(|ui| {
                     if ui.button("Add System").clicked() {
-                        context.fractal_view.add_system();
+                        context.fractal_state.add_system();
                     }
                 });
 
@@ -139,7 +142,7 @@ impl WindowOps for IfsSettingsWindow {
                             .add_sized([self.width / 2.0 - 15.0, 20.0], Button::new("Save"))
                             .clicked()
                         {
-                            let initialization_result = context.fractal_view.initialize();
+                            let initialization_result = context.fractal_state.initialize();
 
                             match initialization_result {
                                 Ok(_) => {
@@ -165,7 +168,7 @@ impl WindowOps for IfsSettingsWindow {
         self.show_existing_errors(ui, context);
 
         if reset_initialization {
-            context.fractal_view.reset_initialization();
+            context.fractal_state.reset_initialization();
         }
 
         if to_close {

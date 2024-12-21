@@ -28,6 +28,7 @@ pub mod config;
 pub mod context;
 pub mod errors {
     pub mod env;
+    pub mod file_loader;
     pub mod log;
     pub mod validation;
 }
@@ -45,6 +46,8 @@ pub mod math {
 }
 pub mod fractal {
     pub mod dot;
+    pub mod examples;
+    pub mod file_loader;
     pub mod model;
     pub mod state;
     pub mod system;

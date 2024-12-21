@@ -29,7 +29,7 @@ impl Canvas {
     pub fn process(&mut self, context: &mut Context) {
         self.grid = context.grid.process(self.screen_params);
 
-        self.fractal = context.fractal_view.process();
+        self.fractal = context.fractal_state.process();
     }
 
     pub fn draw(&mut self, ui: &mut egui::Ui) -> Response {

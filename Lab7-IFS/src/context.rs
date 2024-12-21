@@ -1,3 +1,4 @@
+use crate::fractal::file_loader::FileLoader;
 use crate::fractal::state::FractalState;
 use crate::graphics::grid::Grid;
 
@@ -5,5 +6,6 @@ use crate::graphics::grid::Grid;
 pub struct Context {
     pub grid: Grid,
 
-    pub fractal_view: FractalState,
+    pub fractal_state: FractalState,
+    pub file_loader: FileLoader,
 }
