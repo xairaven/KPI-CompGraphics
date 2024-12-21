@@ -46,8 +46,20 @@ impl Model {
             .collect();
         let mut rng = thread_rng();
 
-        // TODO: Remove this unwrap (we're going fully safe here :D)
-        let dist = WeightedIndex::new(&probabilities).unwrap();
+        let dist = match WeightedIndex::new(&probabilities) {
+            Ok(value) => value,
+            Err(err) => {
+                log::error!(
+                    "{}",
+                    format!(
+                        "Error occurred while creating weighted index. Additional Info: {}",
+                        err
+                    )
+                );
+                std::process::exit(1);
+            },
+        };
+
         for current_index in 0..self.iterations {
             let equation = &equations[dist.sample(&mut rng)];
             let new_dot = equation.next_dot(&dots[current_index as usize]);
