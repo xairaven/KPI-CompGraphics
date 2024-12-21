@@ -96,6 +96,9 @@ impl WindowOps for IfsSettingsWindow {
                                                 .speed(0.01)
                                                 .range(0.01..=1.0),
                                         )
+                                        .on_hover_text(
+                                            "Hint: The sum of probabilities cannot exceed 1.",
+                                        )
                                         .changed()
                                     {
                                         reset_initialization = true;

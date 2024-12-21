@@ -102,7 +102,7 @@ impl Settings {
             ui.add_space(10.0);
 
             ui.vertical_centered_justified(|ui| {
-                if ui.button("Enter Parameters").clicked() {
+                if ui.button("Parameters").clicked() {
                     self.ifs_settings = Some(Box::new(IfsSettingsWindow::default()));
                 }
             });
