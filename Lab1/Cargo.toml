@@ -1,9 +1,9 @@
 [package]
 name = "Lab1"
-version = "0.1.0"
+version = "1.0.0"
 authors = ["Alex Kovalov <alexkovalevkpi@gmail.com>"]
 edition = "2021"
-rust-version = "1.81"
+rust-version = "1.84"
 
 [dependencies]
 chrono = "0.4.38"

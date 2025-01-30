@@ -3,7 +3,7 @@ name = "Lab7-IFS"
 version = "1.0.0"
 authors = ["Alex Kovalov <alexkovalevkpi@gmail.com>"]
 edition = "2021"
-rust-version = "1.82"
+rust-version = "1.84"
 
 [dependencies]
 chrono = "0.4.39"             # Logging purposes.
