@@ -6,15 +6,14 @@ edition = "2021"
 rust-version = "1.84"
 
 [dependencies]
-chrono = "0.4.38"
+chrono = "0.4.39"
 dotenvy = "0.15.7"
-egui = "0.29.0"
-egui_extras = { version = "0.29.0", features = ["default"] }
-eframe = { version = "0.29.0", default-features = false, features = [
+egui = "0.30.0"
+eframe = { version = "0.30.0", default-features = false, features = [
     "default_fonts", # Embed the default egui fonts.
     "glow",          # Use the glow rendering backend. Alternative: "wgpu".
 ] }
-fern = "0.6.2"
-log = "0.4.22"
-nalgebra = "0.33.0"
-thiserror = "1.0.64"
+fern = "0.7.1"
+log = "0.4.25"
+nalgebra = "0.33.2"
+thiserror = "2.0.11"
