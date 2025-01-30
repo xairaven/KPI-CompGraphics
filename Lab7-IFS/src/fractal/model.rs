@@ -1,8 +1,8 @@
 use crate::fractal::dot::Dot;
 use crate::fractal::system::EquationSystem;
 use eframe::epaint::Color32;
-use rand::distributions::{Distribution, WeightedIndex};
-use rand::thread_rng;
+use rand::distr::weighted::WeightedIndex;
+use rand::distr::Distribution;
 
 pub const DEFAULT_ITERATIONS: u32 = 20000;
 pub const DEFAULT_RADIUS: f32 = 0.025;
@@ -47,7 +47,7 @@ impl Model {
             .iter()
             .map(|equation| equation.probability())
             .collect();
-        let mut rng = thread_rng();
+        let mut rng = rand::rng();
 
         let dist = match WeightedIndex::new(&probabilities) {
             Ok(value) => value,

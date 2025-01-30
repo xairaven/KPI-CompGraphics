@@ -2,7 +2,7 @@ use crate::context::Context;
 use crate::model::examples::FractalExamples;
 use crate::ui::components::canvas::Canvas;
 use crate::ui::windows::message::MessageWindow;
-use egui::{vec2, DragValue, Grid, RichText};
+use egui::{vec2, DragValue, Grid, RichText, UserData, ViewportCommand};
 use indoc::indoc;
 
 pub struct Settings {
@@ -66,7 +66,7 @@ impl Settings {
                     .clicked()
                 {
                     ui.ctx()
-                        .send_viewport_cmd(egui::ViewportCommand::Screenshot);
+                        .send_viewport_cmd(ViewportCommand::Screenshot(UserData::default()));
                 }
             });
 

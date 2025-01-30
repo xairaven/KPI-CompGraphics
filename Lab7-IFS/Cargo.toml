@@ -17,9 +17,9 @@ eframe = { version = "0.30.0", default-features = false, features = [
 fern = "0.7.1"                # Logger.
 image = "0.25.5"              # Imaging library.
 indoc = "2.0.5"               # Indented document literals
-log = "0.4.22"                # Logging facade.
+log = "0.4.25"                # Logging facade.
 nalgebra = "0.33.2"           # Matrices, linear algebra.
-rand = "0.8.5"                # Random number generators and other randomness functionality.
-rfd = "0.15.1"                # File Dialogs.
+rand = "0.9.0"                # Random number generators and other randomness functionality.
+rfd = "0.15.2"                # File Dialogs.
 strum_macros = "0.26.4"       # Helpful macros for working with enums and strings
-thiserror = "2.0.8"           # Custom enum errors.
+thiserror = "2.0.11"           # Custom enum errors.
